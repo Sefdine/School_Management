@@ -1,0 +1,143 @@
+/* student home.css*/
+
+
+/* ------- container -----*/
+
+#container{
+    margin-top: 20px;
+}
+
+p{
+    font-size: 1.2em;
+}
+
+/*-------- note ---------*/
+
+#note{
+    padding: 20px;
+    width: 40%;
+}
+
+#note a{
+    display: block;
+	border: 2px solid rgb(39, 20, 209);
+	border-radius: 14px;
+	width: 60%;
+	color: black;
+	padding: 5px;
+	text-align: center;
+	text-decoration-line: none;
+    position: relative;
+    left: 50px;
+}
+
+#note a:hover{
+    transition: 0.4s;
+    background: rgb(39, 20, 209);
+}
+
+/*------ Paiement --------*/
+
+#paiement{
+    padding: 20px;
+    width: 50%;
+    margin-left: 140px;
+}
+
+#paiement a{
+    display: block;
+	border: 2px solid rgb(39, 20, 209);
+	border-radius: 14px;
+	width: 40%;
+	color: black;
+	padding: 5px;
+	text-align: center;
+	text-decoration-line: none;
+    position: relative;
+    left: 90px;
+}
+
+#paiement a:hover{
+    transition: 0.4s;
+    background: rgb(39, 20, 209);
+}
+
+#button_more {
+    margin-left: 100px;
+    width: 150px;
+    height: 50px;
+    background: rgb(8, 61, 235);
+    border: none;
+    padding: 10px 10px;
+    font-weight: bold;
+    color: #fff;
+}
+
+#button_more:hover{
+    transition: 0.3s;
+    background: rgb(53, 7, 138);
+}
+
+#about_us {
+    display: flex;
+    flex-direction: row;
+}
+
+#about_us p {
+    width: 40%;
+    margin-left: 10%;
+}
+
+#part2{
+    margin-top: 30px;
+    background-color: rgba(222, 225, 236, 0.952);
+    padding: 20px;
+}
+/* ---------------- MEDIA SCREEN -----------------*/
+@media screen and (max-width: 991px) {
+
+    #note {
+        width: auto;
+        margin: auto;
+    }
+
+    #note a {
+        width: auto;
+        position: inherit;
+        margin: auto;
+    }
+    
+    #paiement {
+        width: auto;
+        margin: auto;
+    }
+
+    #paiement a{
+        width: auto;
+        position: inherit;
+        margin: auto;
+    }
+
+    #about_us {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        text-align: center;
+    }
+
+    #about_us p {
+        width: 50%;
+        padding-bottom: 10px;
+        font-size: 1.0em;
+        margin: auto;
+    }
+    
+    #button_more {
+        margin: auto;
+    }
+
+    #part2{
+        margin-top: 10px;
+        padding: 10px;
+    }
+}
