@@ -14,7 +14,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link active" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" style="color: white">Note</a>
-              <ul class="dropdown-menu text-small shadow">
+              <ul class="dropdown-menu text-small shadow" id="dropdown-rate">
                 <?php foreach($modules as $module): ?>
                   <li>
                     <a class="dropdown-item" href="index.php?action=rate&id=<?= $user->id ?>&module=<?= urldecode($module) ?>&sessionData=<?= 1 ?>"><?= $module ?></a>
