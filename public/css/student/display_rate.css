@@ -1,0 +1,41 @@
+/*display_rate.css*/
+
+#text-center h3{
+    text-align: center;
+    margin-top: 40px;
+}
+
+table,th,td{
+            /*border: 1px solid black;*/
+            text-align: center;
+            color: rgb(255, 255, 255);
+            padding: 10px;
+}
+
+#headerline {
+   background-color: rgba(175, 166, 166, 0.911);
+}
+
+td{
+    border-top: 1px solid black;
+}
+
+#firstcolumn{
+    background-color: rgba(47, 78, 216, 0.877);
+}
+
+#secondcolumn{
+    background-color: rgb(172, 202, 219);
+    color: rgb(32, 2, 165);
+}
+
+table{
+    margin: auto;
+    margin-top : 20px;
+    width: 60%;
+    margin-bottom: 20px;
+}
+
+#footerline {
+    background-color: rgba(49, 136, 207, 0.911);
+}

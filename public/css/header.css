@@ -1,0 +1,56 @@
+/*header.css*/
+
+/*---------global----------*/
+#nav{
+    overflow: hidden;
+    background-color: rgb(28, 122, 209); 
+    position: sticky; 
+    top: 0;
+    z-index: 1;
+}
+
+#dropdown {
+    position: fixed; 
+    top: 10px;
+}
+
+#bloc1 a:hover{
+    background-color: rgba(117, 201, 218, 0.527);
+    transition: 0.4s;
+}
+
+#bloc {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+}
+
+/*------------premiere partie---------------*/
+
+/*------------deuxieme partie--------------*/
+#bloc2{
+    margin-left: 120px; 
+}
+
+
+/* ---------------- MEDIA SCREEN -----------------*/
+@media screen and (max-width: 991px) {
+    #bloc {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #bloc1 {
+        margin: auto;
+        width: 100%;
+    }
+
+    #bloc2 {
+        margin: auto;
+    }
+
+    #dropdown {
+        top: 10px;
+        left: 20px;
+    }
+}
