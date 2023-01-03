@@ -39,9 +39,6 @@ if (isset($_GET['action'])){
                 if ($name === 'student') {
                     $student->displayHome($identifier);
                 } elseif ($name === 'teacher') {
-                    if(isset($_GET['sessionData']) && $_GET['sessionData'] > 0){
-                        $_SESSION['data'] = [];
-                    }
                     $teacher->displayHome($identifier);
                 } else {
                     $user->displayForm();
