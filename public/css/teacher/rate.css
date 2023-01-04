@@ -3,3 +3,17 @@
 .table-responsive {
     background-color: rgba(194, 183, 183, 0.815);
 }
+
+/* header */
+#dropdown-rate {
+    position: fixed;
+    top: 50px;
+    left: 40%;
+}
+
+@media screen and (max-width: 991px) {
+    /* header */
+    #dropdown-rate {
+        position: inherit;
+    }
+}

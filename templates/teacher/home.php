@@ -8,7 +8,7 @@
     <p>Choisissez un module pour remplir les notes</p>
     <div class="module_teacher">
         <?php foreach($modules as $module): ?>
-            <a href="index.php?action=rate&id=<?= $user->id ?>&module=<?= urldecode($module) ?>"><?= $module ?></a>
+            <a href="index.php?action=rate&id=<?= $user->id ?>&module=<?= urldecode($module) ?>&sessionData=<?= 1 ?>"><?= $module ?></a>
         <?php endforeach; ?>
     </div>
 </div>

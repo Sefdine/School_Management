@@ -10,11 +10,11 @@
         <div id="bloc1">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-              <a class="nav-link active" href="index.php?action=home&id=<?= $user->id ?>&sessionData=<?= 1 ?>" style="color: white">Home</a>
+              <a class="nav-link active" href="index.php?action=home&id=<?= $user->id ?>" style="color: white">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link active" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" style="color: white">Note</a>
-              <ul class="dropdown-menu text-small shadow">
+              <ul class="dropdown-menu text-small shadow" id="dropdown-rate">
                 <?php foreach($modules as $module): ?>
                   <li>
                     <a class="dropdown-item" href="index.php?action=rate&id=<?= $user->id ?>&module=<?= urldecode($module) ?>&sessionData=<?= 1 ?>"><?= $module ?></a>
