@@ -21,7 +21,7 @@
       <div id="about_us">
         <h2>IPEM ?</h2>
         <p>INSTITUT PARCOURS ET MÉTIERS par abréviation IPEM vous offre l'opportunité d'intégrer un cycle des formations professionnelles...</p>
-        <button id="button_more" onclick="window.location.href = 'https://www.ipemfp.com/about';" title="Accedez au site officiel de IPEM">Savoir plus</button> 
+        <button id="button_more" onclick="window.location.href = 'https://www.ipemfp.net/about';" title="Accedez au site officiel de IPEM">Savoir plus</button> 
       </div>
     </div>
   </div>
