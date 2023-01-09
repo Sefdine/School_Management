@@ -23,7 +23,7 @@ trait Password
             if (password_verify($current_password, $user->password)) {
                 $cost = ['cost' => 12];
                 $new_password = password_hash($new_password, PASSWORD_BCRYPT, $cost);
-                $success = $users->setPassword($name, $identifier, $new_password);
+                $success = $users->setPassword($identifier, $new_password);
     
                 if ($success) {
                     header('Location: index.php?action=errorPassword&login_err=success_password&id='.$identifier);
