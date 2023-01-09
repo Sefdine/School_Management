@@ -11,11 +11,12 @@ class Teacher extends User
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT modules FROM teacher WHERE id = ?'
+            'SELECT m.nom FROM module m, enseigner en, enseignant e, utilisateur u WHERE m.id = en.id_module AND en.id_enseignant = e.id AND e.id = u.id AND u.id = ?'
         );
         $statement->execute([$identifier]);
-        $row = $statement->fetch();
-        $modules = explode(',', $row['modules']);
+        while($row = $statement->fetch()) {
+            $modules[] = $row['nom'];
+        }
 
         return $modules;
     }

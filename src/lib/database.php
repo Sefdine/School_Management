@@ -11,7 +11,7 @@ class Database
     public function getConnection(): \PDO
     {
         if ($this->database === null) {
-            $this->database = new \PDO('mysql:host=localhost;dbname=ipem;charset=utf8', 'root', 'root');
+            $this->database = new \PDO('mysql:host=localhost;dbname=ipem_db;charset=utf8', 'root', 'root');
         }
         return $this->database;
     }

@@ -21,11 +21,11 @@ class User
         $connection = new Database;
         if ($name === 'student') {
             $statement = $connection->getConnection()->query(
-                'SELECT id, identifier, password, token FROM student ORDER BY id ASC'
+                'SELECT u.id, password, token, identifiant FROM utilisateur u, inscription i, etudiant e WHERE i.id_etudiant = e.id AND e.id = u.id ORDER BY u.id ASC'
             );
         } elseif($name === 'teacher') {
             $statement = $connection->getConnection()->query(
-                'SELECT id, identifier, password, token FROM teacher ORDER BY id ASC'
+                'SELECT u.id, password, token, identifiant FROM utilisateur u, enseignant e WHERE u.id = e.id ORDER BY u.id ASC'
             );
         }
         
@@ -33,7 +33,7 @@ class User
         while($row = $statement->fetch()) {
             $user = new self;
             $user->id = $row['id'];
-            $user->identifier = $row['identifier'];
+            $user->identifier = $row['identifiant'];
             $user->password = $row['password'];
             $user->token = $row['token'];
             $users[] = $user;
@@ -46,11 +46,11 @@ class User
         $connection = new Database;
         if ($name === 'student') {
             $statement = $connection->getConnection()->prepare(
-                'SELECT * FROM student WHERE id = ?'
+                'SELECT u.id, nom, prenom, password, identifiant FROM inscription i, etudiant e, utilisateur u WHERE i.id_etudiant = e.id AND e.id = u.id AND u.id = ?'
             );
         } elseif ($name === 'teacher') {
             $statement = $connection->getConnection()->prepare(
-                'SELECT * FROM teacher WHERE id = ?'
+                'SELECT u.id, nom, prenom, password, identifiant FROM  enseignant e, utilisateur u WHERE e.id = u.id AND u.id = ?'
             );
         }
         
@@ -58,27 +58,21 @@ class User
         $row = $statement->fetch();
         $user = new self;
         $user->id = $row['id'];
-        $user->firstname = $row['firstname'];
-        $user->lastname = $row['lastname'];
-        $user->identifier = $row['identifier'];
+        $user->firstname = $row['nom'];
+        $user->lastname = $row['prenom'];
+        $user->identifier = $row['identifiant'];
         $user->password = $row['password'];
 
         return $user;
     }
 
-    public function setPassword(string $name, string $identifier, string $new_password): bool
+    public function setPassword(string $identifier, string $new_password): bool
     {
         $connection = new Database;
-        if ($name === 'student') {
-            $statement = $connection->getConnection()->prepare(
-                'UPDATE student SET password = ? WHERE id = ?'
-            );    
-        } elseif ($name === 'teacher') {
-            $statement = $connection->getConnection()->prepare(
-                'UPDATE teacher SET password = ? WHERE id = ?'
-            );    
-        }
-        
+        $statement = $connection->getConnection()->prepare(
+            'UPDATE utilisateur SET password = ? WHERE id = ?'
+        );    
+
         $affectedLines = $statement->execute([$new_password, $identifier]);
         return ($affectedLines > 0);
     }
