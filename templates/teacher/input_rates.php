@@ -60,7 +60,7 @@
     Module : <strong><?= $current_module?></strong>
     <br>
     <br>
-    <form action="index.php?action=rateTreatment&id=<?= $user->id ?>&module=<?= urldecode($current_module) ?>" method="POST" enctype="multipart/form-data" autocomplete="off">
+    <form action="index.php?action=rateTreatment&id=<?= $user->id ?>&module=<?= urldecode($current_module) ?>&level=<?= $level ?>&group=<?= $group ?>" method="POST" enctype="multipart/form-data" autocomplete="off">
         <div class="mb-3">
             <input type="text" class="form-control" name="num_inscription" required="required" placeholder="Numéro d'inscription">
         </div>

@@ -39,7 +39,7 @@ if (isset($_GET['action'])){
                 if ($name === 'student') {
                     $student->displayHome($identifier);
                 } elseif ($name === 'teacher') {
-                    $teacher->displayHome($identifier);
+                    $teacher->displayLanding($identifier);
                 } else {
                     $user->displayForm();
                     die();
@@ -49,7 +49,20 @@ if (isset($_GET['action'])){
             $user->displayForm();
             die();
         }
-    } elseif ($action === 'rate') {
+    } elseif($action === 'module'){
+        if (isset($_SESSION['user'])) {
+            if (isset($_GET['id']) && $_GET['id'] > 0) {
+                $identifier = $_GET['id'];       
+                $teacher->displayModules($identifier, $_POST);
+            } else {
+                $user->displayForm();
+                die();              
+            }
+        } else {
+            $user->displayForm();
+            die();
+        }
+    }elseif ($action === 'rate') {
         if (isset($_SESSION['user'])) {
             $name = $_SESSION['name'] ?? '';
             if (isset($_GET['id']) && $_GET['id'] > 0) {
@@ -59,11 +72,12 @@ if (isset($_GET['action'])){
                 } elseif ($name === 'teacher') {                    
                     $module = $_GET['module'] ?? '';
                     $error = $_GET['error'] ?? '';
+                    $level = $_GET['level'] ?? '';
+                    $group = $_GET['group'] ?? '';
                     if(isset($_GET['sessionData']) && $_GET['sessionData'] > 0){
                         $_SESSION['data'] = [];
                     }
-                    $teacher->displayFormRate($identifier, $module, $error);
-                } else {
+                    $teacher->displayFormRate($identifier, $module, $level, $group, $error);
                     $user->displayForm();
                     die();
                 }
