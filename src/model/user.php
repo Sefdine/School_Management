@@ -7,8 +7,7 @@ use Ipem\Src\Lib\Database;
 
 class User 
 {
-    public Database $connection;
-    
+
     public int $id;
     public string $identifier;
     public string $password;

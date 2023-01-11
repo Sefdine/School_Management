@@ -11,26 +11,44 @@ use Ipem\Src\Model\User as ModelUser;
 
 class Teacher extends User
 {
-    public function displayFormRate(string $identifier, string $current_module, string $error = ''): void
+    public function displayFormRate(string $identifier, string $current_module, string $level, string $group, string $error = ''): void
     {
         $rates = new Rate;
         $users = new ModelUser;
         $user = $users->getUser('teacher', $identifier);
         $full_names = self::getFullName($rates->getRates());
-        $modules = (new ModelTeacher)->getModules($identifier);
+        $modules = (new ModelTeacher)->getModules($identifier, $level, $group);
         require_once('templates/teacher/header.php');
         echo '<br>';
         require_once('templates/errors/errors.php');
         require_once('templates/teacher/input_rates.php');
     }
 
-    public function displayHome(string $identifier): void
+    public function displayLanding(string $identifier): void
     {
         $users = new ModelUser;
         $user = $users->getuser('teacher', $identifier);
-        $modules = (new ModelTeacher)->getModules($identifier);
+        $teacher = new ModelTeacher;
+        $years = $teacher->getYears($identifier);
+        $studies = $teacher->getStudies();
+        $groups = $teacher->getGroups();
+        $levels = $teacher->getlevels($identifier);
+        $controls = $teacher->getControls();
+        require_once('templates/teacher/landing.php'); 
+    }
+
+    public function displayModules(string $identifier, array $data): void
+    {
+        $users = new ModelUser;
+        $user = $users->getuser('teacher', $identifier);
+        $year = $data['year'] ?? '';
+        $study = $data['study'] ?? '';
+        $group = $data['group'] ?? '';
+        $level = $data['level'] ?? '';
+        $control = $data['control'] ?? '';
+        $modules = (new ModelTeacher)->getModules($identifier, $level, $group);
         require_once('templates/teacher/header.php');
-        require_once('templates/teacher/home.php');
+        require_once('templates/teacher/module.php');
     }
     protected static function getFullName(array $names): array
     {
