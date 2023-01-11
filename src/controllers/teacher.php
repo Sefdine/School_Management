@@ -11,12 +11,16 @@ use Ipem\Src\Model\User as ModelUser;
 
 class Teacher extends User
 {
-    public function displayFormRate(string $identifier, string $current_module, string $level, string $group, string $error = ''): void
+    public function displayFormRate(string $identifier, string $current_module, array $data, string $error = ''): void
     {
         $rates = new Rate;
         $users = new ModelUser;
         $user = $users->getUser('teacher', $identifier);
-        $full_names = self::getFullName($rates->getRates());
+        $year = $data['year'];
+        $study = $data['study'];
+        $group = $data['group'] ?? '';
+        $level = $data['level'] ?? '';
+        $control = $data['control'] ?? '';
         $modules = (new ModelTeacher)->getModules($identifier, $level, $group);
         require_once('templates/teacher/header.php');
         echo '<br>';
@@ -41,11 +45,9 @@ class Teacher extends User
     {
         $users = new ModelUser;
         $user = $users->getuser('teacher', $identifier);
-        $year = $data['year'] ?? '';
-        $study = $data['study'] ?? '';
         $group = $data['group'] ?? '';
         $level = $data['level'] ?? '';
-        $control = $data['control'] ?? '';
+        $_SESSION['array'] = $data;
         $modules = (new ModelTeacher)->getModules($identifier, $level, $group);
         require_once('templates/teacher/header.php');
         require_once('templates/teacher/module.php');

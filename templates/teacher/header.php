@@ -17,7 +17,7 @@
               <ul class="dropdown-menu text-small shadow" id="dropdown-rate">
                 <?php foreach($modules as $module): ?>
                   <li>
-                    <a class="dropdown-item" href="index.php?action=rate&id=<?= $user->id ?>&module=<?= urldecode($module) ?>&sessionData=<?= 1 ?>&level=<?= $level ?>&group=<?= $group ?>"><?= $module ?></a>
+                    <a class="dropdown-item" href="index.php?action=rate&id=<?= $user->id ?>&module=<?= urldecode($module) ?>&sessionData=<?= 1 ?>"><?= $module ?></a>
                   </li>
                 <?php endforeach ?>
               </ul>

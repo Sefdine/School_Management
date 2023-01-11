@@ -23,7 +23,7 @@ class Rate
     public float $work_legislation;
     public float $financial_math;
 
-    public function getRates(): array
+    /* public function getRates(): array
     {
         $connection = new Database;
         $statement = $connection->getConnection()->query(
@@ -50,9 +50,9 @@ class Rate
             $rates[] = $rate;
         }
         return $rates;
-    }
+    } */
 
-    public function getRate(string $identifier): self
+    /* public function getRate(string $identifier): self
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
@@ -77,16 +77,53 @@ class Rate
         $rate->financial_math = $row['financial_math'];
 
         return $rate;
-    }
+    } */
 
-    public function updateRate(int $identifier, string $module, float $value): bool
+    public function updateRate(string $identifier, string $year, string $study, string $group, string $level, string $control, string $module, float $value): bool
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            str_replace('module', $module, 'UPDATE rate SET module = ? WHERE id = ?')
+            'UPDATE
+            note n,
+            filiere f, 
+            groupe g, 
+            niveau ni, 
+            controle c, 
+            module m,
+            annee a,
+            inscription i
+            SET 
+            n.valeur = ?,
+            n.id_inscription = i.id_etudiant,
+            n.id_module = m.id,
+            n.id_controle = c.id,
+            n.id_annee = a.id
+            WHERE n.id_annee = a.id
+            AND n.id_module = m.id
+            AND n.id_controle = c.id
+            AND n.id_inscription = i.id_etudiant
+            AND i.id_filiere = f.id
+            AND g.id_filiere = f.id
+            AND ni.id_groupe = g.id
+            AND m.id_niveau = ni.id
+            AND f.nom = ?
+            AND g.nom = ?
+            AND a.annee = ?
+            AND c.id = ?
+            AND m.nom = ?
+            AND ni.niveau = ?
+            AND i.identifiant = ?'
         );
-        
-        $affectedLines = $statement->execute([$value, $identifier]);
+        $affectedLines = $statement->execute([
+            $value, 
+            $study, 
+            $group, 
+            $year, 
+            $control, 
+            $module, 
+            $level, 
+            $identifier
+        ]);
         return ($affectedLines > 0);
     }
 }

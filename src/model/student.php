@@ -11,11 +11,11 @@ class Student extends User
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id FROM etudiant WHERE identifier = ?'
+            'SELECT id_etudiant FROM inscription WHERE identifiant = ?'
         );
         $statement->execute([$value]);
         if ($row = $statement->fetch()) {
-            $identifier = $row['id'];
+            $identifier = $row['id_etudiant'];
             return $identifier;
         } else {
             return 0;

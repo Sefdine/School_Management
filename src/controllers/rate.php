@@ -10,15 +10,8 @@ use Ipem\Src\Model\User as ModelUser;
 
 class Rate
 {
-    public function update_rate(string $id, string $fr_mod, array $data): void
+    public function update_rate(string $id, string $module, array $data): void
     {
-        $modules = self::getNameModule();
-        $module = '';
-        foreach ($modules as $fr => $en) {
-            if (str_replace(' ','',strtolower($fr)) === str_replace(' ','',strtolower($fr_mod))) {
-                $module = $en;
-            }          
-        }
         $num_inscription = $data['num_inscription'] ?? '';
         $value = (float)($data['rate'] ?? 0);
         $rate = new ModelRate;
@@ -29,28 +22,34 @@ class Rate
             if ($identifier) {
                 $users = new ModelUser;
                 $user = $users->getuser('student', (string)$identifier);
+                $array = $_SESSION['array'];
+                $year = $array['year'];
+                $study = $array['study'];
+                $group = $array['group'];
+                $level = $array['level'];
+                $control = $array['control'];
                 $full_name = implode(' ', [$user->lastname, $user->firstname]);
-                $success = $rate->updateRate($identifier, $module, $value);
+                $success = $rate->updateRate($num_inscription, $year, $study, $group, $level, $control, $module, $value);
             } else {
-                header('Location: index.php?action=rate&id='.$id.'&module='.$fr_mod.'&error=invalid_num_inscription');
+                header('Location: index.php?action=rate&id='.$id.'&module='.$module.'&error=invalid_num_inscription');
                 die();
             }
         } else {
-            header('Location: index.php?action=rate&id='.$id.'&module='.$fr_mod.'&error=empty_numInscription');
+            header('Location: index.php?action=rate&id='.$id.'&module='.$module.'&error=empty_numInscription');
             die();
         }
 
         if ($success) {
             $_SESSION['data'][] = [$num_inscription, $full_name, $value];
-            header('Location: index.php?action=rate&id='.$id.'&module='.$fr_mod.'&error=rateSuccess');
+            header('Location: index.php?action=rate&id='.$id.'&module='.$module.'&error=rateSuccess');
             die();
         } else {
-            header('Location: index.php?action=rate&id='.$id.'&module='.$fr_mod.'&error=rateError');
+            header('Location: index.php?action=rate&id='.$id.'&module='.$module.'&error=rateError');
             die();
         }
     }
 
-    protected static function getNameModule(): array
+    /* protected static function getNameModule(): array
     {
         $modules = [
             'Français' => 'french',
@@ -66,5 +65,5 @@ class Rate
         ];
 
         return $modules;
-    }
+    } */
 }
