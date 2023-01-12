@@ -4,7 +4,11 @@
     <h3>M. <?= $user->firstname; ?> </h3>
 </div>
 <div class="container">
+    Numéro d'inscription: <strong><?= $num_inscription ?></strong><br>
     Année: <strong><?= $year ?></strong><br>
+    Filière: <strong><?= $study ?></strong><br>
+    Groupe: <strong><?= $group ?></strong><br>
+    Niveau: <strong><?= ($level === 1) ? '1ère année' : $level.'ème année' ?></strong><br>
     Contrôle: <strong><?= 'controle n°'.$control ?></strong>
     <div id="maTable">
         <table >
