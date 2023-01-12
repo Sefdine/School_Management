@@ -7,5 +7,5 @@ use Ipem\Src\Lib\Database;
 
 class Student extends User
 {
-    use Inscription;
+    use Inscription, Module;
 }

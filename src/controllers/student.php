@@ -6,6 +6,7 @@ namespace Ipem\Src\Controllers;
 
 use Ipem\Src\Model\Rate;
 use Ipem\Src\Model\User as ModelUser;
+use Ipem\Src\Model\Student as ModelStudent;
 
 class Student extends User
 {
@@ -17,32 +18,38 @@ class Student extends User
         require_once('templates/student/home.php');
     }
 
-    public function displayRate(string $identifier): void
+    public function displayRate(string $identifier, string $year, string $control): void
     {
-        $student = new ModelUser;
+        $users = new ModelUser;
         $title = 'Consultaion des notes';
-        $user = $student->getUser('student', $identifier);
-        $rates = new Rate;
-        $rate = $rates->getRate($identifier);
-        $average = self::getAverage($rate);
+        $user = $users->getUser('student', $identifier);
+        $student = new ModelStudent;
+        $modules = $student->getModulesStudent((int)$identifier, $year);
+        $rate = new Rate;
+        $rates = $rate->getRates((int)$identifier, (int)$control, $year);
+        $data = self::getData($modules, $rates);
+        $average = self::getAverage($rates);
         require_once('templates/student/header.php');
         require_once('templates/student/display_rate.php');
     }
 
-    protected static function getAverage(Rate $rate): float
+    protected static function getData(array $modules, array $rates): array
     {
-        $total = array_sum([
-            $rate->french,
-            $rate->english,
-            $rate->marketing,
-            $rate->accounting,
-            $rate->office,
-            $rate->statistics,
-            $rate->business_management,
-            $rate->admin_management,
-            $rate->work_legislation,
-            $rate->financial_math
-        ]);
+        $data = [];
+        foreach($modules as $module){
+            foreach($rates as $k => $rate){
+                if($k === $module) {
+                    $data[$module] = $rate;
+                } 
+            }
+        }
+
+        return $data;
+    }
+
+    protected static function getAverage(array $data): float
+    {
+        $total = array_sum($data);
         
         return $total / 10;
     }
