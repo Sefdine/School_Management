@@ -30,6 +30,28 @@ trait Module
         return $modules;
     }
 
+    public function getModulesStudent(int $identifier, string $year): array
+    {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare(
+            'SELECT m.nom
+            FROM module m, niveau n, groupe g, filiere f, annee a, inscription i
+            WHERE i.id_niveau = n.id
+            AND m.id_niveau = n.id
+            AND n.id_groupe = g.id
+            AND g.id_filiere = f.id
+            AND f.id_annee = a.id
+            AND i.id_etudiant = ?
+            AND a.annee = ?'
+        );
+        $statement->execute([$identifier, $year]);
+        $modules = [];
+        while($row = $statement->fetch()) {
+            $modules[] = $row['nom'];
+        }
+        return $modules;
+    }
+
     public function getIdModule(string $name, int $id_level): int
     {
         $connection = new Database;

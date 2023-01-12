@@ -44,7 +44,7 @@ class Rate
                     $success = $rate->updateRate($id_rate, $value);
                 } else {
                     $id_control = (int)$control;
-                    $success = $rate->insertRate($value, $identifier, $id_level, $id_module, $id_control, $id_year);
+                    $success = $rate->insertRate($value, $identifier, $id_module, $id_control, $id_year);
                 }  
             } else {
                 header('Location: index.php?action=rate&id='.$id.'&module='.$module.'&error=invalid_num_inscription');

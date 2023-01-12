@@ -68,7 +68,9 @@ if (isset($_GET['action'])){
             if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $identifier = $_GET['id'];
                 if ($name === 'student') {
-                    $student->displayRate($identifier);
+                    $year = $_GET['year'] ?? '2022';
+                    $control = $_GET['control'] ?? '1';
+                    $student->displayRate($identifier, $year, $control);
                 } elseif ($name === 'teacher') {                    
                     $module = $_GET['module'] ?? '';
                     $error = $_GET['error'] ?? '';

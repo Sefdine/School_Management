@@ -11,6 +11,8 @@ class Rate
     public int $id;
     public string $firstname;
     public string $lastname;
+    public float $value_rate;
+    public string $name_module;
 
     public function updateRate(int $identifier, $value): bool
     {
@@ -45,6 +47,37 @@ class Rate
         );
         $affectedLines = $statement->execute([$value, $id_inscription, $id_module, $id_control, $id_year]);
         return ($affectedLines > 0);
+    }
+
+    public function getRates(int $identifier, int $control, string $year): array
+    {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare(
+            'SELECT n.valeur, m.nom
+            FROM note n,
+            module m,
+            annee a,
+            filiere f,
+            groupe g,
+            niveau ni,
+            controle c
+            WHERE a.id = f.id_annee
+            AND f.id = g.id_filiere
+            AND g.id = ni.id_groupe
+            AND ni.id = m.id_niveau
+            AND m.id = n.id_module
+            AND n.id_controle = c.id
+            AND n.id_annee = a.id
+            AND a.annee = ?
+            AND c.id = ?
+            AND n.id_inscription = ?'
+        );
+        $statement->execute([$year, $control, $identifier]);
+        $rates = [];
+        while($row = $statement->fetch()) {
+            $rates[$row['nom']] = $row['valeur'];
+        }
+        return $rates;
     }
 
     public function checkRateIfExist(string $identifier, string $year, string $study, string $group, string $level, string $control, string $module): int
