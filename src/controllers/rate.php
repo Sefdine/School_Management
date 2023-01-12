@@ -7,6 +7,7 @@ namespace Ipem\Src\Controllers;
 use Ipem\Src\Model\Rate as ModelRate;
 use Ipem\Src\Model\Student as ModelStudent;
 use Ipem\Src\Model\User as ModelUser;
+use Ipem\Src\Model\Teacher as ModelTeacher;
 
 class Rate
 {
@@ -18,18 +19,33 @@ class Rate
         $student = new ModelStudent;
 
         if ($num_inscription) {
-            $identifier = $student->getId($num_inscription);
+            $array = $_SESSION['array'];
+            $year = $array['year'];
+            $study = $array['study'];
+            $group = $array['group'];
+            $level = $array['level'];
+            $control = $array['control'];
+
+            $teacher = new ModelTeacher;
+            $id_year = $teacher->getIdYear($year);
+            $id_study = $teacher->getIdStudy($study, $id_year);                
+            $id_group = $teacher->getIdGroup($group, $id_study);
+            $id_level = $teacher->getIdLevel($level, $id_group);
+            $id_module = $teacher->getIdModule($module, $id_level);
+            $identifier = $student->getIdInscription($num_inscription, $id_level);
             if ($identifier) {
                 $users = new ModelUser;
                 $user = $users->getuser('student', (string)$identifier);
-                $array = $_SESSION['array'];
-                $year = $array['year'];
-                $study = $array['study'];
-                $group = $array['group'];
-                $level = $array['level'];
-                $control = $array['control'];
                 $full_name = implode(' ', [$user->lastname, $user->firstname]);
-                $success = $rate->updateRate($num_inscription, $year, $study, $group, $level, $control, $module, $value);
+
+                $id_rate = $rate->checkRateIfExist($num_inscription, $year, $study, $group, $level, $control, $module);
+
+                if($id_rate) {
+                    $success = $rate->updateRate($id_rate, $value);
+                } else {
+                    $id_control = (int)$control;
+                    $success = $rate->insertRate($value, $identifier, $id_level, $id_module, $id_control, $id_year);
+                }  
             } else {
                 header('Location: index.php?action=rate&id='.$id.'&module='.$module.'&error=invalid_num_inscription');
                 die();
@@ -48,22 +64,4 @@ class Rate
             die();
         }
     }
-
-    /* protected static function getNameModule(): array
-    {
-        $modules = [
-            'Français' => 'french',
-            'Anglais' => 'english',
-            'Marketing' => 'marketing',
-            'Comptabilité Général' => 'accounting',
-            'Informatique' => 'office',
-            'Statistique' => 'statistics',
-            "Gestion de l'entreprise" => 'business_management',
-            'Gestion administrative' => 'admin_managemen',
-            'Législation du travail' => 'work_legislation',
-            'Mathématique financière' => 'financial_math',
-        ];
-
-        return $modules;
-    } */
 }
