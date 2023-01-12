@@ -13,7 +13,7 @@
               <a class="nav-link active" href="index.php?action=home&id=<?= $user->id?>" style="color: white">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="index.php?action=rate&id=<?= $user->id ?>" style="color: white">Note</a>
+              <a class="nav-link active" href="index.php?action=landing&id=<?= $user->id ?>" style="color: white">Note</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#" style="color: white">Paiement</a>

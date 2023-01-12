@@ -18,12 +18,29 @@ class Student extends User
         require_once('templates/student/home.php');
     }
 
+    public function displayLanding(string $identifier, string $error = ''): void 
+    {
+        $users = new ModelUser;
+        $user = $users->getUser('student', $identifier);
+        $student = new ModelStudent;
+        $years = $student->getYears();
+        $controls = $student->getControls();
+        require_once('templates/student/header.php');
+        require_once('templates/errors/errors.php');
+        require_once('templates/student/landing.php');
+    }
+
     public function displayRate(string $identifier, string $year, string $control): void
     {
         $users = new ModelUser;
         $title = 'Consultaion des notes';
         $user = $users->getUser('student', $identifier);
         $student = new ModelStudent;
+        $array = $student->getData($year, (int)$identifier);
+        $study = $array['study'];
+        $group = $array['group'];
+        $level = $array['level'];
+        $num_inscription = $array['num_inscription'];
         $modules = $student->getModulesStudent((int)$identifier, $year);
         $rate = new Rate;
         $rates = $rate->getRates((int)$identifier, (int)$control, $year);

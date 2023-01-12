@@ -10,7 +10,7 @@
       <div id="note">
         <p>Vous pouvez désormais consulter vos notes<br>
         <em>Attetion</em>: Si vous rencontrez un problème technique, ou si vous avez une reclammation, Veuillez le signalé auprès de l'administarion.</p>
-        <a href="index.php?action=rate&id=<?= urldecode($user->id) ?>"><strong>Mes notes</strong></a>
+        <a href="index.php?action=landing&id=<?= urldecode($user->id) ?>"><strong>Mes notes</strong></a>
       </div>
       <div id="paiement">
         <p>Suivez attentivement l'état de votre paiement. <br>Adressez vous à l'administration en cas d'ambiguité.</p>

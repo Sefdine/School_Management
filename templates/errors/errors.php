@@ -63,6 +63,11 @@ switch($error)
     case 'invalid_num_inscription':
         echo "<div class='alert alert-danger'>Le numéro d'inscription n'existe pas ou l'étudiant n'est pas inscrit au groupe choisi</div>";
     break;
+
+    //student landing error
+    case 'rate_not_exist':
+        echo "<div class='alert alert-danger'>Vos notes ne sont pas encore disponible</div>";
+    break;
 }
 ?> 
 

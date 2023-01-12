@@ -49,6 +49,17 @@ if (isset($_GET['action'])){
             $user->displayForm();
             die();
         }
+    } elseif ($action === 'landing') {
+        if (isset($_SESSION['user'])) {
+            if (isset($_GET['id']) && $_GET['id'] > 0) {
+                $identifier = $_GET['id'];  
+                $error = $_GET['error'] ?? '';           
+                $student->displayLanding($identifier, $error);
+            }
+        } else {
+            $user->displayForm();
+            die();
+        }
     } elseif($action === 'module'){
         if (isset($_SESSION['user'])) {
             if (isset($_GET['id']) && $_GET['id'] > 0) {
@@ -68,8 +79,8 @@ if (isset($_GET['action'])){
             if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $identifier = $_GET['id'];
                 if ($name === 'student') {
-                    $year = $_GET['year'] ?? '2022';
-                    $control = $_GET['control'] ?? '1';
+                    $year = $_POST['year'] ?? '';
+                    $control = $_POST['control'] ?? '';
                     $student->displayRate($identifier, $year, $control);
                 } elseif ($name === 'teacher') {                    
                     $module = $_GET['module'] ?? '';
