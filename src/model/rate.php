@@ -11,82 +11,83 @@ class Rate
     public int $id;
     public string $firstname;
     public string $lastname;
-    public string $study;
-    public float $french;
-    public float $english;
-    public float $marketing;
-    public float $accounting;
-    public float $office;
-    public float $statistics;
-    public float $business_management;
-    public float $admin_management;
-    public float $work_legislation;
-    public float $financial_math;
 
-    public function getRates(): array
-    {
-        $connection = new Database;
-        $statement = $connection->getConnection()->query(
-            'SELECT * FROM rate ORDER BY id ASC'
-        );
-        $rates = [];
-        while($row = $statement->fetch()) {
-            $rate = new Self;
-            $rate->id = $row['id'];
-            $rate->firstname = $row['firstname'];
-            $rate->lastname = $row['lastname'];
-            $rate->study = $row['study'];
-            $rate->french = $row['french'];
-            $rate->english = $row['english'];
-            $rate->marketing = $row['marketing'];
-            $rate->accounting = $row['accounting'];
-            $rate->office = $row['office'];
-            $rate->statistics = $row['statistics'];
-            $rate->business_management = $row['business_management'];
-            $rate->admin_management = $row['admin_management'];
-            $rate->work_legislation = $row['work_legislation'];
-            $rate->financial_math = $row['financial_math'];
-
-            $rates[] = $rate;
-        }
-        return $rates;
-    }
-
-    public function getRate(string $identifier): self
+    public function updateRate(int $identifier, $value): bool
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT * FROM rate WHERE id = ?'
+            'UPDATE note SET valeur = ? WHERE id = ?'
         );
-        $statement->execute([$identifier]);
-        $row = $statement->fetch();
-        $rate = new Self;
-        $rate->id = $row['id'];
-        $rate->firstname = $row['firstname'];
-        $rate->lastname = $row['lastname'];
-        $rate->study = $row['study'];
-        $rate->french = $row['french'];
-        $rate->english = $row['english'];
-        $rate->marketing = $row['marketing'];
-        $rate->accounting = $row['accounting'];
-        $rate->office = $row['office'];
-        $rate->statistics = $row['statistics'];
-        $rate->business_management = $row['business_management'];
-        $rate->admin_management = $row['admin_management'];
-        $rate->work_legislation = $row['work_legislation'];
-        $rate->financial_math = $row['financial_math'];
-
-        return $rate;
-    }
-
-    public function updateRate(int $identifier, string $module, float $value): bool
-    {
-        $connection = new Database;
-        $statement = $connection->getConnection()->prepare(
-            str_replace('module', $module, 'UPDATE rate SET module = ? WHERE id = ?')
-        );
-        
         $affectedLines = $statement->execute([$value, $identifier]);
         return ($affectedLines > 0);
+    }
+
+    public function insertRate(float $value, int $id_inscription, int $id_module, int $id_control, int $id_year): bool
+    {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare(
+            'INSERT INTO 
+            note
+            (
+                valeur, 
+                id_inscription, 
+                id_module, 
+                id_controle, 
+                id_annee
+            )
+            VALUES(
+                ?,
+                (SELECT id_etudiant FROM inscription WHERE id_etudiant = ?),
+                (SELECT id FROM module WHERE id = ?),
+                (SELECT id FROM controle WHERE id = ?),
+                (SELECT id FROM annee WHERE id = ?)
+            )'
+        );
+        $affectedLines = $statement->execute([$value, $id_inscription, $id_module, $id_control, $id_year]);
+        return ($affectedLines > 0);
+    }
+
+    public function checkRateIfExist(string $identifier, string $year, string $study, string $group, string $level, string $control, string $module): int
+    {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare(
+            'SELECT n.id FROM 
+            note n, 
+            annee a,
+            filiere f,
+            groupe g,
+            niveau ni,
+            module m,
+            inscription i,
+            controle c
+            WHERE 
+            n.id_annee = a.id
+            AND n.id_module = m.id
+            AND n.id_controle = c.id
+            AND n.id_inscription = i.id_etudiant
+            AND i.id_niveau = ni.id
+            AND m.id_niveau = ni.id
+            AND ni.id_groupe = g.id
+            AND g.id_filiere = f.id
+            AND f.id_annee = a.id
+            AND f.nom = ?
+            AND g.nom = ?
+            AND a.annee = ?
+            AND c.id = ?
+            AND m.nom = ?
+            AND ni.niveau = ?
+            AND i.identifiant = ?'
+        );
+        $statement->execute([
+            $study, 
+            $group, 
+            $year, 
+            $control, 
+            $module, 
+            $level, 
+            $identifier
+        ]);
+        
+        return ($row = $statement->fetch()) ? $row['id'] : 0;
     }
 }

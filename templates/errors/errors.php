@@ -61,7 +61,7 @@ switch($error)
     break;
 
     case 'invalid_num_inscription':
-        echo "<div class='alert alert-danger'>Le numéro d'inscription n'existe pas</div>";
+        echo "<div class='alert alert-danger'>Le numéro d'inscription n'existe pas ou l'étudiant n'est pas inscrit au groupe choisi</div>";
     break;
 }
 ?> 

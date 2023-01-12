@@ -72,12 +72,11 @@ if (isset($_GET['action'])){
                 } elseif ($name === 'teacher') {                    
                     $module = $_GET['module'] ?? '';
                     $error = $_GET['error'] ?? '';
-                    $level = $_GET['level'] ?? '';
-                    $group = $_GET['group'] ?? '';
+                    $data = $_SESSION['array'] ?? '';
                     if(isset($_GET['sessionData']) && $_GET['sessionData'] > 0){
                         $_SESSION['data'] = [];
                     }
-                    $teacher->displayFormRate($identifier, $module, $level, $group, $error);
+                    $teacher->displayFormRate($identifier, $module, $data, $error);
                     $user->displayForm();
                     die();
                 }

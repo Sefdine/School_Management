@@ -57,7 +57,12 @@
 <div class="container">
     <h1>Insérer une note</h1>
     <p>Identifier l'étudiant par son numéro d'inscription.</p>
-    Module : <strong><?= $current_module?></strong>
+    Année: <?= $year ?><br>
+    Filière: <?= $study ?><br>
+    Groupe: <?= $group ?><br>
+    Niveau: <?= $level === '1' ? '1ère année' : '2ème année'; ?><br>
+    Contrôle: <?= 'contrôle n°'. $control ?><br>
+    Module : <strong><?= $current_module?></strong><br>
     <br>
     <br>
     <form action="index.php?action=rateTreatment&id=<?= $user->id ?>&module=<?= urldecode($current_module) ?>&level=<?= $level ?>&group=<?= $group ?>" method="POST" enctype="multipart/form-data" autocomplete="off">
