@@ -7,8 +7,20 @@
     margin-top: 20px;
 }
 
-p{
-    font-size: 1.2em;
+.hello {
+    border: 2px solid rgb(123, 190, 123);
+    border-radius: 10px;
+    background-color: rgb(97, 236, 166);
+    padding: 10px;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    width: 60%;
+    margin: auto;
+}
+
+.hello:hover {
+    background-color: rgb(80, 26, 206);
+    transition: 1s;
 }
 
 /*-------- note ---------*/
@@ -20,10 +32,10 @@ p{
 
 #note a{
     display: block;
-	border: 2px solid rgb(39, 20, 209);
+	border: 2px solid rgb(57, 184, 135);
 	border-radius: 14px;
 	width: 60%;
-	color: black;
+	color: rgb(224, 224, 224);
 	padding: 5px;
 	text-align: center;
 	text-decoration-line: none;
@@ -33,7 +45,7 @@ p{
 
 #note a:hover{
     transition: 0.4s;
-    background: rgb(39, 20, 209);
+    background: rgb(57, 184, 135);
 }
 
 /*------ Paiement --------*/
@@ -46,10 +58,10 @@ p{
 
 #paiement a{
     display: block;
-	border: 2px solid rgb(39, 20, 209);
+	border: 2px solid rgb(95, 143, 161);
 	border-radius: 14px;
 	width: 40%;
-	color: black;
+	color: rgb(190, 187, 187);
 	padding: 5px;
 	text-align: center;
 	text-decoration-line: none;
@@ -59,7 +71,7 @@ p{
 
 #paiement a:hover{
     transition: 0.4s;
-    background: rgb(39, 20, 209);
+    background: rgb(95, 143, 161);
 }
 
 #button_more {
@@ -90,11 +102,21 @@ p{
 
 #part2{
     margin-top: 30px;
-    background-color: rgba(222, 225, 236, 0.952);
+    background-color: rgba(22, 46, 133, 0.781);
     padding: 20px;
 }
+
+#part2 h2{
+    color: rgb(255, 255, 255);
+}
+
 /* ---------------- MEDIA SCREEN -----------------*/
 @media screen and (max-width: 991px) {
+
+    .hello {
+        font-size: 1.1em;
+        width: max-content;
+    }
 
     #note {
         width: auto;

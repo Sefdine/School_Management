@@ -3,7 +3,7 @@
 /*---------global----------*/
 #nav{
     overflow: hidden;
-    background-color: rgb(28, 122, 209); 
+    background-color: rgb(97, 23, 233);
     position: sticky; 
     top: 0;
     z-index: 1;
@@ -12,6 +12,12 @@
 #dropdown {
     position: fixed; 
     top: 10px;
+}
+
+#bloc1 a{
+    color: rgb(168, 164, 157);
+    font-size: 1.1em;
+    text-decoration: solid;
 }
 
 #bloc1 a:hover{

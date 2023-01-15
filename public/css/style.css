@@ -1,3 +1,16 @@
+
+body {
+    background:rgb(97, 23, 233);
+}
+
+p{
+    font-size: 1.2em;
+}
+
+h1, h2, p, label {
+    color: #f7f7f7;
+}
+
 #logo_ipem{
     width: 120px;
     position: relative;
@@ -30,4 +43,10 @@
 .btn {        
     font-size: 15px;
     font-weight: bold;
+}
+
+.footer {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
 }

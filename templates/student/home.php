@@ -2,9 +2,7 @@
 <?php ob_start(); ?>
 
 <div class="container" id="container">
-  <div class="alert alert-success">
-    <h2 class="p-3">Bonjour <?= $user->firstname; ?> !</h2>               
-  </div>
+  <h2 class="hello">Bonjour <?= $user->firstname; ?> !</h2>               
   <div class="row">
     <div id="part1">
       <div id="note">

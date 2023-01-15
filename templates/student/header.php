@@ -10,13 +10,13 @@
         <div id="bloc1">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-              <a class="nav-link active" href="index.php?action=home&id=<?= $user->id?>" style="color: white">Home</a>
+              <a class="nav-link active" href="index.php?action=home&id=<?= $user->id?>" style="color: white"><strong>Home</strong></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="index.php?action=landing&id=<?= $user->id ?>" style="color: white">Note</a>
+              <a class="nav-link active" href="index.php?action=landing&id=<?= $user->id ?>" style="color: white"><strong>Note</strong></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#" style="color: white">Paiement</a>
+              <a class="nav-link" href="#" style="color: white"><strong>Paiement</strong></a>
             </li>
           </ul>
         </div>
