@@ -7,13 +7,13 @@
         <div style="display: flex; flex-direction: row;">
             <div class="form-check" style="margin-left:20px">
                 <input class="form-check-input" type="radio" name="flexRadioDefault" value="flexRadioDefault1" required="required">
-                <label class="form-check-label" for="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1" style="color: rgb(39, 39, 43);">
                     Etudiant
                 </label>
             </div>
             <div class="form-check" style="margin-left:70px">
                 <input class="form-check-input" type="radio" name="flexRadioDefault" value="flexRadioDefault2" required="required">
-                <label class="form-check-label" for="flexRadioDefault2">
+                <label class="form-check-label" for="flexRadioDefault2" style="color: rgb(39, 39, 43);">
                     Professeur
                 </label>
             </div>
