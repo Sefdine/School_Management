@@ -27,6 +27,11 @@
     transition: all;
 }
 
+.landing {
+    margin-top: 150px!important;
+    margin: auto;
+}
+
 @media screen and (max-width: 991px) {
     .module_teacher {
         margin-bottom: 10px;

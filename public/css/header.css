@@ -9,6 +9,11 @@
     z-index: 1;
 }
 
+#nav:hover {
+    background-color: rgb(36, 19, 190);
+    transition: 2s;
+}
+
 #dropdown {
     position: fixed; 
     top: 10px;
