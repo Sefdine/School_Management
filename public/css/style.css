@@ -44,9 +44,3 @@ h1, h2, p, label {
     font-size: 15px;
     font-weight: bold;
 }
-
-.footer {
-    position: sticky;
-    bottom: 0;
-    width: 100%;
-}
