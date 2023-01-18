@@ -27,9 +27,22 @@
     transition: all;
 }
 
+.modules {
+    border: 1px solid rgb(175, 238, 27);
+    height: max-content + 30px;
+    width: max-content + 30px;
+    border-radius: 15px;
+    background-color: rgb(14, 223, 14);
+    padding: 10px;
+}
+
+.modules:hover {
+    background-color: blue;
+    transition: 2s;
+}
+
 .landing {
-    margin-top: 150px!important;
-    margin: auto;
+    margin-top: 40px;
 }
 
 @media screen and (max-width: 991px) {
