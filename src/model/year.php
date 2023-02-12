@@ -12,10 +12,11 @@ trait Year
     {
         $connection = new Database;
         $statement = $connection->getConnection()->query(
-            'SELECT annee FROM annee ORDER BY id ASC'
+            'SELECT name FROM years ORDER BY id ASC'
         );
+        $years = [];
         while($row = $statement->fetch()) {
-            $years[] = $row['annee'];
+            $years[] = $row['name'];
         }
         return $years;
     }
@@ -24,7 +25,7 @@ trait Year
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id FROM annee WHERE annee = ?'
+            'SELECT id FROM years WHERE name = ?'
         );
         $statement->execute([$year]);
     

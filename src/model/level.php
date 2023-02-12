@@ -12,12 +12,12 @@ trait Level
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT niveau FROM niveau WHERE id_groupe = ?'
+            'SELECT level FROM levels WHERE group_id = ?'
         );
         $statement->execute([$identifier]);
         $levels = [];
         while($row = $statement->fetch()) {
-            $levels[] = $row['niveau'];
+            $levels[] = $row['level'];
         }
         return $levels;
     }
@@ -26,7 +26,7 @@ trait Level
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id FROM niveau WHERE niveau = ? AND id_groupe = ?'
+            'SELECT id FROM levels WHERE level = ? AND group_id = ?'
         );
         $statement->execute([$level, $id_group]);
         

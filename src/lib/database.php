@@ -11,8 +11,22 @@ class Database
     public function getConnection(): \PDO
     {
         if ($this->database === null) {
-            $this->database = new \PDO('mysql:host=localhost;dbname=ipem_db;charset=utf8', 'root', 'root');
+            try{
+                $this->database = new \PDO(
+                    'mysql:host=localhost;
+                    dbname=ipem;
+                    charset=utf8;
+                    port=3306', 
+                    'root', 
+                    'root'
+                );
+                $this->database->setAttribute(\PDO::ATTR_ERRMODE,
+                \PDO::ERRMODE_EXCEPTION);
+            } catch(PDOException $e) {
+                echo "Connection failed: " . $e->getMessage();
+            }
         }
         return $this->database;
     }
-}
+} 
+

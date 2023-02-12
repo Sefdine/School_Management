@@ -15,7 +15,7 @@ class Teacher extends User
     {
         $rates = new Rate;
         $users = new ModelUser;
-        $user = $users->getUser('teacher', $identifier);
+        $user = $users->getUser($identifier);
         $year = $data['year'];
         $study = $data['study'];
         $group = $data['group'] ?? '';
@@ -31,7 +31,7 @@ class Teacher extends User
     public function displayLanding(string $identifier): void
     {
         $users = new ModelUser;
-        $user = $users->getuser('teacher', $identifier);
+        $user = $users->getuser($identifier);
         $teacher = new ModelTeacher;
         $years = $teacher->getYears($identifier);
         $studies = $teacher->getStudies();
@@ -44,7 +44,7 @@ class Teacher extends User
     public function displayModules(string $identifier, array $data): void
     {
         $users = new ModelUser;
-        $user = $users->getuser('teacher', $identifier);
+        $user = $users->getuser($identifier);
         $group = $data['group'] ?? '';
         $level = $data['level'] ?? '';
         $_SESSION['array'] = $data;

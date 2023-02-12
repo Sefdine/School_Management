@@ -15,10 +15,10 @@ trait Password
         require_once('templates/password/update_password_form.php');
     }
 
-    public function updatePasswordTreatment(string $name, string $identifier, string $current_password, string $new_password): void
+    public function updatePasswordTreatment(string $identifier, string $current_password, string $new_password): void
     {
         $users = new User;
-        $user = $users->getUser($name, $identifier);
+        $user = $users->getUser($identifier);
         if ($current_password !== $new_password) {
             if (password_verify($current_password, $user->password)) {
                 $cost = ['cost' => 12];
@@ -38,11 +38,11 @@ trait Password
         }
     }
 
-    public function updatePassword(string $name, string $identifier): void
+    public function updatePassword(string $identifier): void
     {
         $users = new User;
         $title = 'Changer mon mot de passe';
-        $user = $users->getUser($name, $identifier);
+        $user = $users->getUser($identifier);
         require_once('templates/password/update_password.php');
     }
 }

@@ -35,7 +35,7 @@
 	border: 2px solid rgb(57, 184, 135);
 	border-radius: 14px;
 	width: 60%;
-	color: rgb(224, 224, 224);
+	color: black;
 	padding: 5px;
 	text-align: center;
 	text-decoration-line: none;
@@ -46,6 +46,7 @@
 #note a:hover{
     transition: 0.4s;
     background: rgb(57, 184, 135);
+    color: #fff;
 }
 
 /*------ Paiement --------*/
@@ -61,7 +62,7 @@
 	border: 2px solid rgb(95, 143, 161);
 	border-radius: 14px;
 	width: 40%;
-	color: rgb(190, 187, 187);
+	color: black;
 	padding: 5px;
 	text-align: center;
 	text-decoration-line: none;
@@ -72,6 +73,7 @@
 #paiement a:hover{
     transition: 0.4s;
     background: rgb(95, 143, 161);
+    color: #fff;
 }
 
 #button_more {
@@ -98,6 +100,7 @@
 #about_us p {
     width: 40%;
     margin-left: 10%;
+    color: #fff;
 }
 
 #part2{

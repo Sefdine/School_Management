@@ -181,3 +181,77 @@ CREATE TABLE teachs(
         ON DELETE CASCADE
         ON UPDATE CASCADE
 )ENGINE=InnoDB;
+
+#--------------------------------------------------------
+#   Table: contain
+#--------------------------------------------------------
+CREATE TABLE contain(
+    id INTEGER AUTO_INCREMENT NOT NULL,
+    year_id INTEGER NOT NULL,
+    study_id INTEGER NOT NULL,
+    group_id INTEGER NOT NULL,
+    level_id INTEGER NOT NULL,
+    CONSTRAINT contain_PK PRIMARY KEY (id),
+    CONSTRAINT contain_years_FK FOREIGN KEY (year_id)
+        REFERENCES years(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT contain_studies_FK FOREIGN KEY (study_id)
+        REFERENCES studies(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT contain_groupes_FK FOREIGN KEY (group_id)
+        REFERENCES groupes(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT contain_levels_FK FOREIGN KEY (level_id)
+        REFERENCES levels(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT contain_modules_FK FOREIGN KEY (module_id)
+        REFERENCES modules(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE(year_id, study_id, group_id, level_id, module_id)
+)ENGINE=InnoDB;
+
+#--------------------------------------------------------
+#   Table: levelsModules
+#--------------------------------------------------------
+CREATE TABLE levelsModules(
+    level_id INTEGER NOT NULL,
+    module_id INTEGER NOT NULL,
+    CONSTRAINT levelsModules_PK PRIMARY KEY (level_id, module_id),
+    UNIQUE (level_id, module_id),
+    CONSTRAINT levelsModules_levels_FK FOREIGN KEY (level_id) REFERENCES levels(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT levelsModules_modules_FK FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+INSERT INTO contain (year_id, study_id, group_id, level_id)
+VALUES
+    (1, 1, 1, 1),
+    (1, 1, 1, 2),
+    (1, 1, 2, 1),
+    (1, 1, 2, 2),
+    (1, 1, 3, 1),
+    (1, 1, 4, 1);
+
+INSERT INTO exams (number) VALUES (1), (2), (3);
+
+INSERT INTO modules (name)
+VALUES 
+    ('Anglais'),
+    ('Français'),
+    ('Informatique'),
+    ('Action commerciale'),
+    ('Statistiques'),
+    ('Mathématiques financières'),
+    ('Comptabilité général'),
+    ('Gestion de l\'entreprise'),
+    ('Gestion administrative'),
+    ('Législation du travail');
+
+
+
+INSERT INTO levelsModules(module_id)
+SELECT id FROM modules ORDER BY id ASC;
+
+ALTER TABLE levelsModules ALTER COLUMN level_id SET DEFAULT 3;
+
+INSERT INTO averages (registration_id, module_id)
+VALUES
+    (1, 1),
+    (1, 2),
+    (1, 3),
+    (56, 1),
+    (56, 2),
+    (56, 3);

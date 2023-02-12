@@ -1,14 +1,10 @@
 
 body {
-    background:rgb(97, 23, 233);
+    background:rgb(237, 235, 240);
 }
 
 p{
     font-size: 1.2em;
-}
-
-h1, h2, p, label {
-    color: #f7f7f7;
 }
 
 #logo_ipem{

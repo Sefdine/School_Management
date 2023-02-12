@@ -7,28 +7,31 @@ use Ipem\Src\Lib\Database;
 
 class Student extends User
 {
-    use Inscription, Module, Year, Control;
+    use Inscription, Module, Year, Exam;
 
     public function getData(string $year, int $identifier): array
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT f.nom, g.nom as groupe, n.niveau, i.identifiant
-            FROM filiere f, groupe g, niveau n, annee a, inscription i
-            WHERE a.id = f.id_annee
-            AND f.id = g.id_filiere
-            AND g.id = n.id_groupe
-            AND n.id = i.id_niveau
-            AND a.annee = ?
-            AND i.id_etudiant = ?'
+            'SELECT s.name AS study, g.name AS groupe, l.level, u.identifier
+            FROM contain c
+            JOIN studies s ON c.study_id = s.id
+            JOIN groupes g ON c.group_id = g.id
+            JOIN levels l ON c.level_id = l.id
+            JOIN years y ON c.year_id = y.id
+            JOIN registrations r ON c.id = r.contain_id
+            JOIN students st ON r.student_id = st.id
+            JOIN users u ON st.user_id = u.id
+            AND y.name = ?
+            AND u.id = ?'
         );
         $statement->execute([$year, $identifier]);
 
         if($row = $statement->fetch()) {
-            $data['study'] = $row['nom'];
+            $data['study'] = $row['study'];
             $data['group'] = $row['groupe'];
-            $data['level'] = $row['niveau'];
-            $data['num_inscription'] = $row['identifiant'];
+            $data['level'] = $row['level'];
+            $data['num_inscription'] = $row['identifier'];
 
             return $data;
         } else {

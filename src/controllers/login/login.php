@@ -19,8 +19,8 @@ trait Login
         $num = 0;
         if ($radio === 'flexRadioDefault1') {          
             $users = new User;
-            foreach($users->getUsers('student') as $user) {
-                if ($identifier === $user->identifier && password_verify($password, $user->password)) {
+            foreach($users->getUsers() as $user) {
+                if (($identifier.' ') === $user->identifier && password_verify($password, $user->password)) {
                     $num++;
                     $identifier = $user->id;
                     $_SESSION['user'] = $user->token;
@@ -29,7 +29,7 @@ trait Login
             }         
         } elseif ($radio === 'flexRadioDefault2') {
             $users = new User;
-            foreach($users->getUsers('teacher') as $user) {
+            foreach($users->getUsers() as $user) {
                 if ($identifier === $user->identifier && password_verify($password, $user->password)) {
                     $num++;
                     $identifier = $user->id;
