@@ -81,7 +81,7 @@ if (isset($_GET['action'])){
                 if ($name === 'student') {
                     $year = $_POST['year'] ?? '';
                     $control = $_POST['control'] ?? '';
-                    $student->displayRate($identifier, $year, $control);
+                    $student->displayAverage($identifier, $year, $control);
                 } elseif ($name === 'teacher') {                    
                     $module = $_GET['module'] ?? '';
                     $error = $_GET['error'] ?? '';
@@ -93,7 +93,6 @@ if (isset($_GET['action'])){
                     $user->displayForm();
                     die();
                 }
-                
             }
         } else {
             $user->displayForm();
@@ -103,8 +102,7 @@ if (isset($_GET['action'])){
         if (isset($_SESSION['user'])) {
             if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $identifier = $_GET['id'];
-                $name = $_SESSION['name'] ?? '';
-                $user->updatePassword($name, $identifier);
+                $user->updatePassword($identifier);
             }
         } else {
             $user->displayForm();
@@ -122,14 +120,13 @@ if (isset($_GET['action'])){
         }   
     } elseif ($action === 'updatePasswordTreatment') {
         if (isset($_SESSION['user'])) {
-            $name = $_SESSION['name'] ?? '';
             if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $identifier = $_GET['id'];
                 $current_passord = $_POST['current_password'];
                 $new_password = $_POST['new_password'];
                 $new_password_retype = $_POST['new_password_retype'];
                 if ($new_password === $new_password_retype) {
-                   $user->updatePasswordTreatment($name, $identifier, $current_passord, $new_password);
+                   $user->updatePasswordTreatment($identifier, $current_passord, $new_password);
                 } else {
                     header('Location: index.php?action=errorPassword&login_err=new_password_retype&id='.$identifier);
                 }

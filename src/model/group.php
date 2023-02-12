@@ -12,11 +12,11 @@ trait Group
     {
         $connection = new Database;
         $statement = $connection->getConnection()->query(
-            'SELECT nom FROM groupe ORDER BY nom ASC'
+            'SELECT name FROM groupes ORDER BY name ASC'
         );
         $groups = [];
         while($row = $statement->fetch()) {
-            $groups[] = $row['nom'];
+            $groups[] = $row['name'];
         }
         return $groups;
     }
@@ -25,7 +25,7 @@ trait Group
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id FROM groupe WHERE nom = ? AND id_filiere = ?'
+            'SELECT id FROM groupes WHERE name = ? AND study_id = ?'
         );
         $statement->execute([$name, $id_study]);
         

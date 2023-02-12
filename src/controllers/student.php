@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ipem\Src\Controllers;
 
-use Ipem\Src\Model\Rate;
+use Ipem\Src\Model\Average;
 use Ipem\Src\Model\User as ModelUser;
 use Ipem\Src\Model\Student as ModelStudent;
 
@@ -13,7 +13,7 @@ class Student extends User
     public function displayHome(string $identifier): void 
     {
         $student = new ModelUser;
-        $user = $student->getUser('student', $identifier);
+        $user = $student->getUser($identifier);
         require_once('templates/student/header.php');
         require_once('templates/student/home.php');
     }
@@ -21,7 +21,7 @@ class Student extends User
     public function displayLanding(string $identifier, string $error = ''): void 
     {
         $users = new ModelUser;
-        $user = $users->getUser('student', $identifier);
+        $user = $users->getUser($identifier);
         $student = new ModelStudent;
         $years = $student->getYears();
         $controls = $student->getControls();
@@ -30,11 +30,11 @@ class Student extends User
         require_once('templates/student/landing.php');
     }
 
-    public function displayRate(string $identifier, string $year, string $control): void
+    public function displayAverage(string $identifier, string $year, string $control): void
     {
         $users = new ModelUser;
         $title = 'Consultaion des notes';
-        $user = $users->getUser('student', $identifier);
+        $user = $users->getUser($identifier);
         $student = new ModelStudent;
         $array = $student->getData($year, (int)$identifier);
         $study = $array['study'];
@@ -42,8 +42,8 @@ class Student extends User
         $level = $array['level'];
         $num_inscription = $array['num_inscription'];
         $modules = $student->getModulesStudent((int)$identifier, $year);
-        $rate = new Rate;
-        $rates = $rate->getRates((int)$identifier, (int)$control, $year);
+        $rate = new Average;
+        $rates = $rate->getAverages((int)$identifier, (int)$control, $year);
         $data = self::getData($modules, $rates);
         $average = self::getAverage($rates);
         require_once('templates/student/header.php');

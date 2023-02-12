@@ -12,19 +12,19 @@ trait Module
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT m.nom 
-            FROM module m, enseigner en, niveau n, groupe g
-            WHERE m.id = en.id_module 
-            AND m.id_niveau = n.id
-            AND n.id_groupe = g.id
-            AND en.id_enseignant = ?
-            AND n.niveau = ?
-            AND g.nom = ?'
+            'SELECT m.name 
+            FROM modules m, teachs t, levels l, groupes g
+            WHERE m.id = t.module_id
+            AND m.level_id = l.id
+            AND l.group_id = g.id
+            AND t.teacher_id = ?
+            AND l.level = ?
+            AND g.name = ?'
         );
         $statement->execute([$identifier, $level, $group]);
         $modules = [];
         while($row = $statement->fetch()) {
-            $modules[] = $row['nom'];
+            $modules[] = $row['name'];
         }
 
         return $modules;
@@ -34,20 +34,21 @@ trait Module
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT m.nom
-            FROM module m, niveau n, groupe g, filiere f, annee a, inscription i
-            WHERE i.id_niveau = n.id
-            AND m.id_niveau = n.id
-            AND n.id_groupe = g.id
-            AND g.id_filiere = f.id
-            AND f.id_annee = a.id
-            AND i.id_etudiant = ?
-            AND a.annee = ?'
+            'SELECT m.name FROM modules m
+            JOIN levelsmodules lm ON m.id = lm.module_id
+            JOIN levels l ON l.id = lm.level_id
+            JOIN contain c ON l.id = c.level_id
+            JOIN years y ON y.id = c.year_id
+            JOIN registrations r ON c.id = r.contain_id
+            JOIN students s ON s.id = r.student_id
+            JOIN users u ON u.id = s.user_id
+            AND u.id = ?
+            AND y.name = ?'
         );
         $statement->execute([$identifier, $year]);
         $modules = [];
         while($row = $statement->fetch()) {
-            $modules[] = $row['nom'];
+            $modules[] = $row['name'];
         }
         return $modules;
     }
@@ -56,7 +57,7 @@ trait Module
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id FROM module WHERE nom = ? AND id_niveau = ?'
+            'SELECT id FROM modules WHERE name = ? AND level_id = ?'
         );
         $statement->execute([$name, $id_level]);
         

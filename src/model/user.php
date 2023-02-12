@@ -7,7 +7,6 @@ use Ipem\Src\Lib\Database;
 
 class User 
 {
-
     public int $id;
     public string $identifier;
     public string $password;
@@ -15,24 +14,20 @@ class User
     public string $lastname;
     public string $token;
 
-    public function getUsers(string $name): array
+    public function getUsers(): array
     {
         $connection = new Database;
-        if ($name === 'student') {
-            $statement = $connection->getConnection()->query(
-                'SELECT u.id, password, token, identifiant FROM utilisateur u, inscription i, etudiant e WHERE i.id_etudiant = e.id AND e.id = u.id ORDER BY u.id ASC'
-            );
-        } elseif($name === 'teacher') {
-            $statement = $connection->getConnection()->query(
-                'SELECT u.id, password, token, identifiant FROM utilisateur u, enseignant e WHERE u.id = e.id ORDER BY u.id ASC'
-            );
-        }
+        $statement = $connection->getConnection()->query(
+            'SELECT id, password, token, identifier
+            FROM users 
+            ORDER BY id ASC'
+        );
         
         $users = [];
         while($row = $statement->fetch()) {
             $user = new self;
             $user->id = $row['id'];
-            $user->identifier = $row['identifiant'];
+            $user->identifier = $row['identifier'];
             $user->password = $row['password'];
             $user->token = $row['token'];
             $users[] = $user;
@@ -40,26 +35,22 @@ class User
         return $users;
     }
 
-    public function getuser(string $name, string $identifier): self
+    public function getUser(string $identifier): self
     {
         $connection = new Database;
-        if ($name === 'student') {
-            $statement = $connection->getConnection()->prepare(
-                'SELECT u.id, nom, prenom, password, identifiant FROM inscription i, etudiant e, utilisateur u WHERE i.id_etudiant = e.id AND e.id = u.id AND u.id = ?'
-            );
-        } elseif ($name === 'teacher') {
-            $statement = $connection->getConnection()->prepare(
-                'SELECT u.id, nom, prenom, password, identifiant FROM  enseignant e, utilisateur u WHERE e.id = u.id AND u.id = ?'
-            );
-        }
+        $statement = $connection->getConnection()->prepare(
+            'SELECT id, firstname, lastname, password, identifier 
+            FROM users
+            WHERE id = ?'
+        );
         
         $statement->execute([$identifier]);
         $row = $statement->fetch();
         $user = new self;
         $user->id = $row['id'];
-        $user->firstname = $row['nom'];
-        $user->lastname = $row['prenom'];
-        $user->identifier = $row['identifiant'];
+        $user->firstname = $row['firstname'];
+        $user->lastname = $row['lastname'];
+        $user->identifier = $row['identifier'];
         $user->password = $row['password'];
 
         return $user;
@@ -69,7 +60,7 @@ class User
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'UPDATE utilisateur SET password = ? WHERE id = ?'
+            'UPDATE users SET password = ? WHERE id = ?'
         );    
 
         $affectedLines = $statement->execute([$new_password, $identifier]);

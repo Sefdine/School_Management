@@ -6,17 +6,17 @@ namespace Ipem\Src\Model;
 
 use Ipem\Src\Lib\Database;
 
-trait Control
+trait Exam
 {
     public function getControls(): array
     {
         $connection = new Database;
         $statement = $connection->getConnection()->query(
-            'SELECT id FROM controle ORDER BY id ASC'
+            'SELECT number FROM exams ORDER BY number ASC'
         );
         $controls = [];
         while($row = $statement->fetch()) {
-            $controls[] = $row['id'];
+            $controls[] = $row['number'];
         }
         return $controls;
     }

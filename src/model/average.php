@@ -6,37 +6,30 @@ namespace Ipem\Src\Model;
 
 use Ipem\Src\Lib\Database;
 
-class Rate 
+class Average 
 {
     public int $id;
     public string $firstname;
     public string $lastname;
-    public float $value_rate;
+    public float $value_average;
     public string $name_module;
 
-    public function updateRate(int $identifier, $value): bool
+    public function updateAverage(int $identifier, $value): bool
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'UPDATE note SET valeur = ? WHERE id = ?'
+            'UPDATE averages SET value = ? WHERE id = ?'
         );
         $affectedLines = $statement->execute([$value, $identifier]);
         return ($affectedLines > 0);
     }
 
-    public function insertRate(float $value, int $id_inscription, int $id_module, int $id_control, int $id_year): bool
+    public function insertAverage(float $value, int $id_inscription, int $id_module, int $id_control, int $id_year): bool
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
             'INSERT INTO 
-            note
-            (
-                valeur, 
-                id_inscription, 
-                id_module, 
-                id_controle, 
-                id_annee
-            )
+            averages (value, exam_id, module_id)
             VALUES(
                 ?,
                 (SELECT id_etudiant FROM inscription WHERE id_etudiant = ?),
@@ -49,38 +42,32 @@ class Rate
         return ($affectedLines > 0);
     }
 
-    public function getRates(int $identifier, int $control, string $year): array
+    public function getAverages(int $identifier, int $control, string $year): array
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT n.valeur, m.nom
-            FROM note n,
-            module m,
-            annee a,
-            filiere f,
-            groupe g,
-            niveau ni,
-            controle c
-            WHERE a.id = f.id_annee
-            AND f.id = g.id_filiere
-            AND g.id = ni.id_groupe
-            AND ni.id = m.id_niveau
-            AND m.id = n.id_module
-            AND n.id_controle = c.id
-            AND n.id_annee = a.id
-            AND a.annee = ?
-            AND c.id = ?
-            AND n.id_inscription = ?'
+            'SELECT m.name, a.value
+            FROM averages a 
+            JOIN registrations r ON r.id = a.registration_id
+            JOIN modules m ON m.id = a.module_id
+            JOIN exams e ON e.id = a.exam_id
+            JOIN contain c ON c.id = r.contain_id
+            JOIN years y ON y.id = c.year_id
+            JOIN students s ON s.id = r.student_id
+            JOIN users u ON u.id = s.user_id
+            AND y.name = ?
+            AND e.number = ?
+            AND u.id = ?'
         );
         $statement->execute([$year, $control, $identifier]);
-        $rates = [];
+        $averages = [];
         while($row = $statement->fetch()) {
-            $rates[$row['nom']] = $row['valeur'];
+            $averages[$row['name']] = $row['value'];
         }
-        return $rates;
+        return $averages;
     }
 
-    public function checkRateIfExist(string $identifier, string $year, string $study, string $group, string $level, string $control, string $module): int
+    public function checkAverageIfExist(string $identifier, string $year, string $study, string $group, string $level, string $control, string $module): int
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(

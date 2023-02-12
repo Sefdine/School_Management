@@ -12,11 +12,11 @@ trait Study
     {
         $connection = new Database;
         $statement = $connection->getConnection()->query(
-            'SELECT nom FROM filiere ORDER BY nom ASC'
+            'SELECT name FROM studies ORDER BY name ASC'
         );
         $studies = [];
         while($row = $statement->fetch()) {
-            $studies[] = $row['nom'];
+            $studies[] = $row['name'];
         }
         return $studies;
     }
@@ -25,7 +25,10 @@ trait Study
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id FROM filiere WHERE nom = ? AND id_annee = ?'
+            'SELECT s.id FROM studies s
+            JOIN contain c ON s.id = c.study_id
+            JOIN years y ON c.year_id = y.id 
+            WHERE s.name = ? AND y.id = ?'
         );
         $statement->execute([$name, $id_year]);
         
