@@ -54,16 +54,13 @@ trait Module
         return $modules;
     }
 
-    public function getIdModule(string $name, int $id_level): int
+    public function getIdModule(string $name): int
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT m.id FROM modules m 
-            JOIN levelsmodules lm ON m.id = lm.module_id
-            AND m.name = ?
-            AND lm.level_id = ?'
+            'SELECT id FROM modules WHERE name = ?'
         );
-        $statement->execute([$name, $id_level]);
+        $statement->execute([$name]);
         
         return ($row = $statement->fetch()) ? $row['id'] : 0;
     }

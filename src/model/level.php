@@ -24,16 +24,13 @@ trait Level
         return $levels;
     }
 
-    public function getIdLevel(string $level, int $id_group): int
+    public function getIdLevel(string $level): int
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT l.id FROM levels l
-            JOIN contain c ON l.id = c.level_id
-            AND l.level = ?
-            AND c.group_id = ?'
+            'SELECT id FROM levels WHERE level = ?'
         );
-        $statement->execute([$level, $id_group]);
+        $statement->execute([$level]);
         
         return ($row = $statement->fetch()) ? $row['id'] : 0;
     }

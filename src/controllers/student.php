@@ -24,7 +24,7 @@ class Student extends User
         $user = $users->getUser($identifier);
         $student = new ModelStudent;
         $years = $student->getYears();
-        $controls = $student->getControls();
+        $controls = $student->getExams();
         require_once('templates/student/header.php');
         require_once('templates/errors/errors.php');
         require_once('templates/student/landing.php');

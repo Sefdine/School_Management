@@ -13,39 +13,40 @@ class Average
 {
     public function update_rate(string $id, string $module, array $data): void
     {
-        $num_inscription = $data['num_inscription'].' ' ?? '';
+        $identifier = $data['num_inscription'].' ' ?? '';
         $value = (float)($data['rate'] ?? 0);
-        $rate = new ModelAverage;
-        $student = new ModelStudent;
+        $users = new ModelUser;
 
-        if ($num_inscription) {
+        $user_id = $users->getIdUser($identifier);
+
+        if ($identifier) {
+            $students = new ModelStudent;
+            $student_id = $students->getIdStudent($user_id);
+
             $array = $_SESSION['array'];
             $year = $array['year'];
             $study = $array['study'];
             $group = $array['group'];
             $level = $array['level'];
-            $control = $array['control'];
+            $exam = $array['control'];
 
             $teacher = new ModelTeacher;
-            $id_year = $teacher->getIdYear($year);
-            $id_study = $teacher->getIdStudy($study, $id_year);                
-            $id_group = $teacher->getIdGroup($group, $id_study);
-            $id_level = $teacher->getIdLevel($level, $id_group);
-            $id_module = $teacher->getIdModule($module, $id_level);
-            $identifier = $student->getIdRegistration($num_inscription, $id_level);
-            if ($identifier) {
-                $users = new ModelUser;
-                $user = $users->getUser((string)$identifier);
+            $year_id = $teacher->getIdYear($year);
+            $study_id = $teacher->getIdStudy($study);                
+            $group_id = $teacher->getIdGroup($group);
+            $level_id = $teacher->getIdLevel($level);
+            $module_id = $teacher->getIdModule($module);
+            $exam_id = $teacher->getIdExam($exam);
+            $contain_id = $teacher->getIdContain($year_id, $study_id, $group_id, $level_id);
+            $registration_id = 0;
+            $registration_id = $students->getIdRegistration($student_id, $contain_id);
+            
+            if ($registration_id) {
+                $averages = new ModelAverage;
+                $user = $users->getUser((string)$user_id);
                 $full_name = implode(' ', [$user->lastname, $user->firstname]);
 
-                $id_rate = $rate->checkRateIfExist($num_inscription, $year, $study, $group, $level, $control, $module);
-
-                if($id_rate) {
-                    $success = $rate->updateRate($id_rate, $value);
-                } else {
-                    $id_control = (int)$control;
-                    $success = $rate->insertRate($value, $identifier, $id_module, $id_control, $id_year);
-                }  
+                $success = $averages->insertAverage($value, $registration_id, $module_id, $exam_id);
             } else {
                 header('Location: index.php?action=rate&id='.$id.'&module='.$module.'&error=invalid_num_inscription');
                 die();
@@ -56,7 +57,7 @@ class Average
         }
 
         if ($success) {
-            $_SESSION['data'][] = [$num_inscription, $full_name, $value];
+            $_SESSION['data'][] = [$identifier, $full_name, $value];
             header('Location: index.php?action=rate&id='.$id.'&module='.$module.'&error=rateSuccess');
             die();
         } else {

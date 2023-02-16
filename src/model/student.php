@@ -39,4 +39,14 @@ class Student extends User
             die();
         }
     }
+
+    public function getIdStudent(int $user_id): int
+    {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare(
+            'SELECT id FROM students WHERE user_id = ?'
+        );
+        $statement->execute([$user_id]);
+        return ($row = $statement->fetch()) ? $row['id'] : 0;
+    }
 }

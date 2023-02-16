@@ -37,7 +37,7 @@ class Teacher extends User
         $studies = $teacher->getStudies();
         $groups = $teacher->getGroups();
         $levels = $teacher->getlevels($identifier);
-        $controls = $teacher->getControls();
+        $controls = $teacher->getExams();
         require_once('templates/teacher/landing.php'); 
     }
 

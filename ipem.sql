@@ -268,3 +268,5 @@ JOIN registrations r ON s.id = r.student_id
 JOIN contain c ON c.id = r.contain_id
 AND u.identifier = 'GE334 '
 AND c.level_id = 1;
+
+SELECT * FROM averages;

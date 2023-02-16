@@ -21,16 +21,13 @@ trait Study
         return $studies;
     }
 
-    public function getIdStudy(string $name, int $id_year): int
+    public function getIdStudy(string $name): int
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT s.id FROM studies s
-            JOIN contain c ON s.id = c.study_id
-            JOIN years y ON c.year_id = y.id 
-            WHERE s.name = ? AND y.id = ?'
+            'SELECT id FROM studies WHERE name = ?'
         );
-        $statement->execute([$name, $id_year]);
+        $statement->execute([$name]);
         
         return ($row = $statement->fetch()) ? $row['id'] : 0;
     }

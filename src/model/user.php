@@ -21,8 +21,7 @@ class User
             'SELECT id, password, token, identifier
             FROM users 
             ORDER BY id ASC'
-        );
-        
+        );        
         $users = [];
         while($row = $statement->fetch()) {
             $user = new self;
@@ -35,7 +34,7 @@ class User
         return $users;
     }
 
-    public function getUser(string $identifier): self
+    public function getUser(string $user_id): self
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
@@ -44,7 +43,7 @@ class User
             WHERE id = ?'
         );
         
-        $statement->execute([$identifier]);
+        $statement->execute([$user_id]);
         $row = $statement->fetch();
         $user = new self;
         $user->id = $row['id'];
@@ -56,15 +55,25 @@ class User
         return $user;
     }
 
-    public function setPassword(string $identifier, string $new_password): bool
+    public function setPassword(string $user_id, string $new_password): bool
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
             'UPDATE users SET password = ? WHERE id = ?'
         );    
 
-        $affectedLines = $statement->execute([$new_password, $identifier]);
+        $affectedLines = $statement->execute([$new_password, $user_id]);
         return ($affectedLines > 0);
+    }
+
+    public function getIdUser(string $identifier):int 
+    {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare(
+            'SELECT id FROM users WHERE identifier = ?'
+        );
+        $statement->execute([$identifier]);
+        return ($row = $statement->fetch()) ? $row['id'] : 0;
     }
 }
 

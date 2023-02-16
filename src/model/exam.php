@@ -8,7 +8,7 @@ use Ipem\Src\Lib\Database;
 
 trait Exam
 {
-    public function getControls(): array
+    public function getExams(): array
     {
         $connection = new Database;
         $statement = $connection->getConnection()->query(
@@ -19,5 +19,15 @@ trait Exam
             $controls[] = $row['number'];
         }
         return $controls;
+    }
+
+    public function getIdExam(string $number): int 
+    {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare(
+            'SELECT id FROM exams WHERE number = ?'
+        );
+        $statement->execute([$number]);
+        return ($row = $statement->fetch()) ? $row['id'] : 0;
     }
 }

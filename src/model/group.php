@@ -21,16 +21,13 @@ trait Group
         return $groups;
     }
 
-    public function getIdGroup(string $name, int $id_study): int
+    public function getIdGroup(string $name): int
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT DISTINCT g.id FROM groupes g 
-            JOIN contain c ON g.id = c.group_id
-            AND g.name = ?
-            AND c.study_id = ?'
+            'SELECT id FROM groupes WHERE name = ?'
         );
-        $statement->execute([$name, $id_study]);
+        $statement->execute([$name]);
         
         return ($row = $statement->fetch()) ? $row['id'] : 0;
     }
