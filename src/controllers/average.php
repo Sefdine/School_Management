@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Ipem\Src\Controllers;
 
-use Ipem\Src\Model\Rate as ModelRate;
+use Ipem\Src\Model\Average as ModelAverage;
 use Ipem\Src\Model\Student as ModelStudent;
 use Ipem\Src\Model\User as ModelUser;
 use Ipem\Src\Model\Teacher as ModelTeacher;
 
-class Rate
+class Average
 {
     public function update_rate(string $id, string $module, array $data): void
     {
-        $num_inscription = $data['num_inscription'] ?? '';
+        $num_inscription = $data['num_inscription'].' ' ?? '';
         $value = (float)($data['rate'] ?? 0);
-        $rate = new ModelRate;
+        $rate = new ModelAverage;
         $student = new ModelStudent;
 
         if ($num_inscription) {
@@ -32,10 +32,10 @@ class Rate
             $id_group = $teacher->getIdGroup($group, $id_study);
             $id_level = $teacher->getIdLevel($level, $id_group);
             $id_module = $teacher->getIdModule($module, $id_level);
-            $identifier = $student->getIdInscription($num_inscription, $id_level);
+            $identifier = $student->getIdRegistration($num_inscription, $id_level);
             if ($identifier) {
                 $users = new ModelUser;
-                $user = $users->getuser('student', (string)$identifier);
+                $user = $users->getUser((string)$identifier);
                 $full_name = implode(' ', [$user->lastname, $user->firstname]);
 
                 $id_rate = $rate->checkRateIfExist($num_inscription, $year, $study, $group, $level, $control, $module);

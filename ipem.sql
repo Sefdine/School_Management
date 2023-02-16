@@ -169,9 +169,10 @@ CREATE TABLE registrations(
 CREATE TABLE teachs(
     teacher_id INTEGER NOT NULL,
     module_id INTEGER NOT NULL,
+    contain_id INTEGER NOT NULL,
     absence INTEGER,
     CONSTRAINT teachs_PK PRIMARY KEY (teacher_id, module_id),
-    UNIQUE (teacher_id, module_id),
+    UNIQUE (teacher_id, module_id, contain_id),
     CONSTRAINT teachs_teachers_FK FOREIGN KEY (teacher_id)
         REFERENCES teachers(id)
         ON DELETE CASCADE
@@ -240,8 +241,6 @@ VALUES
     ('Gestion administrative'),
     ('Législation du travail');
 
-
-
 INSERT INTO levelsModules(module_id)
 SELECT id FROM modules ORDER BY id ASC;
 
@@ -255,3 +254,17 @@ VALUES
     (56, 1),
     (56, 2),
     (56, 3);
+
+INSERT INTO teachs (teacher_id, contain_id, module_id)
+VALUES
+    (1, 3, 4),
+    (1, 3, 8);
+
+SELECT * FROM registrations;
+
+SELECT s.id FROM students s
+JOIN users u ON u.id = s.user_id
+JOIN registrations r ON s.id = r.student_id
+JOIN contain c ON c.id = r.contain_id
+AND u.identifier = 'GE334 '
+AND c.level_id = 1;

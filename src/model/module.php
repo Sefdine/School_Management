@@ -12,12 +12,13 @@ trait Module
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT m.name 
-            FROM modules m, teachs t, levels l, groupes g
-            WHERE m.id = t.module_id
-            AND m.level_id = l.id
-            AND l.group_id = g.id
-            AND t.teacher_id = ?
+            'SELECT m.name FROM modules m 
+            JOIN teachs t ON m.id = t.module_id
+            JOIN contain c ON c.id = t.contain_id
+            JOIN levels l ON l.id = c.level_id
+            JOIN groupes g ON g.id = c.group_id
+            JOIN teachers tc ON tc.id = t.teacher_id
+            AND tc.user_id = ?
             AND l.level = ?
             AND g.name = ?'
         );
@@ -57,7 +58,10 @@ trait Module
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id FROM modules WHERE name = ? AND level_id = ?'
+            'SELECT m.id FROM modules m 
+            JOIN levelsmodules lm ON m.id = lm.module_id
+            AND m.name = ?
+            AND lm.level_id = ?'
         );
         $statement->execute([$name, $id_level]);
         

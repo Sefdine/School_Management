@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ipem\Src\Controllers;
 
 
-use Ipem\Src\Model\Rate;
+use Ipem\Src\Model\Average;
 use Ipem\Src\Model\Teacher as ModelTeacher;
 use Ipem\Src\Model\User as ModelUser;
 
@@ -13,7 +13,7 @@ class Teacher extends User
 {
     public function displayFormRate(string $identifier, string $current_module, array $data, string $error = ''): void
     {
-        $rates = new Rate;
+        $rates = new Average;
         $users = new ModelUser;
         $user = $users->getUser($identifier);
         $year = $data['year'];
@@ -31,9 +31,9 @@ class Teacher extends User
     public function displayLanding(string $identifier): void
     {
         $users = new ModelUser;
-        $user = $users->getuser($identifier);
+        $user = $users->getUser($identifier);
         $teacher = new ModelTeacher;
-        $years = $teacher->getYears($identifier);
+        $years = $teacher->getYears();
         $studies = $teacher->getStudies();
         $groups = $teacher->getGroups();
         $levels = $teacher->getlevels($identifier);
@@ -44,7 +44,7 @@ class Teacher extends User
     public function displayModules(string $identifier, array $data): void
     {
         $users = new ModelUser;
-        $user = $users->getuser($identifier);
+        $user = $users->getUser($identifier);
         $group = $data['group'] ?? '';
         $level = $data['level'] ?? '';
         $_SESSION['array'] = $data;

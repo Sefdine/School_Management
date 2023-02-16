@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Ipem\Src\Controllers\Student;
 use Ipem\Src\Controllers\Teacher;
 use Ipem\Src\Controllers\User;
-use Ipem\Src\Controllers\Rate;
+use Ipem\Src\Controllers\Average;
 
 session_start();
 
@@ -17,7 +17,7 @@ spl_autoload_register(static function(string $fqcn) {
 $student = new Student;
 $teacher = new Teacher;
 $user = new User;
-$rate = new Rate;
+$rate = new Average;
 
 if (isset($_GET['action'])){
     $action = $_GET['action'];

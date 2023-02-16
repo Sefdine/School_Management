@@ -25,7 +25,10 @@ trait Group
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id FROM groupes WHERE name = ? AND study_id = ?'
+            'SELECT DISTINCT g.id FROM groupes g 
+            JOIN contain c ON g.id = c.group_id
+            AND g.name = ?
+            AND c.study_id = ?'
         );
         $statement->execute([$name, $id_study]);
         

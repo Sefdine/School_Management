@@ -7,5 +7,5 @@ use Ipem\Src\Lib\Database;
 
 class Teacher extends User
 {
-    use Year, Study, Group, Level, Control, Module;
+    use Year, Study, Group, Level, Exam, Module;
 }

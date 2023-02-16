@@ -7,7 +7,7 @@ use Ipem\Src\Lib\Database;
 
 class Student extends User
 {
-    use Inscription, Module, Year, Exam;
+    use Registration, Module, Year, Exam;
 
     public function getData(string $year, int $identifier): array
     {
