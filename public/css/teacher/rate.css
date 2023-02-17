@@ -11,9 +11,47 @@
     left: 40%;
 }
 
+.insertion {
+    background-color: #0D6EFD;
+    color: #fff;
+    border-top-left-radius: 40px;
+    border-bottom-right-radius: 55px;
+    border-bottom-left-radius: 55px;
+    padding-bottom: 3px;
+}
+
+.insertion:hover {
+    background-color: rgb(224, 110, 10);
+    transition: 0.3s;
+    font-size: 1.2em;
+}
+
+.insertion h1{
+    text-align: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: blue;
+    border-top-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    padding: 5px;
+}
+
+.insertion .insertion_body{
+    text-align: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: rgb(224, 110, 10);
+    border-top-right-radius: 10px;
+    padding: 10px;
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 55px;
+}
+
 @media screen and (max-width: 991px) {
     /* header */
     #dropdown-rate {
         position: inherit;
+    }
+
+    .table-responsive tr{
+         font-size: 12px;
     }
 }

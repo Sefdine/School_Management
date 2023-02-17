@@ -1,5 +1,5 @@
-<?php 
-
+<div class="container text-center">
+<?php
 switch($error)
 {
     //Login error
@@ -70,4 +70,6 @@ switch($error)
     break;
 }
 ?> 
+
+</div>
 

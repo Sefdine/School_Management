@@ -2,7 +2,7 @@
 <?php ob_start() ?>
 
 <br>
-<div class="modal-dialog" role="document">
+<div class="container modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title">Changer mon mot de passe</h5>
