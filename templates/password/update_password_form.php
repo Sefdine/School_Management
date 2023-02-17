@@ -8,7 +8,7 @@
             <h5 class="modal-title">Changer mon mot de passe</h5>
         </div>
         <div class="modal-body">
-            <form action="index.php?action=updatePasswordTreatment&id=<?= $identifier ?>" method="POST">
+            <form action="<?= URL_ROOT ?>updatePasswordTreatment/<?= $identifier ?>" method="POST">
                 <label for='current_password'>Mot de passe actuel</label>
                 <input type="password" id="current_password" name="current_password" class="form-control" required />
                 <br />
@@ -22,7 +22,7 @@
             </form>
         </div>
         <div class="modal-footer">
-            <button type="button" onclick="window.location.href='index.php?action=updatePassword&id=<?= $identifier ?>';" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+            <button type="button" onclick="window.location.href='<?= URL_ROOT ?>updatePassword/<?= $identifier ?>';" class="btn btn-danger" data-dismiss="modal">Fermer</button>
         </div>
     </div>
 </div>

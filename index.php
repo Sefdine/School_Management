@@ -7,6 +7,8 @@ use Ipem\Src\Controllers\Teacher;
 use Ipem\Src\Controllers\User;
 use Ipem\Src\Controllers\Average;
 
+require_once('config/config.php');
+
 session_start();
 
 spl_autoload_register(static function(string $fqcn) {
@@ -53,8 +55,9 @@ if (isset($_GET['action'])){
         if (isset($_SESSION['user'])) {
             if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $identifier = $_GET['id'];  
-                $error = $_GET['error'] ?? '';           
+                $error = $_SESSION['err'] ?? '';           
                 $student->displayLanding($identifier, $error);
+                $_SESSION['err'] = '';
             }
         } else {
             $user->displayForm();
@@ -82,15 +85,16 @@ if (isset($_GET['action'])){
                     $year = $_POST['year'] ?? '';
                     $control = $_POST['control'] ?? '';
                     $student->displayAverage($identifier, $year, $control);
-                } elseif ($name === 'teacher') {                    
-                    $module = $_GET['module'] ?? '';
-                    $error = $_GET['error'] ?? '';
+                } elseif ($name === 'teacher') {                
+                    $module_slug = $_GET['module_slug'] ?? '';
+                    $error = $_SESSION['err'] ?? '';
                     $data = $_SESSION['array'] ?? '';
-                    if(isset($_GET['sessionData']) && $_GET['sessionData'] > 0){
+                    if(isset($_SESSION['sessionData']) && $_SESSION['sessionData'] > 0){
                         $_SESSION['data'] = [];
                     }
-                    $teacher->displayFormRate($identifier, $module, $data, $error);
+                    $teacher->displayFormRate($identifier, $module_slug, $data, $error);
                     $user->displayForm();
+                    $_SESSION['err'] = '';
                     die();
                 }
             }
@@ -128,7 +132,8 @@ if (isset($_GET['action'])){
                 if ($new_password === $new_password_retype) {
                    $user->updatePasswordTreatment($identifier, $current_passord, $new_password);
                 } else {
-                    header('Location: index.php?action=errorPassword&login_err=new_password_retype&id='.$identifier);
+                    $_SESSION['err'] = 'new_password_retype';
+                    header('Location: '. URL_ROOT .'errorPassword/'.$identifier);
                 }
             }
         } else {
@@ -137,10 +142,10 @@ if (isset($_GET['action'])){
         }   
     } elseif ($action === 'rateTreatment') {
         if (isset($_SESSION['user'])) {
-            $module = $_GET['module'] ?? '';
+            $module_slug = $_GET['module_slug'] ?? '';
             $id = $_GET['id'] ?? '';
             if (isset($_POST)) {
-                $rate->update_rate($id, $module, $_POST);
+                $rate->update_average($id, $module_slug, $_POST);
             }
         } else {
             $teacher->displayForm();
@@ -157,16 +162,18 @@ if (isset($_GET['action'])){
             die();
         }          
     } elseif ($action === 'errorLogin') {
-        if (isset($_GET['login_err'])) {
-            $login_err = $_GET['login_err'];
+        if (isset($_SESSION['err'])) {
+            $login_err = $_SESSION['err'];
             $user->displayForm($login_err);
+            $_SESSION['err'] = '';
         }    
     } elseif ($action === 'errorPassword') {
         if (isset($_SESSION['user'])) {
-            if (isset($_GET['login_err']) && isset($_GET['id']) && $_GET['id'] > 0) {
-                $login_err = $_GET['login_err'];
+            if (isset($_SESSION['err']) && isset($_GET['id']) && $_GET['id'] > 0) {
+                $login_err = $_SESSION['err'];
                 $identifier = $_GET['id'];
                 $user->displayFormUpdatePassword($identifier, $login_err);
+                $_SESSION['err'] = '';
             }
         } else {
             $user->displayForm();

@@ -8,7 +8,7 @@
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero perferendis quis animi! Perferendis quas porro, autem eligendi quod beatae odio assumenda sint eius? Autem dolorum provident iste repellat. Ab, doloribus!</p>
         </div>
         <div class="col-md-6">
-            <form action="index.php?action=module&id=<?= $user->id ?>" method="POST" enctype="multipart/form-data">
+            <form action="<?= URL_ROOT ?>module/<?= $user->id ?>" method="POST" enctype="multipart/form-data">
                 <label for="year" class="form-label">Année</label>
                 <select class="form-select" name="year" required>
                     <?php foreach($years as $year): ?>
@@ -24,7 +24,7 @@
                 <label for="group" class="form-label">Groupe</label>
                 <select class="form-select" name="group" required>
                     <?php foreach($groups as $group): ?>
-                        <option value="<?= $group ?>"><?= $group ?></option>
+                        <option value="<?= $group->slug ?>"><?= $group->name ?></option>
                     <?php endforeach ?>
                 </select>
                 <label for="level" class="form-label">Niveau</label>
@@ -47,7 +47,7 @@
 </div>
 
 <div class="nav-item dropdown" id="dropdown" style="position: absolute;">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><img src="public/images/logo_login.png" alt="Votre pseudo" title="Votre compte" width=30px height=30px></a>
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><img src="<?= URL_ROOT ?>public/images/logo_login.png" alt="Votre pseudo" title="Votre compte" width=30px height=30px></a>
             <ul class="dropdown-menu text-small shadow">
               <li>
                 <h5 class="dropdown-item"><?php echo ($user->lastname . "\t" . $user->firstname); ?></h5>
@@ -59,7 +59,7 @@
                 <a href="index.php?action=disconnect" class="dropdown-item">Déconnexion</a>
               </li>
               <li>
-                <a class="dropdown-item" href="index.php?action=updatePassword&id=<?= $user->id ?>">Changer mon mot de passe</a>
+                <a class="dropdown-item" href="<?= URL_ROOT ?>updatePassword/<?= $user->id ?>">Changer mon mot de passe</a>
               </li>
             </ul>
           </div>

@@ -40,9 +40,10 @@ trait Login
         }
 
         if ($num) {
-            header('Location: index.php?action=home&id=' .$identifier);
+            header('Location: ' .URL_ROOT. 'home/' .$identifier);
         } else {
-            header('Location: index.php?action=errorLogin&login_err=id_and_password');
+            $_SESSION['err'] = 'id_and_password';
+            header('Location: '. URL_ROOT .'errorLogin');
         }
     }
 }

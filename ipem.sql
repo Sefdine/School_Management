@@ -260,13 +260,5 @@ VALUES
     (1, 3, 4),
     (1, 3, 8);
 
-SELECT * FROM registrations;
+SELECT * FROM modules;
 
-SELECT s.id FROM students s
-JOIN users u ON u.id = s.user_id
-JOIN registrations r ON s.id = r.student_id
-JOIN contain c ON c.id = r.contain_id
-AND u.identifier = 'GE334 '
-AND c.level_id = 1;
-
-SELECT * FROM averages;

@@ -35,7 +35,8 @@ class Student extends User
 
             return $data;
         } else {
-            header('Location: index.php?action=landing&id='.$identifier.'&error=rate_not_exist');
+            $_SESSION['err'] = 'rate_not_exist';
+            header('Location: '. URL_ROOT .'landing/'.$identifier);
             die();
         }
     }

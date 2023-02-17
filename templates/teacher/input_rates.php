@@ -59,13 +59,13 @@
     <p>Identifier l'étudiant par son numéro d'inscription.</p>
     Année: <?= $year ?><br>
     Filière: <?= $study ?><br>
-    Groupe: <?= $group ?><br>
+    Groupe: <?= $group_name ?><br>
     Niveau: <?= $level === '1' ? '1ère année' : '2ème année'; ?><br>
     Contrôle: <?= 'contrôle n°'. $control ?><br>
     Module : <strong><?= $current_module?></strong><br>
     <br>
     <br>
-    <form action="index.php?action=rateTreatment&id=<?= $user->id ?>&module=<?= urldecode($current_module) ?>&level=<?= $level ?>&group=<?= $group ?>" method="POST" enctype="multipart/form-data" autocomplete="off">
+    <form action="<?= URL_ROOT ?>rateTreatment/<?= $user->id ?>/<?= $current_slug ?>" method="POST" enctype="multipart/form-data" autocomplete="off">
         <div class="mb-3">
             <input type="text" class="form-control" name="num_inscription" required="required" placeholder="Numéro d'inscription">
         </div>
@@ -76,7 +76,7 @@
     </form>
     <br />
     <br />
-    <a href="index.php?action=rate&id=<?= $user->id ?>&module=<?= urldecode($current_module) ?>&sessionData=<?= 1 ?>">Reinitialiser le tableau</a>
+    <a href="<?= URL_ROOT ?>rate/<?= $user->id ?>/<?= $current_slug ?><?php $_SESSION['sessionData'] = 1 ?>">Reinitialiser le tableau</a>
     <div class="table-responsive">
         <table class="table table-striped table-sm table-hover">
             <thead class="thead-light">

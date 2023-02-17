@@ -11,13 +11,14 @@ use Ipem\Src\Model\Teacher as ModelTeacher;
 
 class Average
 {
-    public function update_rate(string $id, string $module, array $data): void
+    public function update_average(string $id, string $module_slug, array $data): void
     {
         $identifier = $data['num_inscription'].' ' ?? '';
         $value = (float)($data['rate'] ?? 0);
         $users = new ModelUser;
 
         $user_id = $users->getIdUser($identifier);
+        $_SESSION['sessionData'] = 0;
 
         if ($identifier) {
             $students = new ModelStudent;
@@ -26,16 +27,16 @@ class Average
             $array = $_SESSION['array'];
             $year = $array['year'];
             $study = $array['study'];
-            $group = $array['group'];
+            $group_slug = $array['group'];
             $level = $array['level'];
             $exam = $array['control'];
 
             $teacher = new ModelTeacher;
             $year_id = $teacher->getIdYear($year);
             $study_id = $teacher->getIdStudy($study);                
-            $group_id = $teacher->getIdGroup($group);
+            $group_id = $teacher->getIdGroup($group_slug);
             $level_id = $teacher->getIdLevel($level);
-            $module_id = $teacher->getIdModule($module);
+            $module_id = $teacher->getIdModule($module_slug);
             $exam_id = $teacher->getIdExam($exam);
             $contain_id = $teacher->getIdContain($year_id, $study_id, $group_id, $level_id);
             $registration_id = 0;
@@ -48,20 +49,24 @@ class Average
 
                 $success = $averages->insertAverage($value, $registration_id, $module_id, $exam_id);
             } else {
-                header('Location: index.php?action=rate&id='.$id.'&module='.$module.'&error=invalid_num_inscription');
+                $_SESSION['err'] = 'invalid_num_inscription';
+                header('Location: '. URL_ROOT .'rate/'.$id.'/'.$module_slug);
                 die();
             }
         } else {
-            header('Location: index.php?action=rate&id='.$id.'&module='.$module.'&error=empty_numInscription');
+            $_SESSION['err'] = 'empty_numInscription';
+            header('Location: '. URL_ROOT .'rate/'.$id.'/'.$module_slug);
             die();
         }
 
         if ($success) {
             $_SESSION['data'][] = [$identifier, $full_name, $value];
-            header('Location: index.php?action=rate&id='.$id.'&module='.$module.'&error=rateSuccess');
+            $_SESSION['err'] = 'rateSuccess';
+            header('Location: '. URL_ROOT .'rate/'.$id.'/'.$module_slug);
             die();
         } else {
-            header('Location: index.php?action=rate&id='.$id.'&module='.$module.'&error=rateError');
+            $_SESSION['err'] = 'rateError';
+            header('Location: '. URL_ROOT .'rate/'.$id.'/'.$module_slug);
             die();
         }
     }

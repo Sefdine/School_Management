@@ -26,15 +26,19 @@ trait Password
                 $success = $users->setPassword($identifier, $new_password);
     
                 if ($success) {
-                    header('Location: index.php?action=errorPassword&login_err=success_password&id='.$identifier);
+                    $_SESSION['err'] = 'success_password';
+                    header('Location: '. URL_ROOT .'errorPassword/'.$identifier);
                 } else {
-                    header('Location: index.php?action=errorPassword&login_err=problem&id='.$identifier);
+                    $_SESSION['err'] = 'problem';
+                    header('Location: '. URL_ROOT .'errorPassword/'.$identifier);
                 }
             } else {
-                header('Location: index.php?action=errorPassword&login_err=current_password&id='.$identifier);
+                $_SESSION['err'] = 'current_password';
+                header('Location: '. URL_ROOT .'errorPassword/'.$identifier);
             }
         } else {
-            header('Location: index.php?action=errorPassword&login_err=new_password&id='.$identifier);
+            $_SESSION['err'] = 'new_password';
+            header('Location: '. URL_ROOT .'errorPassword/'.$identifier);
         }
     }
 
