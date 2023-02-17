@@ -55,14 +55,18 @@
 -->
 
 <div class="container">
-    <h1>Insérer une note</h1>
-    <p>Identifier l'étudiant par son numéro d'inscription.</p>
-    Année: <?= $year ?><br>
-    Filière: <?= $study ?><br>
-    Groupe: <?= $group_name ?><br>
-    Niveau: <?= $level === '1' ? '1ère année' : '2ème année'; ?><br>
-    Contrôle: <?= 'contrôle n°'. $control ?><br>
-    Module : <strong><?= $current_module?></strong><br>
+    <div class="insertion">
+        <h1>Insérer une note</h1>
+        <div class="insertion_body">
+            <p>Identifier l'étudiant par son numéro d'inscription.</p>
+            Année: <?= $year ?><br>
+            Filière: <?= $study ?><br>
+            Groupe: <?= $group_name ?><br>
+            Niveau: <?= $level === '1' ? '1ère année' : '2ème année'; ?><br>
+            Contrôle: <?= 'contrôle n°'. $control ?><br>
+            Module : <strong><?= $current_module?></strong><br>
+        </div>
+    </div>
     <br>
     <br>
     <form action="<?= URL_ROOT ?>rateTreatment/<?= $user->id ?>/<?= $current_slug ?>" method="POST" enctype="multipart/form-data" autocomplete="off">

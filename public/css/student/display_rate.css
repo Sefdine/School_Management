@@ -1,15 +1,43 @@
-/*display_rate.css*/
+/*display_average.css*/
 
-#text-center h3{
+.section_display_average_student{
     text-align: center;
-    margin-top: 40px;
+    padding: 20px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.display_average_student{
+    background-color: #d6701c;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.col_display_average_student{
+    color: #fff;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin: auto;
+}
+
+.col_display_average_student:hover{
+    font-size: larger;
+    transition: 0.8s;
+}
+
+#myTable:hover{
+    background-color: #ffffff21;
+    transition: 0.6s;
+}
+
+table:hover{
+    font-size: large;
+    transition: 0.5s;
 }
 
 table,th,td{
-            /*border: 1px solid black;*/
-            text-align: center;
-            color: rgb(255, 255, 255);
-            padding: 10px;
+    /*border: 1px solid black;*/
+    text-align: center;
+    color: rgb(255, 255, 255);
+    padding: 10px;
 }
 
 #headerline {
@@ -32,10 +60,16 @@ td{
 table{
     margin: auto;
     margin-top : 20px;
-    width: 60%;
     margin-bottom: 20px;
 }
 
 #footerline {
     background-color: rgba(49, 136, 207, 0.911);
+}
+
+@media screen and (max-width: 991px) {
+    .display_average_student{
+        grid-template-columns: 1fr;
+        padding-top: 10px;
+    }
 }

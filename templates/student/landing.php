@@ -6,7 +6,7 @@
         <div class="col-md-4">
             <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem aliquid doloremque iure, sapiente alias blanditiis nemo iste animi illo possimus minus, quaerat odit beatae atque eius molestias unde eaque nulla.</p>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8 landing_form">
             <form action="<?= URL_ROOT ?>rate/<?= $user->id ?>" method="post">
                 <label for="year">Année</label>
                 <select name="year" class="form-control" required>
