@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="public/css/teacher/rate.css">
     <link rel="stylesheet" href="public/css/student/display_rate.css">
 
+    <!-- <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> -->
     <title><?= $title ?? 'IPEM' ?></title>
   </head>
   <body class="d-flex flex-column min-vh-100">
