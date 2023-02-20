@@ -8,11 +8,11 @@ use Ipem\Src\Lib\Database;
 
 class Average 
 {
-    public int $id;
-    public string $firstname;
-    public string $lastname;
-    public float $value_average;
-    public string $name_module;
+    public $id;
+    public $firstname;
+    public $lastname;
+    public $value_average;
+    public $name_module;
 
     public function getAverages(int $identifier, int $control, string $year): array
     {

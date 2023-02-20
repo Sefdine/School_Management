@@ -8,8 +8,8 @@ use Ipem\Src\Lib\Database;
 
 trait Module
 {
-    public string $name;
-    public string $slug;
+    public $name;
+    public $slug;
 
     public function getModules(string $identifier, string $level, string $group_slug): array
     {
