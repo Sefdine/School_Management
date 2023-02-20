@@ -8,8 +8,8 @@ use Ipem\Src\Lib\Database;
 
 trait Group
 {
-    public string $name;
-    public string $slug;
+    public $name;
+    public $slug;
 
     public function getGroups(): array
     {

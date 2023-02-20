@@ -7,12 +7,12 @@ use Ipem\Src\Lib\Database;
 
 class User 
 {
-    public int $id;
-    public string $identifier;
-    public string $password;
-    public string $firstname;
-    public string $lastname;
-    public string $token;
+    public $id;
+    public $identifier;
+    public $password;
+    public $firstname;
+    public $lastname;
+    public $token;
 
     public function getUsers(): array
     {
@@ -76,4 +76,3 @@ class User
         return ($row = $statement->fetch()) ? $row['id'] : 0;
     }
 }
-
