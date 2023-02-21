@@ -5,9 +5,9 @@
 <div class="row">
   <div id="part1">
     <div id="note">
-      <p>Vous pouvez désormais consulter vos notes<br>
-      <em>Attetion</em>: Si vous rencontrez un problème technique, ou si vous avez une reclammation, Veuillez le signalé auprès de l'administarion.</p>
-      <a href="<?= URL_ROOT ?>landing/<?= $user->id ?>"><strong>Mes notes</strong></a>
+      <p>Suivez vos évaluations par le moyen le plus simple.</p>
+      <p>Pour vous procurer un environnement moderne, IPEM met à votre disposition cette plate-forme vous permettant de consulter vos notes.</p>
+      <a href="<?= URL_ROOT ?>landing/<?= $user->id ?>"><strong>Consulter mes notes</strong></a>
     </div>
   </div>
   <div id="part2">

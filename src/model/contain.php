@@ -20,6 +20,6 @@ trait Contain
             level_id = ?'
         );
         $statement->execute([$year_id, $study_id, $group_id, $level_id]);
-        return ($row = $statement->fetch()) ? $row['id'] : 0;
+        return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }
 }

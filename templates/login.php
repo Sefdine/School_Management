@@ -30,7 +30,6 @@
             <button type="submit" class="btn btn-primary btn-block">Connexion</button>
         </div>
     </form>
-    <p class="text-center">Si vous rencontrez un problème suite à votre identification, renseigner vous auprès de l'administration ! </p>
 
 </div>
 

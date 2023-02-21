@@ -1,7 +1,9 @@
 /*display_average.css*/
 
 .section_display_average_student{
-    text-align: center;
+    width: max-content;
+    margin: auto;
+    text-align: justify;
     padding: 20px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
@@ -14,8 +16,9 @@
 
 .col_display_average_student{
     color: #fff;
-    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    width: 90%;
     margin: auto;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .col_display_average_student:hover{

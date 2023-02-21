@@ -36,7 +36,7 @@ class Student extends User
         $title = 'Consultaion des notes';
         $user = $users->getUser($identifier);
         $student = new ModelStudent;
-        $array = $student->getData($year, (int)$identifier);
+        $array = $student->getData($year, (int)$control, (int)$identifier);
         $study = $array['study'];
         $group = $array['group'];
         $level = $array['level'];

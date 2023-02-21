@@ -73,6 +73,6 @@ class User
             'SELECT id FROM users WHERE identifier = ?'
         );
         $statement->execute([$identifier]);
-        return ($row = $statement->fetch()) ? $row['id'] : 0;
+        return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }
 }
