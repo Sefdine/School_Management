@@ -32,6 +32,6 @@ trait Level
         );
         $statement->execute([$level]);
         
-        return ($row = $statement->fetch()) ? $row['id'] : 0;
+        return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }
 }

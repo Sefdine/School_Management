@@ -42,7 +42,7 @@ trait Module
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
             'SELECT m.name FROM modules m
-            JOIN levelsmodules lm ON m.id = lm.module_id
+            JOIN levels_modules lm ON m.id = lm.module_id
             JOIN levels l ON l.id = lm.level_id
             JOIN contain c ON l.id = c.level_id
             JOIN years y ON y.id = c.year_id
@@ -68,7 +68,7 @@ trait Module
         );
         $statement->execute([$modue_slug]);
         
-        return ($row = $statement->fetch()) ? $row['id'] : 0;
+        return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }
 
     public function getModule(string $slug):string 

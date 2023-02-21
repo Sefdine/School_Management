@@ -9,23 +9,26 @@ class Student extends User
 {
     use Registration, Module, Year, Exam;
 
-    public function getData(string $year, int $identifier): array
+    public function getData(string $year, int $exam, int $identifier): array
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT s.name AS study, g.name AS groupe, l.level, u.identifier
-            FROM contain c
-            JOIN studies s ON c.study_id = s.id
-            JOIN groupes g ON c.group_id = g.id
-            JOIN levels l ON c.level_id = l.id
-            JOIN years y ON c.year_id = y.id
-            JOIN registrations r ON c.id = r.contain_id
-            JOIN students st ON r.student_id = st.id
-            JOIN users u ON st.user_id = u.id
-            AND y.name = ?
-            AND u.id = ?'
+            'SELECT DISTINCT s.name AS study, g.name AS groupe, l.level, u.identifier
+                FROM contain c
+                JOIN studies s ON c.study_id = s.id
+                JOIN groupes g ON c.group_id = g.id
+                JOIN levels l ON c.level_id = l.id
+                JOIN years y ON c.year_id = y.id
+                JOIN registrations r ON c.id = r.contain_id
+                JOIN averages a ON r.id = a.registration_id
+                JOIN exams e ON e.id = a.exam_id
+                JOIN students st ON r.student_id = st.id
+                JOIN users u ON st.user_id = u.id
+                WHERE y.name = ?
+                AND e.number = ?
+                AND u.id = ?'
         );
-        $statement->execute([$year, $identifier]);
+        $statement->execute([$year, $exam, $identifier]);
 
         if($row = $statement->fetch()) {
             $data['study'] = $row['study'];
@@ -48,6 +51,6 @@ class Student extends User
             'SELECT id FROM students WHERE user_id = ?'
         );
         $statement->execute([$user_id]);
-        return ($row = $statement->fetch()) ? $row['id'] : 0;
+        return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }
 }

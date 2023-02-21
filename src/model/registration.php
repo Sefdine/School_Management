@@ -16,6 +16,6 @@ trait Registration
         );
         $statement->execute([$student_id, $contain_id]);
         
-        return ($row = $statement->fetch()) ? $row['id'] : 0;
+        return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }
 }

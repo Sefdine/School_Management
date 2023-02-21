@@ -3,11 +3,7 @@
 
 <div class="section_display_average_student">
     <h1>Ravi de vous voir</h1>
-    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam eos assumenda nihil, error saepe officiis, repudiandae ab, totam tenetur neque libero eum magnam magni enim corporis exercitationem quos dicta. Eum.</p>
-</div>
-<div class="display_average_student">
-    <div class="col_display_average_student">
-        <label>
+    <label>
         <strong><?= $user->firstname. ' '. $user->lastname ?></strong><br>
         Numéro d'inscription: <strong><?= $num_inscription ?></strong><br>
         Année: <strong><?= $year ?></strong><br>
@@ -16,6 +12,11 @@
         Niveau: <strong><?= ($level === 1) ? '1ère année' : $level.'ème année' ?></strong><br>
         Contrôle: <strong><?= 'controle n°'.$control ?></strong>
         </label>
+</div>
+<div class="display_average_student">
+    <div class="col_display_average_student">
+        <p>Les notes qui s'afficheront sont celles publiées par vos enseignants.<br>
+        La moyenne s'affichera lorsque toutes les notes seront au complet sinon elle affichera <strong>"NI"</strong> pour <strong>"Notes Incomplètes"</strong></p>
     </div>
     <div id="myTable">
         <table >
@@ -31,7 +32,7 @@
             <?php endforeach ?>
             <tr id="footerline">
                 <th>Moyenne</th>
-                <th><?= $average ?></th>
+                <th><?= (count($data) == 10) ? $average : 'NI'?></th>
             </tr>
         </table>
     </div>

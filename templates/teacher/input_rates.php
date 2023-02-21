@@ -62,7 +62,7 @@
             Année: <?= $year ?><br>
             Filière: <?= $study ?><br>
             Groupe: <?= $group_name ?><br>
-            Niveau: <?= $level === '1' ? '1ère année' : '2ème année'; ?><br>
+            Niveau: <?= ($level === '1') ? '1ère année' : '2ème année'; ?><br>
             Contrôle: <?= 'contrôle n°'. $control ?><br>
             Module : <strong><?= $current_module?></strong><br>
         </div>
