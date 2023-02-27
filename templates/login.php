@@ -1,7 +1,7 @@
 
 <?php ob_start(); ?>
 <div class="login-form">
-    <img src="public/images/logo_ipem1.jpg" alt="Logo de IPEM" id="logo_ipem">
+    <img src="public/images/logo_ipem1.JPG" alt="Logo de IPEM" id="logo_ipem">
     <form action="<?= URL_ROOT ?>connectionTreatment" method="post">
         <h2 class="text-center">Connexion</h2>
         <div style="display: flex; flex-direction: row;">
