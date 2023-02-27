@@ -12,7 +12,9 @@ trait Level
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT level FROM levels WHERE group_id = ?'
+            'SELECT level FROM levels l
+            JOIN contain c ON l.id = c.level_id
+            AND c.group_id = ?'
         );
         $statement->execute([$identifier]);
         $levels = [];
@@ -22,14 +24,14 @@ trait Level
         return $levels;
     }
 
-    public function getIdLevel(string $level, int $id_group): int
+    public function getIdLevel(string $level): int
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id FROM levels WHERE level = ? AND group_id = ?'
+            'SELECT id FROM levels WHERE level = ?'
         );
-        $statement->execute([$level, $id_group]);
+        $statement->execute([$level]);
         
-        return ($row = $statement->fetch()) ? $row['id'] : 0;
+        return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }
 }

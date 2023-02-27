@@ -3,19 +3,20 @@
 
 /* ------- container -----*/
 
-#container{
+.row{
     margin-top: 20px;
 }
 
 .hello {
-    border: 2px solid rgb(123, 190, 123);
+    border: 2px solid rgb(8, 61, 235);
     border-radius: 10px;
-    background-color: rgb(97, 236, 166);
+    background-color: rgb(8, 61, 235);
     padding: 10px;
     color: rgb(255, 255, 255);
     text-align: center;
     width: 60%;
     margin: auto;
+    margin-top: 20px;
 }
 
 .hello:hover {
@@ -25,54 +26,49 @@
 
 /*-------- note ---------*/
 
-#note{
+#part1{
     padding: 20px;
+    background-color: rgb(224, 110, 10);
+}
+
+#note {
     width: 40%;
+    margin: auto;
+    color: #fff;
+    background-color: rgb(224, 110, 10);
+    padding-top: 15px;
+    border-radius: 50px;
+}
+
+#note:hover{
+    font-size: large;
+    background-color: rgb(8, 61, 235);
+    transition: 0.8s;
+}
+
+#note p{
+    text-align: center;
+    width: 90%;
+    margin: auto;
 }
 
 #note a{
     display: block;
-	border: 2px solid rgb(57, 184, 135);
-	border-radius: 14px;
-	width: 60%;
-	color: black;
-	padding: 5px;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    margin: auto;
+    color: #ffffff;
+    height: 70px;
+    padding-top: 20px;
+    background: rgb(8, 61, 235);
 	text-align: center;
 	text-decoration-line: none;
-    position: relative;
-    left: 50px;
 }
 
 #note a:hover{
     transition: 0.4s;
-    background: rgb(57, 184, 135);
-    color: #fff;
-}
-
-/*------ Paiement --------*/
-
-#paiement{
-    padding: 20px;
-    width: 50%;
-    margin-left: 140px;
-}
-
-#paiement a{
-    display: block;
-	border: 2px solid rgb(95, 143, 161);
-	border-radius: 14px;
-	width: 40%;
-	color: black;
-	padding: 5px;
-	text-align: center;
-	text-decoration-line: none;
-    position: relative;
-    left: 90px;
-}
-
-#paiement a:hover{
-    transition: 0.4s;
-    background: rgb(95, 143, 161);
+    background: rgb(238, 188, 9);
+    font-size: larger;
     color: #fff;
 }
 
@@ -104,13 +100,24 @@
 }
 
 #part2{
-    margin-top: 30px;
     background-color: rgba(22, 46, 133, 0.781);
     padding: 20px;
 }
 
 #part2 h2{
     color: rgb(255, 255, 255);
+}
+
+/* Landing */
+.landing_form{
+    background-color: rgb(224, 110, 10);
+    border-radius: 30px;
+    padding: 20px;
+    color: #fff;
+}
+
+.landing_form:hover{
+    background-color: rgb(238, 188, 9);
 }
 
 /* ---------------- MEDIA SCREEN -----------------*/
@@ -122,7 +129,7 @@
     }
 
     #note {
-        width: auto;
+        width: 80%;
         margin: auto;
     }
 
@@ -162,7 +169,6 @@
     }
 
     #part2{
-        margin-top: 10px;
         padding: 10px;
     }
 }

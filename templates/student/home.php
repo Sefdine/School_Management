@@ -1,26 +1,20 @@
 
 <?php ob_start(); ?>
 
-<div class="container" id="container">
-  <h2 class="hello">Bonjour <?= $user->firstname; ?> !</h2>               
-  <div class="row">
-    <div id="part1">
-      <div id="note">
-        <p>Vous pouvez désormais consulter vos notes<br>
-        <em>Attetion</em>: Si vous rencontrez un problème technique, ou si vous avez une reclammation, Veuillez le signalé auprès de l'administarion.</p>
-        <a href="index.php?action=landing&id=<?= urldecode($user->id) ?>"><strong>Mes notes</strong></a>
-      </div>
-      <div id="paiement">
-        <p>Suivez attentivement l'état de votre paiement. <br>Adressez vous à l'administration en cas d'ambiguité.</p>
-        <a href="#"><strong>Mon Paiement</strong></a>
-      </div>
+<h2 class="hello">Bonjour <?= $user->firstname; ?> !</h2>               
+<div class="row">
+  <div id="part1">
+    <div id="note">
+      <p>Suivez vos évaluations par le moyen le plus simple.</p>
+      <p>Pour vous procurer un environnement moderne, IPEM met à votre disposition cette plate-forme vous permettant de consulter vos notes.</p>
+      <a href="<?= URL_ROOT ?>landing/<?= $user->id ?>"><strong>Consulter mes notes</strong></a>
     </div>
-    <div id="part2">
-      <div id="about_us">
-        <h2>IPEM ?</h2>
-        <p>INSTITUT PARCOURS ET MÉTIERS par abréviation IPEM vous offre l'opportunité d'intégrer un cycle des formations professionnelles...</p>
-        <button id="button_more" onclick="window.location.href = 'https://www.ipemfp.net/about';" title="Accedez au site officiel de IPEM">Savoir plus</button> 
-      </div>
+  </div>
+  <div id="part2">
+    <div id="about_us">
+      <h2>IPEM ?</h2>
+      <p>INSTITUT PARCOURS ET MÉTIERS par abréviation IPEM vous offre l'opportunité d'intégrer un cycle des formations professionnelles...</p>
+      <button id="button_more" onclick="window.location.href = 'https://www.ipemfp.net/about';" title="Accedez au site officiel de IPEM">Savoir plus</button> 
     </div>
   </div>
 </div>

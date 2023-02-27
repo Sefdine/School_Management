@@ -1,10 +1,11 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <base href="<?= URL_ROOT ?>">
 
     <!-- Bootstrap CSS -->
     <!-- CSS only -->
@@ -17,6 +18,9 @@
     <link rel="stylesheet" href="public/css/teacher/rate.css">
     <link rel="stylesheet" href="public/css/student/display_rate.css">
 
+    <!-- site icons -->
+    <link rel="shortcut icon" href="fav.ico" type="image/x-icon">
+
     <title><?= $title ?? 'IPEM' ?></title>
   </head>
   <body class="d-flex flex-column min-vh-100">
@@ -25,6 +29,6 @@
 
     <?php require_once('templates/footer.php'); ?>
     <!-- JavaScript Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script src="vendor\twbs\bootstrap\dist\js\bootstrap.bundle.min.js"></script>
   </body>
 </html>

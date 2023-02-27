@@ -4,10 +4,12 @@
     <div class="row">
         <h2>Une étape avant de consulter vos notes</h2>
         <div class="col-md-4">
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem aliquid doloremque iure, sapiente alias blanditiis nemo iste animi illo possimus minus, quaerat odit beatae atque eius molestias unde eaque nulla.</p>
+            <p>"Pendant les études, la réussite ne dépend que de soi, dans la vie professionnelle, la réussite dépend aussi des autres."<br>
+            <label style="font-size: medium">Edine-le-sage</label></p>
         </div>
-        <div class="col-md-8">
-            <form action="index.php?action=rate&id=<?= $user->id ?>" method="post">
+        <br>
+        <div class="col-md-8 landing_form">
+            <form action="<?= URL_ROOT ?>rate/<?= $user->id ?>" method="post">
                 <label for="year">Année</label>
                 <select name="year" class="form-control" required>
                     <?php foreach($years as $year): ?>

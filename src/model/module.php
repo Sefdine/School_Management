@@ -8,23 +8,30 @@ use Ipem\Src\Lib\Database;
 
 trait Module
 {
-    public function getModules(string $identifier, string $level, string $group): array
+    public $name;
+    public $slug;
+
+    public function getModules(string $identifier, string $level, string $group_slug): array
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT m.name 
-            FROM modules m, teachs t, levels l, groupes g
-            WHERE m.id = t.module_id
-            AND m.level_id = l.id
-            AND l.group_id = g.id
-            AND t.teacher_id = ?
+            'SELECT m.name AS module_name, m.slug FROM modules m 
+            JOIN teachs t ON m.id = t.module_id
+            JOIN contain c ON c.id = t.contain_id
+            JOIN levels l ON l.id = c.level_id
+            JOIN groupes g ON g.id = c.group_id
+            JOIN teachers tc ON tc.id = t.teacher_id
+            AND tc.user_id = ?
             AND l.level = ?
-            AND g.name = ?'
+            AND g.slug = ?'
         );
-        $statement->execute([$identifier, $level, $group]);
+        $statement->execute([$identifier, $level, $group_slug]);
         $modules = [];
         while($row = $statement->fetch()) {
-            $modules[] = $row['name'];
+            $module = new Self;
+            $module->name = $row['module_name'];
+            $module->slug = $row['slug'];
+            $modules[] = $module;
         }
 
         return $modules;
@@ -35,7 +42,7 @@ trait Module
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
             'SELECT m.name FROM modules m
-            JOIN levelsmodules lm ON m.id = lm.module_id
+            JOIN levels_modules lm ON m.id = lm.module_id
             JOIN levels l ON l.id = lm.level_id
             JOIN contain c ON l.id = c.level_id
             JOIN years y ON y.id = c.year_id
@@ -53,14 +60,24 @@ trait Module
         return $modules;
     }
 
-    public function getIdModule(string $name, int $id_level): int
+    public function getIdModule(string $modue_slug): int
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id FROM modules WHERE name = ? AND level_id = ?'
+            'SELECT id FROM modules WHERE slug = ?'
         );
-        $statement->execute([$name, $id_level]);
+        $statement->execute([$modue_slug]);
         
-        return ($row = $statement->fetch()) ? $row['id'] : 0;
+        return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
+    }
+
+    public function getModule(string $slug):string 
+    {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare(
+            'SELECT name FROM modules WHERE slug = ?'
+        );
+        $statement->execute([$slug]);
+        return ($row = $statement->fetch()) ? $row['name'] : '';
     }
 }

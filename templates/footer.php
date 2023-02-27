@@ -2,7 +2,7 @@
 
 
 <footer class="text-center mt-auto p-3">
-  © 2023 by IPEM
+  © 2023 by Sefdine Nassuf
 </footer>
 
 

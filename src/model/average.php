@@ -8,39 +8,11 @@ use Ipem\Src\Lib\Database;
 
 class Average 
 {
-    public int $id;
-    public string $firstname;
-    public string $lastname;
-    public float $value_average;
-    public string $name_module;
-
-    public function updateAverage(int $identifier, $value): bool
-    {
-        $connection = new Database;
-        $statement = $connection->getConnection()->prepare(
-            'UPDATE averages SET value = ? WHERE id = ?'
-        );
-        $affectedLines = $statement->execute([$value, $identifier]);
-        return ($affectedLines > 0);
-    }
-
-    public function insertAverage(float $value, int $id_inscription, int $id_module, int $id_control, int $id_year): bool
-    {
-        $connection = new Database;
-        $statement = $connection->getConnection()->prepare(
-            'INSERT INTO 
-            averages (value, exam_id, module_id)
-            VALUES(
-                ?,
-                (SELECT id_etudiant FROM inscription WHERE id_etudiant = ?),
-                (SELECT id FROM module WHERE id = ?),
-                (SELECT id FROM controle WHERE id = ?),
-                (SELECT id FROM annee WHERE id = ?)
-            )'
-        );
-        $affectedLines = $statement->execute([$value, $id_inscription, $id_module, $id_control, $id_year]);
-        return ($affectedLines > 0);
-    }
+    public $id;
+    public $firstname;
+    public $lastname;
+    public $value_average;
+    public $name_module;
 
     public function getAverages(int $identifier, int $control, string $year): array
     {
@@ -67,47 +39,18 @@ class Average
         return $averages;
     }
 
-    public function checkAverageIfExist(string $identifier, string $year, string $study, string $group, string $level, string $control, string $module): int
+    public function insertAverage(float $value, int $registration_id, int $module_id, int $exam_id): bool
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT n.id FROM 
-            note n, 
-            annee a,
-            filiere f,
-            groupe g,
-            niveau ni,
-            module m,
-            inscription i,
-            controle c
-            WHERE 
-            n.id_annee = a.id
-            AND n.id_module = m.id
-            AND n.id_controle = c.id
-            AND n.id_inscription = i.id_etudiant
-            AND i.id_niveau = ni.id
-            AND m.id_niveau = ni.id
-            AND ni.id_groupe = g.id
-            AND g.id_filiere = f.id
-            AND f.id_annee = a.id
-            AND f.nom = ?
-            AND g.nom = ?
-            AND a.annee = ?
-            AND c.id = ?
-            AND m.nom = ?
-            AND ni.niveau = ?
-            AND i.identifiant = ?'
+            'INSERT INTO averages
+            SET value = ?,
+            registration_id = ?,
+            exam_id = ?,
+            module_id = ?
+            ON DUPLICATE KEY UPDATE value = ?'
         );
-        $statement->execute([
-            $study, 
-            $group, 
-            $year, 
-            $control, 
-            $module, 
-            $level, 
-            $identifier
-        ]);
-        
-        return ($row = $statement->fetch()) ? $row['id'] : 0;
+        $affectedLines = $statement->execute([$value, $registration_id, $exam_id, $module_id, $value]);
+        return ($affectedLines > 0);
     }
 }

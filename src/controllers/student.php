@@ -24,7 +24,7 @@ class Student extends User
         $user = $users->getUser($identifier);
         $student = new ModelStudent;
         $years = $student->getYears();
-        $controls = $student->getControls();
+        $controls = $student->getExams();
         require_once('templates/student/header.php');
         require_once('templates/errors/errors.php');
         require_once('templates/student/landing.php');
@@ -36,7 +36,7 @@ class Student extends User
         $title = 'Consultaion des notes';
         $user = $users->getUser($identifier);
         $student = new ModelStudent;
-        $array = $student->getData($year, (int)$identifier);
+        $array = $student->getData($year, (int)$control, (int)$identifier);
         $study = $array['study'];
         $group = $array['group'];
         $level = $array['level'];

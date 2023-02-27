@@ -2,7 +2,7 @@
 <?php ob_start(); ?>
 <div class="login-form">
     <img src="public/images/logo_ipem1.jpg" alt="Logo de IPEM" id="logo_ipem">
-    <form action="index.php?action=connectionTreatment" method="post">
+    <form action="<?= URL_ROOT ?>connectionTreatment" method="post">
         <h2 class="text-center">Connexion</h2>
         <div style="display: flex; flex-direction: row;">
             <div class="form-check" style="margin-left:20px">
@@ -30,7 +30,6 @@
             <button type="submit" class="btn btn-primary btn-block">Connexion</button>
         </div>
     </form>
-    <p class="text-center">Si vous rencontrez un problème suite à votre identification, renseigner vous auprès de l'administration ! </p>
 
 </div>
 

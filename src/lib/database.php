@@ -6,25 +6,26 @@ namespace Ipem\Src\Lib;
 
 class Database
 {
-    public ?\PDO $database = null;
+    public $database;
+    private $dbhost = DB_HOST;
+    private $dbname = DB_NAME;
+    private $user = DB_USER;
+    private $pass = DB_PASS;
 
     public function getConnection(): \PDO
     {
-        if ($this->database === null) {
-            try{
-                $this->database = new \PDO(
-                    'mysql:host=localhost;
-                    dbname=ipem;
-                    charset=utf8;
-                    port=3306', 
-                    'root', 
-                    'root'
-                );
-                $this->database->setAttribute(\PDO::ATTR_ERRMODE,
-                \PDO::ERRMODE_EXCEPTION);
-            } catch(PDOException $e) {
-                echo "Connection failed: " . $e->getMessage();
-            }
+        try{
+            $this->database = new \PDO(
+                'mysql:host='.$this->dbhost.
+                ';dbname='.$this->dbname.
+                ';charset=utf8;', 
+                $this->user, 
+                $this->pass
+            );
+            $this->database->setAttribute(\PDO::ATTR_ERRMODE,
+            \PDO::ERRMODE_EXCEPTION);
+        } catch(PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
         }
         return $this->database;
     }
