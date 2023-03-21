@@ -1,4 +1,4 @@
--- Active: 1675950352285@@127.0.0.1@3306@ipem
+-- Active: 1677485651157@@117.0.0.1@1106@ipem
 #       script MySQL
 #--------------------------------------------------------
 CREATE DATABASE ipem
@@ -9,11 +9,11 @@ CREATE DATABASE ipem
 #--------------------------------------------------------
 CREATE TABLE users(
     id INTEGER AUTO_INCREMENT NOT NULL,
-    firstname VARCHAR(125) NOT NULL,
-    lastname VARCHAR(125) NOT NULL,
+    firstname VARCHAR(115) NOT NULL,
+    lastname VARCHAR(115) NOT NULL,
     identifier VARCHAR(50) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    token VARCHAR(255) NOT NULL,
+    password VARCHAR(155) NOT NULL,
+    token VARCHAR(155) NOT NULL,
     CONSTRAINT users_PK PRIMARY KEY (id)
 )ENGINE=InnoDB;
 
@@ -22,9 +22,9 @@ CREATE TABLE users(
 #--------------------------------------------------------
 CREATE TABLE students(
     id INTEGER AUTO_INCREMENT NOT NULL,
-    nationality VARCHAR(125) NOT NULL,
+    nationality VARCHAR(115) NOT NULL,
     date_of_birth DATE,
-    address VARCHAR(255),
+    address VARCHAR(155),
     cin VARCHAR(50),
     user_id INTEGER NOT NULL, 
     CONSTRAINT students_PK PRIMARY KEY (id),
@@ -39,9 +39,9 @@ CREATE TABLE students(
 #--------------------------------------------------------
 CREATE TABLE teachers(
     id INTEGER AUTO_INCREMENT NOT NULL,
-    email VARCHAR(255),
-    tel VARCHAR(125),
-    address VARCHAR(255),
+    email VARCHAR(155),
+    tel VARCHAR(115),
+    address VARCHAR(155),
     cin VARCHAR(50),
     user_id INTEGER NOT NULL, 
     CONSTRAINT teachers_PK PRIMARY KEY (id),
@@ -65,7 +65,7 @@ CREATE TABLE years(
 #--------------------------------------------------------
 CREATE TABLE studies(
     id INTEGER AUTO_INCREMENT NOT NULL,
-    name VARCHAR(125) NOT NULL,
+    name VARCHAR(115) NOT NULL,
     year_id INTEGER NOT NULL,
     CONSTRAINT studies_PK PRIMARY KEY (id),
     CONSTRAINT studies_years_FK FOREIGN KEY (year_id)
@@ -79,7 +79,7 @@ CREATE TABLE studies(
 #--------------------------------------------------------
 CREATE TABLE groupes(
     id INTEGER AUTO_INCREMENT NOT NULL,
-    name VARCHAR(125) NOT NULL,
+    name VARCHAR(115) NOT NULL,
     study_id INTEGER NOT NULL,
     CONSTRAINT groupes_PK PRIMARY KEY (id),
     CONSTRAINT groupes_studies_FK FOREIGN KEY (study_id)
@@ -107,7 +107,7 @@ CREATE TABLE levels(
 #--------------------------------------------------------
 CREATE TABLE modules(
     id INTEGER NOT NULL AUTO_INCREMENT,
-    name VARCHAR(125) NOT NULL,
+    name VARCHAR(115) NOT NULL,
     level_id INTEGER NOT NULL,
     CONSTRAINT modules_PK PRIMARY KEY (id),
     CONSTRAINT modules_levels_FK FOREIGN KEY (level_id)
@@ -207,26 +207,27 @@ CREATE TABLE contain(
 )ENGINE=InnoDB;
 
 #--------------------------------------------------------
-#   Table: levelsModules
+#   Table: containModules
 #--------------------------------------------------------
-CREATE TABLE levelsModules(
-    level_id INTEGER NOT NULL,
-    module_id INTEGER NOT NULL,
-    CONSTRAINT levelsModules_PK PRIMARY KEY (level_id, module_id),
-    UNIQUE (level_id, module_id),
-    CONSTRAINT levelsModules_levels_FK FOREIGN KEY (level_id) REFERENCES levels(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT levelsModules_modules_FK FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+CREATE TABLE contain_modules (
+    id INTEGER AUTO_INCREMENT NOT NULL,
+    contain_id INTEGER NOT NULL,
+    module_id INTEGER NOT NULL, 
+    CONSTRAINT contain_modules_PK PRIMARY KEY (id),
+    CONSTRAINT cm_contain FOREIGN KEY (contain_id) REFERENCES contain(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT cm_modules FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE CASCADE ON UPDATE CASCADE
+)ENGINE=InnoDB;
+
 INSERT INTO contain (year_id, study_id, group_id, level_id)
 VALUES
     (1, 1, 1, 1),
-    (1, 1, 1, 2),
-    (1, 1, 2, 1),
-    (1, 1, 2, 2),
-    (1, 1, 3, 1),
+    (1, 1, 1, 1),
+    (1, 1, 1, 1),
+    (1, 1, 1, 1),
+    (1, 1, 1, 1),
     (1, 1, 4, 1);
 
-INSERT INTO exams (number) VALUES (1), (2), (3);
+INSERT INTO exams (number) VALUES (1), (1), (1);
 
 INSERT INTO modules (name)
 VALUES 
@@ -244,21 +245,21 @@ VALUES
 INSERT INTO levelsModules(module_id)
 SELECT id FROM modules ORDER BY id ASC;
 
-ALTER TABLE levelsModules ALTER COLUMN level_id SET DEFAULT 3;
+ALTER TABLE levelsModules ALTER COLUMN level_id SET DEFAULT 1;
 
 INSERT INTO averages (registration_id, module_id)
 VALUES
     (1, 1),
-    (1, 2),
-    (1, 3),
+    (1, 1),
+    (1, 1),
     (56, 1),
-    (56, 2),
-    (56, 3);
+    (56, 1),
+    (56, 1);
 
 INSERT INTO teachs (teacher_id, contain_id, module_id)
 VALUES
-    (1, 3, 4),
-    (1, 3, 8);
+    (1, 1, 4),
+    (1, 1, 8);
 
 SELECT * FROM averages;
 
@@ -274,6 +275,26 @@ SELECT DISTINCT s.name AS study, g.name AS groupe, l.level, u.identifier
     JOIN exams e ON e.id = a.exam_id
     JOIN students st ON r.student_id = st.id
     JOIN users u ON st.user_id = u.id
-    WHERE y.name = '2023'
+    WHERE y.name = '1011'
     AND e.number = 1
     AND u.id = 65;
+
+
+SELECT m.name AS module_name, m.slug FROM modules m 
+            JOIN contain_modules cm ON m.id = cm.module_id
+            JOIN contain c ON c.id = cm.contain_id
+            JOIN groupes g ON g.id = c.group_id
+            JOIN levels l ON l.id = c.level_id
+            JOIN studies s ON s.id = c.study_id
+            JOIN years y ON y.id = c.year_id 
+            WHERE l.level = 1
+            AND g.slug = 'licence'
+            AND s.name = 'Gestion des entreprises'
+            AND y.name = '1011'; 
+
+SELECT * FROM contain_modules;
+
+INSERT INTO contain_modules(contain_id, module_id)
+VALUES (3, 1), (3, 2) , (3, 3), (3, 4), (3, 5), (3, 6), (3, 7), (3, 8), (3, 9), (3, 10);
+
+DELETE FROM contain_modules;

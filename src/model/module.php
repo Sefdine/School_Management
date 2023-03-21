@@ -11,21 +11,23 @@ trait Module
     public $name;
     public $slug;
 
-    public function getModules(string $identifier, string $level, string $group_slug): array
+    public function getModules(string $level, string $group_slug, string $study, string $year): array
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
             'SELECT m.name AS module_name, m.slug FROM modules m 
-            JOIN teachs t ON m.id = t.module_id
-            JOIN contain c ON c.id = t.contain_id
-            JOIN levels l ON l.id = c.level_id
+            JOIN contain_modules cm ON m.id = cm.module_id
+            JOIN contain c ON c.id = cm.contain_id
             JOIN groupes g ON g.id = c.group_id
-            JOIN teachers tc ON tc.id = t.teacher_id
-            AND tc.user_id = ?
-            AND l.level = ?
-            AND g.slug = ?'
+            JOIN levels l ON l.id = c.level_id
+            JOIN studies s ON s.id = c.study_id
+            JOIN years y ON y.id = c.year_id 
+            WHERE l.level = ?
+            AND g.slug = ?
+            AND s.name = ?
+            AND y.name = ?; '
         );
-        $statement->execute([$identifier, $level, $group_slug]);
+        $statement->execute([$level, $group_slug, $study, $year]);
         $modules = [];
         while($row = $statement->fetch()) {
             $module = new Self;
@@ -42,9 +44,8 @@ trait Module
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
             'SELECT m.name FROM modules m
-            JOIN levels_modules lm ON m.id = lm.module_id
-            JOIN levels l ON l.id = lm.level_id
-            JOIN contain c ON l.id = c.level_id
+            JOIN contain_modules cm ON m.id = cm.module_id
+            JOIN contain c ON c.id = cm.contain_id
             JOIN years y ON y.id = c.year_id
             JOIN registrations r ON c.id = r.contain_id
             JOIN students s ON s.id = r.student_id

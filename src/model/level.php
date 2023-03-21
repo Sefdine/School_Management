@@ -8,15 +8,12 @@ use Ipem\Src\Lib\Database;
 
 trait Level
 {
-    public function getlevels(string $identifier): array
+    public function getlevels(): array
     {
         $connection = new Database;
-        $statement = $connection->getConnection()->prepare(
-            'SELECT level FROM levels l
-            JOIN contain c ON l.id = c.level_id
-            AND c.group_id = ?'
+        $statement = $connection->getConnection()->query(
+            'SELECT level FROM levels'
         );
-        $statement->execute([$identifier]);
         $levels = [];
         while($row = $statement->fetch()) {
             $levels[] = $row['level'];

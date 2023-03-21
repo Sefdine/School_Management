@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Ipem\Src\Controllers\Student;
-use Ipem\Src\Controllers\Teacher;
+use Ipem\Src\Controllers\Admin;
 use Ipem\Src\Controllers\User;
 use Ipem\Src\Controllers\Average;
 
@@ -17,18 +17,17 @@ spl_autoload_register(static function(string $fqcn) {
 });
 
 $student = new Student;
-$teacher = new Teacher;
 $user = new User;
+$admin = new Admin;
 $rate = new Average;
 
 if (isset($_GET['action'])){
     $action = $_GET['action'];
     if ($action === 'connectionTreatment') {
-        if (isset($_POST['flexRadioDefault']) && !empty($_POST['identifier']) && !empty($_POST['password'])) {
-            $radio = $_POST['flexRadioDefault'];
+        if (!empty($_POST['identifier']) && !empty($_POST['password'])) {
             $identifier = $_POST['identifier'];
             $password = $_POST['password'];
-            $user->getConnect($radio, $identifier, $password);
+            $user->getConnect($identifier, $password);
         } else {
             header('Location: index.php?action=errorLogin&login_err=empty');
         }
@@ -40,8 +39,8 @@ if (isset($_GET['action'])){
                 $identifier = $_GET['id'];             
                 if ($name === 'student') {
                     $student->displayHome($identifier);
-                } elseif ($name === 'teacher') {
-                    $teacher->displayLanding($identifier);
+                } elseif ($name === 'admin') {
+                    $admin->displayLanding($identifier);
                 } else {
                     $user->displayForm();
                     die();
@@ -67,7 +66,7 @@ if (isset($_GET['action'])){
         if (isset($_SESSION['user'])) {
             if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $identifier = $_GET['id'];       
-                $teacher->displayModules($identifier, $_POST);
+                $admin->displayModules($identifier, $_POST);
             } else {
                 $user->displayForm();
                 die();              
@@ -85,14 +84,14 @@ if (isset($_GET['action'])){
                     $year = $_POST['year'] ?? '';
                     $control = $_POST['control'] ?? '';
                     $student->displayAverage($identifier, $year, $control);
-                } elseif ($name === 'teacher') {                
+                } elseif ($name === 'admin') {                
                     $module_slug = $_GET['module_slug'] ?? '';
                     $error = $_SESSION['err'] ?? '';
                     $data = $_SESSION['array'] ?? '';
                     if(isset($_SESSION['sessionData']) && $_SESSION['sessionData'] > 0){
                         $_SESSION['data'] = [];
                     }
-                    $teacher->displayFormRate($identifier, $module_slug, $data, $error);
+                    $admin->displayFormRate($identifier, $module_slug, $data, $error);
                     $user->displayForm();
                     $_SESSION['err'] = '';
                     die();
@@ -148,7 +147,7 @@ if (isset($_GET['action'])){
                 $rate->update_average($id, $module_slug, $_POST);
             }
         } else {
-            $teacher->displayForm();
+            $admin->displayForm();
             die();
         }          
     } elseif ($action === 'inputRates') {
@@ -158,7 +157,7 @@ if (isset($_GET['action'])){
                 //$teacher->displayFormRate($identifier);
             } 
         } else {
-            $teacher->displayForm();
+            $admin->displayForm();
             die();
         }          
     } elseif ($action === 'errorLogin') {
