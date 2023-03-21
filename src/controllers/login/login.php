@@ -14,30 +14,22 @@ trait Login
         require_once('templates/login.php');
     }
 
-    public function getConnect(string $radio, string $identifier, string $password): void
+    public function getConnect(string $identifier, string $password): void
     {
-        $num = 0;
-        if ($radio === 'flexRadioDefault1') {          
-            $users = new User;
-            foreach($users->getUsers() as $user) {
-                if (($identifier.' ') === $user->identifier && password_verify($password, $user->password)) {
-                    $num++;
-                    $identifier = $user->id;
-                    $_SESSION['user'] = $user->token;
-                    $_SESSION['name'] = 'student';
-                }
-            }         
-        } elseif ($radio === 'flexRadioDefault2') {
-            $users = new User;
-            foreach($users->getUsers() as $user) {
-                if ($identifier === $user->identifier && password_verify($password, $user->password)) {
-                    $num++;
-                    $identifier = $user->id;
-                    $_SESSION['user'] = $user->token;
-                    $_SESSION['name'] = 'teacher';
-                }
-            }
+        if ($identifier === 'admin') {
+            $_SESSION['name'] = 'admin';
+        } else {
+            $_SESSION['name'] = 'student';
         }
+        $num = 0;        
+        $users = new User;
+        foreach($users->getUsers() as $user) {
+            if (($identifier) === $user->identifier && password_verify($password, $user->password)) {
+                $num++;
+                $identifier = $user->id;
+                $_SESSION['user'] = $user->token;
+            }
+        }    
 
         if ($num) {
             header('Location: ' .URL_ROOT. 'home/' .$identifier);

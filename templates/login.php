@@ -4,22 +4,6 @@
     <img src="public/images/logo_ipem1.JPG" alt="Logo de IPEM" id="logo_ipem">
     <form action="<?= URL_ROOT ?>connectionTreatment" method="post">
         <h2 class="text-center">Connexion</h2>
-        <div style="display: flex; flex-direction: row;">
-            <div class="form-check" style="margin-left:20px">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" value="flexRadioDefault1" required="required">
-                <label class="form-check-label" for="flexRadioDefault1" style="color: rgb(39, 39, 43);">
-                    Etudiant
-                </label>
-            </div>
-            <div class="form-check" style="margin-left:70px">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" value="flexRadioDefault2" required="required">
-                <label class="form-check-label" for="flexRadioDefault2" style="color: rgb(39, 39, 43);">
-                    Professeur
-                </label>
-            </div>
-        </div>
-
-
         <div class="form-group">
             <input type="text" name="identifier" class="form-control" placeholder="Identifiant" required="required" autocomplete="off">
         </div>
