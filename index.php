@@ -60,7 +60,15 @@ if (isset($_GET['action'])){
             }
         } else {
             $user->displayForm();
-            die();
+            if ($action === 'disconnect') {
+                if (isset($_SESSION['user'])) {
+                    session_destroy();
+                    header('Location: index.php');
+                } 
+            } else {
+                $user->displayForm();
+                die();
+            }die();
         }
     } elseif($action === 'module'){
         if (isset($_SESSION['user'])) {
@@ -75,7 +83,7 @@ if (isset($_GET['action'])){
             $user->displayForm();
             die();
         }
-    }elseif ($action === 'rate') {
+    } elseif ($action === 'rate') {
         if (isset($_SESSION['user'])) {
             $name = $_SESSION['name'] ?? '';
             if (isset($_GET['id']) && $_GET['id'] > 0) {
@@ -150,11 +158,11 @@ if (isset($_GET['action'])){
             $admin->displayForm();
             die();
         }          
-    } elseif ($action === 'inputRates') {
+    } elseif ($action === 'admin') {
         if (isset($_SESSION['user'])) {
             if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $identifier = $_GET['id'];
-                //$teacher->displayFormRate($identifier);
+                $admin->displayDashboard($identifier);
             } 
         } else {
             $admin->displayForm();
