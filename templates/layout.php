@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="public/css/admin/home.css">
     <link rel="stylesheet" href="public/css/admin/rate.css">
     <link rel="stylesheet" href="public/css/admin/dashboard.css">
+    <link rel="stylesheet" href="public/css/admin/insert/insert.css">
     <link rel="stylesheet" href="public/css/student/display_rate.css">
 
     <!-- site icons -->
