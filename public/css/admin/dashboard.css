@@ -1,0 +1,111 @@
+/* -------------- Header --------------- */
+.header_dashboard {
+    background-color: rgb(119, 119, 161);
+    height: 60px;
+    display: flex;
+}
+
+.header_dashboard > .logo_admin {
+    width: 10rem;
+    text-align: center;
+    align-items: center;
+    margin: auto;
+}
+
+.header_dashboard > .nav_top {
+    display: flex;
+    width: 60%;
+    align-items: center;
+    margin: auto;
+}
+
+.header_dashboard .nav_top li {
+    list-style: none;
+    margin-left: 30px;
+}
+
+.header_dashboard .nav_top .nav_insert {
+    background-color: rgba(29, 212, 212, 0.459);
+    padding: 10px;
+}
+
+.header_dashboard .nav_top .nav_update {
+    background-color: rgba(42, 156, 31, 0.897);
+    padding: 10px;
+}
+
+.header_dashboard .nav_top .nav_delete {
+    background-color: rgba(153, 31, 31, 0.973);
+    padding: 10px;
+}
+
+.header_dashboard > a{
+    margin: auto;
+    margin-left: 10px;
+    margin-right: 30px;
+}
+
+a{
+    text-decoration: none;
+    color: #fff;
+}
+
+.header_dashboard  a:hover{
+    color: #161f96e0;
+    transition: 0.2s;
+}
+
+.header_dashboard > .sign_out{
+    background-color: rgb(41, 41, 117);
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.header_dashboard > .sign_out:hover{
+    background-color: rgb(235, 235, 235);
+    transition: 0.2s;
+}
+
+
+
+/* ---------- Section -----------*/
+.section_admin {
+    display: flex;
+}
+
+.section_admin .nav_left{
+    width: 200px;
+    background-color: rgb(192, 199, 223);
+    height: 100vh;
+}
+
+.section_admin .nav_left ul {
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    align-content: center;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.section_admin > .nav_left li {
+    list-style: none;
+    color: #fff;
+}
+
+.section_admin > .contain_admin {
+    flex: auto;
+    background-color: rgba(192, 199, 223, 0.301);
+}
+
+.section_admin .nav_left ul a{
+    display: inline-block;
+    background-color: rgb(29, 212, 212);
+    width: 130px;
+    text-align: center;
+    padding: 10px;
+}
+
+.section_admin .nav_left ul a:hover{
+    background-color: rgb(31, 31, 136);
+}

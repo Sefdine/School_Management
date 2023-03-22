@@ -14,8 +14,9 @@
     <link rel="stylesheet" href="public/css/style.css">  
     <link rel="stylesheet" href="public/css/header.css">
     <link rel="stylesheet" href="public/css/student/home.css">
-    <link rel="stylesheet" href="public/css/teacher/home.css">
-    <link rel="stylesheet" href="public/css/teacher/rate.css">
+    <link rel="stylesheet" href="public/css/admin/home.css">
+    <link rel="stylesheet" href="public/css/admin/rate.css">
+    <link rel="stylesheet" href="public/css/admin/dashboard.css">
     <link rel="stylesheet" href="public/css/student/display_rate.css">
 
     <!-- site icons -->

@@ -56,6 +56,10 @@ class Admin extends User
         require_once('templates/admin/input_rates.php');
     }
 
+    function displayDashboard(string $identifier) {
+        require_once('templates/admin/dashboard.php');
+    }
+
     protected static function getFullName(array $names): array
     {
         $full_name = [];
