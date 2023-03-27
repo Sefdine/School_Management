@@ -31,171 +31,121 @@ if (isset($_GET['action'])){
         } else {
             header('Location: index.php?action=errorLogin&login_err=empty');
         }
-
     } elseif ($action === 'home') {
-        if (isset($_SESSION['user'])) {
-            $name = $_SESSION['name'] ?? '';
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $identifier = $_GET['id'];             
-                if ($name === 'student') {
-                    $student->displayHome($identifier);
-                } elseif ($name === 'admin') {
-                    $admin->displayLanding($identifier);
-                } else {
-                    $user->displayForm();
-                    die();
-                }
-            }
+        issetSesionUser();
+        $name = $_SESSION['name'] ?? '';
+        $identifier = $_GET['id'] ?? '';             
+        if ($name === 'student') {
+            $student->displayHome($identifier);
+        } elseif ($name === 'admin') {
+            $admin->displayHome();
         } else {
             $user->displayForm();
             die();
         }
     } elseif ($action === 'landing') {
-        if (isset($_SESSION['user'])) {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $identifier = $_GET['id'];  
-                $error = $_SESSION['err'] ?? '';           
-                $student->displayLanding($identifier, $error);
-                $_SESSION['err'] = '';
-            }
-        } else {
-            $user->displayForm();
-            if ($action === 'disconnect') {
-                if (isset($_SESSION['user'])) {
-                    session_destroy();
-                    header('Location: index.php');
-                } 
-            } else {
-                $user->displayForm();
-                die();
-            }die();
+        issetSesionUser();
+        if (isset($_GET['id']) && $_GET['id'] > 0) {
+            $identifier = $_GET['id'];  
+            $error = $_SESSION['err'] ?? '';           
+            $student->displayLanding($identifier, $error);
+            $_SESSION['err'] = '';
         }
     } elseif($action === 'module'){
-        if (isset($_SESSION['user'])) {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $identifier = $_GET['id'];       
-                $admin->displayModules($identifier, $_POST);
-            } else {
-                $user->displayForm();
-                die();              
-            }
+        issetSesionUser();
+        if (isset($_GET['id']) && $_GET['id'] > 0) {
+            $identifier = $_GET['id'];       
+            $admin->displayModules($identifier, $_POST);
         } else {
             $user->displayForm();
-            die();
+            die();              
         }
     } elseif ($action === 'rate') {
-        if (isset($_SESSION['user'])) {
-            $name = $_SESSION['name'] ?? '';
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $identifier = $_GET['id'];
-                if ($name === 'student') {
-                    $year = $_POST['year'] ?? '';
-                    $control = $_POST['control'] ?? '';
-                    $student->displayAverage($identifier, $year, $control);
-                } elseif ($name === 'admin') {                
-                    $module_slug = $_GET['module_slug'] ?? '';
-                    $error = $_SESSION['err'] ?? '';
-                    $data = $_SESSION['array'] ?? '';
-                    if(isset($_SESSION['sessionData']) && $_SESSION['sessionData'] > 0){
-                        $_SESSION['data'] = [];
-                    }
-                    $admin->displayFormRate($identifier, $module_slug, $data, $error);
-                    $user->displayForm();
-                    $_SESSION['err'] = '';
-                    die();
+        issetSesionUser();
+        $name = $_SESSION['name'] ?? '';
+        if (isset($_GET['id']) && $_GET['id'] > 0) {
+            $identifier = $_GET['id'];
+            if ($name === 'student') {
+                $year = $_POST['year'] ?? '';
+                $control = $_POST['control'] ?? '';
+                $student->displayAverage($identifier, $year, $control);
+            } elseif ($name === 'admin') {                
+                $module_slug = $_GET['module_slug'] ?? '';
+                $error = $_SESSION['err'] ?? '';
+                $data = $_SESSION['array'] ?? '';
+                if(isset($_SESSION['sessionData']) && $_SESSION['sessionData'] > 0){
+                    $_SESSION['data'] = [];
                 }
+                $admin->displayFormRate($identifier, $module_slug, $data, $error);
+                $user->displayForm();
+                $_SESSION['err'] = '';
+                die();
             }
-        } else {
-            $user->displayForm();
-            die();
         }
     } elseif ($action === 'updatePassword') {
-        if (isset($_SESSION['user'])) {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $identifier = $_GET['id'];
-                $user->updatePassword($identifier);
-            }
-        } else {
-            $user->displayForm();
-            die();
+        issetSesionUser();
+        if (isset($_GET['id']) && $_GET['id'] > 0) {
+            $identifier = $_GET['id'];
+            $user->updatePassword($identifier);
         }
     } elseif ($action === 'updatePasswordForm') {
-        if (isset($_SESSION['user'])) {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $identifier = $_GET['id'];
-                $user->displayFormUpdatePassword($identifier);
-            }
-        } else {
-            $user->displayForm();
-            die();
-        }   
+        issetSesionUser();
+        if (isset($_GET['id']) && $_GET['id'] > 0) {
+            $identifier = $_GET['id'];
+            $user->displayFormUpdatePassword($identifier);
+        }
     } elseif ($action === 'updatePasswordTreatment') {
-        if (isset($_SESSION['user'])) {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $identifier = $_GET['id'];
-                $current_passord = $_POST['current_password'];
-                $new_password = $_POST['new_password'];
-                $new_password_retype = $_POST['new_password_retype'];
-                if ($new_password === $new_password_retype) {
-                   $user->updatePasswordTreatment($identifier, $current_passord, $new_password);
-                } else {
-                    $_SESSION['err'] = 'new_password_retype';
-                    header('Location: '. URL_ROOT .'errorPassword/'.$identifier);
-                }
+        issetSesionUser();
+        if (isset($_GET['id']) && $_GET['id'] > 0) {
+            $identifier = $_GET['id'];
+            $current_passord = $_POST['current_password'];
+            $new_password = $_POST['new_password'];
+            $new_password_retype = $_POST['new_password_retype'];
+            if ($new_password === $new_password_retype) {
+                $user->updatePasswordTreatment($identifier, $current_passord, $new_password);
+            } else {
+                $_SESSION['err'] = 'new_password_retype';
+                header('Location: '. URL_ROOT .'errorPassword/'.$identifier);
             }
-        } else {
-            $user->displayForm();
-            die();
-        }   
+        }
     } elseif ($action === 'rateTreatment') {
-        if (isset($_SESSION['user'])) {
-            $module_slug = $_GET['module_slug'] ?? '';
-            $id = $_GET['id'] ?? '';
-            if (isset($_POST)) {
-                $rate->update_average($id, $module_slug, $_POST);
-            }
-        } else {
-            $admin->displayForm();
-            die();
-        }          
-    } elseif ($action === 'admin') {
-        if (isset($_SESSION['user'])) {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $identifier = $_GET['id'];
-                $admin->displayDashboard($identifier);
-            } 
-        } else {
-            $admin->displayForm();
-            die();
-        }          
+        issetSesionUser();
+        $module_slug = $_GET['module_slug'] ?? '';
+        $id = $_GET['id'] ?? '';
+        if (isset($_POST)) {
+            $rate->update_average($id, $module_slug, $_POST);
+        }     
+    } elseif ($action === 'insert') {
+        issetSesionUser();
+        $error = $_GET['error'] ?? '';
+        $admin->displayInsert($error);         
+    } elseif($action === 'insertStudent') {
+        issetSesionUser();
+        $data = $_POST ?? [];
+        $admin->insertStudent($data);
     } elseif ($action === 'errorLogin') {
-        if (isset($_SESSION['err'])) {
-            $login_err = $_SESSION['err'];
-            $user->displayForm($login_err);
-            $_SESSION['err'] = '';
-        }    
+        issetSesionUser();
+        $login_err = $_SESSION['err'];
+        $user->displayForm($login_err);
+        $_SESSION['err'] = ''; 
     } elseif ($action === 'errorPassword') {
-        if (isset($_SESSION['user'])) {
-            if (isset($_SESSION['err']) && isset($_GET['id']) && $_GET['id'] > 0) {
-                $login_err = $_SESSION['err'];
-                $identifier = $_GET['id'];
-                $user->displayFormUpdatePassword($identifier, $login_err);
-                $_SESSION['err'] = '';
-            }
-        } else {
-            $user->displayForm();
-            die();
-        }        
+        issetSesionUser();
+        if (isset($_SESSION['err']) && isset($_GET['id']) && $_GET['id'] > 0) {
+            $login_err = $_SESSION['err'];
+            $identifier = $_GET['id'];
+            $user->displayFormUpdatePassword($identifier, $login_err);
+            $_SESSION['err'] = '';
+        }      
     } elseif ($action === 'disconnect') {
-        if (isset($_SESSION['user'])) {
-            session_destroy();
-            header('Location: index.php');
-        } 
+        issetSesionUser();
+        session_destroy();
+        header('Location: index.php');
     } else {
         $user->displayForm();
         die();
     }
 } else {
     $user->displayForm();
+    die();
 }
 

@@ -71,12 +71,13 @@ a{
 /* ---------- Section -----------*/
 .section_admin {
     display: flex;
+    height: 100vh;
 }
 
 .section_admin .nav_left{
-    width: 200px;
-    background-color: rgb(192, 199, 223);
-    height: 100vh;
+    width: 230px;
+    background-color: rgb(119, 119, 161);
+    height: auto;
 }
 
 .section_admin .nav_left ul {
@@ -96,16 +97,18 @@ a{
 .section_admin > .contain_admin {
     flex: auto;
     background-color: rgba(192, 199, 223, 0.301);
+    height: auto;
 }
 
-.section_admin .nav_left ul a{
-    display: inline-block;
+.section_admin .nav_left ul button{
+    border: none;
     background-color: rgb(29, 212, 212);
     width: 130px;
+    color: #fff;
     text-align: center;
     padding: 10px;
 }
 
-.section_admin .nav_left ul a:hover{
+.section_admin .nav_left ul button:hover{
     background-color: rgb(31, 31, 136);
 }
