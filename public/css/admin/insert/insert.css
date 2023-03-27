@@ -1,14 +1,14 @@
 
-.admin_home  > .form-group {
+.admin  > .form-group {
     margin-top: 10px;
 }
 
-.admin_home  > .form-group input{
+.admin  > .form-group input{
     margin-top: 2px;
     border-radius: 5px;
 }
 
-.admin_home  > .form-group .btn-primary{
+.admin  > .form-group .btn-primary{
     margin-top: 5px;
     font-size: 1.7em;
     border-radius: 5px;

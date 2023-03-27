@@ -21,8 +21,7 @@ trait Password
         $user = $users->getUser($identifier);
         if ($current_password !== $new_password) {
             if (password_verify($current_password, $user->password)) {
-                $cost = ['cost' => 12];
-                $new_password = password_hash($new_password, PASSWORD_BCRYPT, $cost);
+                $new_password = self::createPassword($current_password);
                 $success = $users->setPassword($identifier, $new_password);
     
                 if ($success) {
@@ -48,5 +47,15 @@ trait Password
         $title = 'Changer mon mot de passe';
         $user = $users->getUser($identifier);
         require_once('templates/password/update_password.php');
+    }
+
+    protected static function createPassword(string $password): string {
+        $cost = ['cost' => 12];
+        return password_hash($password, PASSWORD_BCRYPT, $cost);
+    }
+
+    protected static function createToken(string $token_string): string {
+        $cost = ['cost' => 12];
+        return password_hash($token_string, PASSWORD_BCRYPT, $cost);
     }
 }

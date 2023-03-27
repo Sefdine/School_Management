@@ -297,4 +297,3 @@ SELECT * FROM contain_modules;
 INSERT INTO contain_modules(contain_id, module_id)
 VALUES (3, 1), (3, 2) , (3, 3), (3, 4), (3, 5), (3, 6), (3, 7), (3, 8), (3, 9), (3, 10);
 
-DELETE FROM contain_modules;
