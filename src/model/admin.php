@@ -17,11 +17,14 @@ class Admin extends User
         $address = $data['address'] ?? '';
         $cin = $data['cin'] ?? '';
 
+
         $connection->getConnection()->beginTransaction();
+
         $insertUserStatement = $connection->getConnection()->prepare('
             INSERT INTO users(firstname, lastname, identifier, password, token, cin, address)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         ');
+        
         $insertUserStatement->execute([
             $firstname,
             $lastname,
@@ -31,14 +34,53 @@ class Admin extends User
             $cin,
             $address
         ]);
-
-        $user_id = $connection->getConnection()->lastInsertId();
-
+        $user_id = $connection->getConnection()->lastInsertId('id');
         $insertStudentStatement = $connection->getConnection()->prepare('
             INSERT INTO students(nationality, date_of_birth, user_id)
             VALUES (?, ?, ?)
         ');
-        $result = $insertStudentStatement->execute([$nationality, $birthday, $user_id]);
+        $result = $insertStudentStatement->execute([$nationality, (string)$birthday, $user_id]);     
+
+        if($result) {
+            $connection->getConnection()->commit();
+            return true;
+        } else {
+            $connection->getConnection()->rollBack();
+            return false;
+        }
+    }
+
+    public function insertUserTeacher(array $data):bool {
+        $connection = new Database;
+        $firstname = $data['firstname'] ?? '';
+        $lastname = $data['lastname'] ?? '';
+        $email = $data['email'] ?? '';
+        $tel = $data['tel'];
+        $cin = $data['cin'];
+        $address = $data['address'];
+
+        $connection->getConnection()->beginTransaction();
+
+        $insertUserStatement = $connection->getConnection()->prepare('
+            INSERT INTO users(firstname, lastname, identifier, password, token, cin, address)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ');
+        
+        $insertUserStatement->execute([
+            $firstname,
+            $lastname,
+            '',
+            '',
+            '',
+            $cin,
+            $address
+        ]);
+        $user_id = $connection->getConnection()->lastInsertId('id');
+        $insertStudentStatement = $connection->getConnection()->prepare('
+            INSERT INTO teachers(email, tel, user_id)
+            VALUES (?, ?, ?)
+        ');
+        $result = $insertStudentStatement->execute([$email, $tel, $user_id]);     
 
         if($result) {
             $connection->getConnection()->commit();

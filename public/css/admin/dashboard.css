@@ -66,6 +66,18 @@ a{
     transition: 0.2s;
 }
 
+.header_dashboard #year {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: unset;
+    border: none;
+    color: #fff;
+    margin-right: 10px;
+}
+
+.header_dashboard #year option {
+    color: #000;
+}
 
 
 /* ---------- Section -----------*/

@@ -15,6 +15,7 @@
     <br>
     <hr>
     <h3>Champs ajoutés</h3>
+    <button onclick="resetTable(this)">Réinitialiser</button>
     <table class="table table-dark">
         <thead>
             <th>#</th>
@@ -27,9 +28,9 @@
             <th>Adresse</th>
         </thead>
         <tbody class="table-group-divider">
-            <?php foreach($data_student as $line): ?>
-            <tr>
-                <td>1</td>
+            <?php foreach($data_student as $k => $line): ?>
+            <tr class="tr_student">
+                <td><?= $k+1 ?></td>
                 <td><?= $line['lastname'] ?></td>
                 <td><?= $line['firstname'] ?></td>
                 <td><?= $line['identifier'] ?></td>
@@ -50,7 +51,7 @@ $insert_student = ob_get_clean();
 <?php ob_start(); ?>
 <div class="admin">
     <h1>Insérer un enseignant</h1>
-    <form action="#" method="post" class="form-group">
+    <form action="<?= URL_ROOT ?>insertTeacher" method="post" class="form-group">
         <input type="text" name="lastname" id="lastname" placeholder="Nom *" class="form-control" required>
         <input type="text" name="firstname" id="firstname" placeholder="Prénom *" class="form-control" required>
         <input type="text" name="email" id="email" placeholder="Email" class="form-control">
@@ -62,6 +63,7 @@ $insert_student = ob_get_clean();
     <br>
     <hr>
     <h3>Champs ajoutés</h3>
+    <button onclick="resetTable(this)">Réinitialiser</button>
     <table class="table table-dark">
         <thead>
             <th>#</th>
@@ -73,24 +75,17 @@ $insert_student = ob_get_clean();
             <th>Adresse</th>
         </thead>
         <tbody class="table-group-divider">
+            <?php foreach($data as $k => $line): ?>
             <tr>
-                <td>1</td>
-                <td>John</td>
-                <td>Doe</td>
-                <td>joh@doe.com</td>
-                <td>06 15 34 56 23</td>
-                <td>KL897M</td>
-                <td>44 New york, United State</td>
+                <td><?= $k+1 ?></td>
+                <td><?= $line['lastname'] ?></td>
+                <td><?= $line['firstname'] ?></td>
+                <td><?= $line['email'] ?></td>
+                <td><?= $line['tel'] ?></td>
+                <td><?= $line['cin'] ?></td>
+                <td><?= $line['address'] ?></td>
             </tr>
-            <tr>
-            <td>1</td>
-                <td>John</td>
-                <td>Doe</td>
-                <td>joh@doe.com</td>
-                <td>06 15 34 56 23</td>
-                <td>KL897M</td>
-                <td>44 New york, United State</td>
-            </tr>
+            <?php endforeach ?>
         </tbody>
     </table>
 </div>
@@ -102,10 +97,10 @@ $insert_teacher = ob_get_clean();
 <?php ob_start(); ?>
 <div class="admin">
     <h1>Insérer une filière</h1>
-    <form action="#" method="post" class="form-group">
-        <input type="text" name="name" id="name" placeholder="Nom de la filière (*)" class="form-control" required>
-        <input type="submit" value="Insérer" class="btn btn-primary">
-    </form>
+    <div class="form-group">
+        <input type="text" name="name" id="study_name" placeholder="Nom de la filière (*)" class="form-control" required>
+        <input type="button" onclick="submit_form_study(this)" value="Insérer" class="btn btn-primary">
+    </div>
     <br>
     <hr>
     <h3>Champs ajoutés</h3>

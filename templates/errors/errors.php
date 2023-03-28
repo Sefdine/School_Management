@@ -73,11 +73,11 @@ switch($error)
     case 'emptyData':
         echo "<div class='alert alert-danger'>Les champs sont vides</div>";
     break;
-    case 'insert_student_failed':
+    case 'insert_failed':
         echo "<div class='alert alert-danger'>L'insertion a échoué. Veuillez réessayer</div>";
     break;
-    case 'insert_student_success':
-        echo "<div class='alert alert-successr'>Insertion reussite</div>";
+    case 'insert_success':
+        echo "<div class='alert alert-success'>Insertion reussite</div>";
     break;
 }
 ?> 
