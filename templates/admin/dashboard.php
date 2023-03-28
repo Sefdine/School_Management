@@ -7,7 +7,10 @@
         <li><a href="#" class="nav_update">Update</a></li>
         <li><a href="#" class="nav_delete">Delete</a></li>
     </ul>
-    <a href="#" class="year_admin">Year</a>
+    <select name="year" id="year">
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+    </select>
     <a href="disconnect" class="sign_out">Sign out</a>
 </div>
 <div class="section_admin">
@@ -23,6 +26,8 @@
     </div>
     <div class="contain_admin">
         <div class="container">
+        <div id="contain_admin"></div>
+            <?php include_once('templates/errors/errors.php') ?>
             <?= $home ?>
             <span class="admin_student"><?= $insert_student ?></span>
             <span class="admin_teacher"><?= $insert_teacher ?></span>

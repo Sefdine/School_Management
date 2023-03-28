@@ -59,8 +59,8 @@ class Admin extends User
     }
 
     function displayInsert(string $error = '') : void {
-        $data_student = $_SESSION['insert_student'] ?? [];
-        require_once('templates/errors/errors.php');
+        
+        $data_student = $_SESSION['insert'] ?? [];
         require_once('templates/admin/insert/index.php');
     }
 
@@ -79,13 +79,34 @@ class Admin extends User
             $success = $admin->insertUserStudent($data, $password, $token);
 
             if (!$success) {
-                $_SESSION['err'] = 'insert_student_failed';
+                $_SESSION['err'] = 'insert_failed';
                 header('Location: '. URL_ROOT .'insert');
             } else {
-                $_SESSION['err'] = 'insert_student_success';
-                $_SESSION['insert_student'][] = $data;
+                $_SESSION['err'] = 'insert_success';
+                $_SESSION['insert'][] = $data;
                 header('Location: '. URL_ROOT .'insert');
             }
+        }
+    }
+
+    function insertTeacher(array $data): void {
+        $firstname = $data['firstname'] ?? '';
+        $lastname = $data['lastname'] ?? '';
+        if(!$firstname || !$lastname) {
+            $_SESSION['err'] = 'emptydata';
+            header('Location: '. URL_ROOT .'insert');
+        } else {
+            $admin = new ModelAdmin;
+            $success = $admin->insertUserTeacher($data);
+        }
+
+        if (!$success) {
+            $_SESSION['err'] = 'insert_failed';
+            header('Location: '. URL_ROOT .'insert');
+        } else {
+            $_SESSION['err'] = 'insert_success';
+            $_SESSION['insert'][] = $data;
+            header('Location: '. URL_ROOT .'insert');
         }
     }
 

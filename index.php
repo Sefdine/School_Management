@@ -9,8 +9,6 @@ use Ipem\Src\Controllers\Average;
 
 require_once('config/config.php');
 
-session_start();
-
 spl_autoload_register(static function(string $fqcn) {
     $path = substr_replace(strtolower(str_replace(['\\', 'Ipem'], ['/', ''], $fqcn)), '', 0, 1).'.php';
     require_once($path);
@@ -29,30 +27,38 @@ if (isset($_GET['action'])){
             $password = $_POST['password'];
             $user->getConnect($identifier, $password);
         } else {
-            header('Location: index.php?action=errorLogin&login_err=empty');
-        }
-    } elseif ($action === 'home') {
-        issetSesionUser();
-        $name = $_SESSION['name'] ?? '';
-        $identifier = $_GET['id'] ?? '';             
-        if ($name === 'student') {
-            $student->displayHome($identifier);
-        } elseif ($name === 'admin') {
-            $admin->displayHome();
-        } else {
-            $user->displayForm();
-            die();
-        }
-    } elseif ($action === 'landing') {
-        issetSesionUser();
-        if (isset($_GET['id']) && $_GET['id'] > 0) {
-            $identifier = $_GET['id'];  
-            $error = $_SESSION['err'] ?? '';           
-            $student->displayLanding($identifier, $error);
+            $_SESSION['err'] = 'empty';
+            header('Location: '.URL_ROOT.'errorLogin');
             $_SESSION['err'] = '';
         }
+    } elseif ($action === 'home') {
+        if (session()) {
+            $name = $_SESSION['name'] ?? '';
+            $identifier = $_GET['id'] ?? '';             
+            if ($name === 'student') {
+                $student->displayHome($identifier);
+            } elseif ($name === 'admin') {
+                $admin->displayHome();
+            } else {
+                $user->displayForm();
+                die();
+            }
+        } else {
+            die($user->displayForm());
+        }
+    } elseif ($action === 'landing') {
+        if (session()) {
+            if (isset($_GET['id']) && $_GET['id'] > 0) {
+                $identifier = $_GET['id'];  
+                $error = $_SESSION['err'] ?? '';           
+                $student->displayLanding($identifier, $error);
+                $_SESSION['err'] = '';
+            }
+        } else {
+            die($user->displayForm());
+        }
     } elseif($action === 'module'){
-        issetSesionUser();
+        session();
         if (isset($_GET['id']) && $_GET['id'] > 0) {
             $identifier = $_GET['id'];       
             $admin->displayModules($identifier, $_POST);
@@ -61,7 +67,7 @@ if (isset($_GET['action'])){
             die();              
         }
     } elseif ($action === 'rate') {
-        issetSesionUser();
+        session();
         $name = $_SESSION['name'] ?? '';
         if (isset($_GET['id']) && $_GET['id'] > 0) {
             $identifier = $_GET['id'];
@@ -83,19 +89,19 @@ if (isset($_GET['action'])){
             }
         }
     } elseif ($action === 'updatePassword') {
-        issetSesionUser();
+        session();
         if (isset($_GET['id']) && $_GET['id'] > 0) {
             $identifier = $_GET['id'];
             $user->updatePassword($identifier);
         }
     } elseif ($action === 'updatePasswordForm') {
-        issetSesionUser();
+        session();
         if (isset($_GET['id']) && $_GET['id'] > 0) {
             $identifier = $_GET['id'];
             $user->displayFormUpdatePassword($identifier);
         }
     } elseif ($action === 'updatePasswordTreatment') {
-        issetSesionUser();
+        session();
         if (isset($_GET['id']) && $_GET['id'] > 0) {
             $identifier = $_GET['id'];
             $current_passord = $_POST['current_password'];
@@ -109,43 +115,69 @@ if (isset($_GET['action'])){
             }
         }
     } elseif ($action === 'rateTreatment') {
-        issetSesionUser();
+        session();
         $module_slug = $_GET['module_slug'] ?? '';
         $id = $_GET['id'] ?? '';
         if (isset($_POST)) {
             $rate->update_average($id, $module_slug, $_POST);
         }     
     } elseif ($action === 'insert') {
-        issetSesionUser();
-        $error = $_GET['error'] ?? '';
-        $admin->displayInsert($error);         
+        if (session()) {
+            $error = $_SESSION['err'] ?? '';
+            $admin->displayInsert($error);   
+            $_SESSION['err'] = ''; 
+        } else {
+            die($user->displayForm());
+        }
     } elseif($action === 'insertStudent') {
-        issetSesionUser();
-        $data = $_POST ?? [];
-        $admin->insertStudent($data);
+        if (session()) {
+            $data = $_POST ?? [];
+            $admin->insertStudent($data);
+        } else {
+            die($user->displayForm());
+        }
+    }  elseif($action === 'insertStudy') {
+        if (session()) {
+            $data = $_POST ?? [];
+            $admin->insertStudy($data);
+        } else {
+            die($user->displayForm());
+        }
+    }elseif($action === 'insertTeacher') {
+        if (session()) {
+            $data = $_POST ?? [];
+            $admin->insertTeacher($data);
+        } else {
+            die($user->displayForm());
+        }
     } elseif ($action === 'errorLogin') {
-        issetSesionUser();
-        $login_err = $_SESSION['err'];
-        $user->displayForm($login_err);
-        $_SESSION['err'] = ''; 
-    } elseif ($action === 'errorPassword') {
-        issetSesionUser();
-        if (isset($_SESSION['err']) && isset($_GET['id']) && $_GET['id'] > 0) {
+        if (session()) {
             $login_err = $_SESSION['err'];
-            $identifier = $_GET['id'];
-            $user->displayFormUpdatePassword($identifier, $login_err);
-            $_SESSION['err'] = '';
-        }      
+            $user->displayForm($login_err);
+            $_SESSION['err'] = ''; 
+        } else {
+            die($user->displayForm());
+        }  
+    } elseif ($action === 'errorPassword') {
+        if (session()) {
+            if (isset($_SESSION['err']) && isset($_GET['id']) && $_GET['id'] > 0) {
+                $login_err = $_SESSION['err'];
+                $identifier = $_GET['id'];
+                $user->displayFormUpdatePassword($identifier, $login_err);
+                $_SESSION['err'] = '';
+            }     
+        } else {
+            die($user->displayForm());
+        }
     } elseif ($action === 'disconnect') {
-        issetSesionUser();
         session_destroy();
         header('Location: index.php');
     } else {
+        session_destroy();
         $user->displayForm();
         die();
     }
 } else {
-    $user->displayForm();
-    die();
+    die($user->displayForm());
 }
 
