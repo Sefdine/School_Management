@@ -75,4 +75,53 @@ class User
         $statement->execute([$identifier]);
         return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }
+    public function getData(string $year, string $study, string $group_slug, int $level, int $limit, int $offset): array {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare('
+            SELECT firstname, lastname, identifier FROM users u 
+            JOIN students s ON u.id = s.user_id
+            JOIN registrations r ON s.id = r.student_id
+            JOIN contain c ON c.id = r.contain_id
+            JOIN years y ON y.id = c.year_id
+            JOIN studies st ON st.id = c.study_id
+            JOIN groupes g ON g.id = c.group_id
+            JOIN levels l ON l.id = c.level_id
+            WHERE y.name = ?
+            AND st.name = ?
+            AND g.slug = ?
+            AND l.level = ?
+            ORDER BY u.id ASC LIMIT ?
+            OFFSET ?
+        ');
+        $statement->execute([$year, $study, $group_slug, $level, $limit, $offset]);
+        $data = [];
+        while($row = $statement->fetch()) {
+            $line = new self;
+            $line->firstname = $row['firstname'];
+            $line->lastname = $row['lastname'];
+            $line->identifier = $row['identifier'];
+            $data[] = $line;
+        }
+        return $data;
+    }
+    public function getDataCount(string $year, string $study, string $group_slug, int $level):int {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare('
+            SELECT count(u.id) as count FROM users u 
+            JOIN students s ON u.id = s.user_id
+            JOIN registrations r ON s.id = r.student_id
+            JOIN contain c ON c.id = r.contain_id
+            JOIN years y ON y.id = c.year_id
+            JOIN studies st ON st.id = c.study_id
+            JOIN groupes g ON g.id = c.group_id
+            JOIN levels l ON l.id = c.level_id
+            WHERE y.name = ?
+            AND st.name = ?
+            AND g.slug = ?
+            AND l.level = ?
+        ');
+        $statement->execute([$year, $study, $group_slug, $level]);
+        $row = $statement->fetch(\PDO::FETCH_NUM)[0];
+        return $row;
+    }
 }

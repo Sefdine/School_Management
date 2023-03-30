@@ -47,4 +47,13 @@ trait Group
         $statement->execute([$slug]);
         return ($row = $statement->fetch()) ? $row['name'] : '';
     }
+
+    public function getGroupSlug(string $group): string {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare(
+            'SELECT slug FROM groupes WHERE name = ?'
+        );
+        $statement->execute([$group]);
+        return ($row = $statement->fetch()) ? $row['slug'] : '';
+    }
 }

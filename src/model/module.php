@@ -25,7 +25,7 @@ trait Module
             WHERE l.level = ?
             AND g.slug = ?
             AND s.name = ?
-            AND y.name = ?; '
+            AND y.name = ?'
         );
         $statement->execute([$level, $group_slug, $study, $year]);
         $modules = [];

@@ -21,6 +21,11 @@ $rate = new Average;
 
 if (isset($_GET['action'])){
     $action = $_GET['action'];
+}  else {
+    $action = null;
+}
+
+if (isset($action)){
     if ($action === 'connectionTreatment') {
         if (!empty($_POST['identifier']) && !empty($_POST['password'])) {
             $identifier = $_POST['identifier'];
@@ -124,7 +129,11 @@ if (isset($_GET['action'])){
     } elseif ($action === 'insert') {
         if (session()) {
             $error = $_SESSION['err'] ?? '';
-            $admin->displayInsert($error);   
+            $year = $_SESSION['data_average']['year'] ?? '2022';
+            $study = $_SESSION['data_average']['study'] ?? 'Gestion des entreprises';
+            $group = $_SESSION['data_average']['group'] ?? 'Technicien Sp├®cialis├®';
+            $level = (int)$_SESSION['data_average']['level'] ?? 1;
+            $admin->displayInsert($error, $year, $study, $group, $level);   
             $_SESSION['err'] = ''; 
         } else {
             die($user->displayForm());
@@ -136,17 +145,24 @@ if (isset($_GET['action'])){
         } else {
             die($user->displayForm());
         }
-    }  elseif($action === 'insertStudy') {
+    } elseif($action === 'insertStudy') {
         if (session()) {
-            $data = $_POST ?? [];
-            $admin->insertStudy($data);
+            $study_name = $_POST['name'] ?? '';
+            $admin->insertStudy($study_name);
         } else {
             die($user->displayForm());
         }
-    }elseif($action === 'insertTeacher') {
+    } elseif($action === 'insertTeacher') {
         if (session()) {
             $data = $_POST ?? [];
             $admin->insertTeacher($data);
+        } else {
+            die($user->displayForm());
+        }
+    } elseif($action === 'insertGroup') {
+        if (session()) {
+            $group = $_POST['name'] ?? '';
+            $admin->insertGroup($group);
         } else {
             die($user->displayForm());
         }
