@@ -5,7 +5,7 @@
     <form action="<?= URL_ROOT ?>insertTeacher" method="post" class="form-group">
         <input type="text" name="lastname" id="lastname" placeholder="Nom *" class="form-control" required>
         <input type="text" name="firstname" id="firstname" placeholder="Prénom *" class="form-control" required>
-        <input type="text" name="email" id="email" placeholder="Email" class="form-control">
+        <input type="email" name="email" id="email" placeholder="Email" class="form-control">
         <input type="text" name="tel" id="tel" placeholder="Numéro GSM" class="form-control">
         <input type="text" name="cin" id="cin" placeholder="Numéro CIN" class="form-control">
         <input type="text" name="address" id="address" placeholder="Adresse" class="form-control">

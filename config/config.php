@@ -42,3 +42,9 @@ if (isset($_POST['group'])) {
 if (isset($_POST['level'])) {
     $_SESSION['data_average']['level'] = $_POST['level'];
 }
+if (isset($_POST['current_page'])) {
+    $_SESSION['average_page'] = $_POST['current_page'];
+}
+if (isset($_POST['current_module'])) {
+    $_SESSION['current_module'] = $_POST['current_module'];
+}

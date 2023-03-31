@@ -7,9 +7,10 @@
         <li><a href="#" class="nav_update">Update</a></li>
         <li><a href="#" class="nav_delete">Delete</a></li>
     </ul>
-    <select id="module">
-        <?php foreach($modules as $module): ?>
-            <option value="<?= $module->slug ?>"><?= $module->name ?></option>
+    <select name="study" id="study_header" onchange="select_study(this)">
+        <option value="title" disabled selected class="text-center">Filières</option>
+        <?php foreach($studies as $item): ?>
+            <option value="<?= $item ?>" <?= ($item == $study) ? 'selected' : '' ?> class="text-center"><?= $item ?></option>
         <?php endforeach ?>
     </select>
     <select id="year" onchange="select_year(this)">

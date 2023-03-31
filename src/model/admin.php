@@ -7,7 +7,9 @@ use Ipem\Src\Lib\Database;
 
 class Admin extends User
 {
-    use Year, Module, Group;
+    public $name;
+    public $slug;
+    use Contain, Module, Registration;
     public function insertUserStudent(array $data, string $password, string $token):bool {
         $connection = new Database;
         $firstname = $data['firstname'] ?? '';
@@ -138,7 +140,7 @@ class Admin extends User
     public function getGroups(string $year, string $study) {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
-            SELECT DISTINCT g.name as groupe FROM groupes g
+            SELECT DISTINCT g.name as groupe, g.slug FROM groupes g
             JOIN contain c ON g.id = c.group_id
             JOIN years y ON y.id = c.year_id
             JOIN studies s ON s.id = c.study_id
@@ -148,7 +150,10 @@ class Admin extends User
         $groupes = [];
         $statement->execute([$year, $study]);
         while ($row = $statement->fetch()) {
-            $groupes[] = $row['groupe'];
+            $group = new self;
+            $group->name = $row['groupe'];
+            $group->slug = $row['slug'];
+            $groupes[] = $group;
         }
         return $groupes;
     }
@@ -162,7 +167,7 @@ class Admin extends User
             JOIN groupes g ON g.id = c.group_id
             WHERE y.name = ?
             AND s.name = ?
-            AND g.name = ?
+            AND g.slug = ?
         ');
         $groupes = [];
         $statement->execute([$year, $study, $group]);

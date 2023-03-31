@@ -8,6 +8,7 @@ use Ipem\Src\Model\Average;
 use Ipem\Src\Model\Teacher;
 use Ipem\Src\Model\User as ModelUser;
 use Ipem\Src\Model\Admin as ModelAdmin;
+use Ipem\Src\Model\Student;
 
 class Admin extends User
 {
@@ -56,20 +57,22 @@ class Admin extends User
     }
     public function displayInsert(string $error = '', string $year, string $study, string $group, int $level) : void {
         $admin = new ModelAdmin;
+        $current_module = $_SESSION['current_module'] ?? '';
+        $counter = $_SESSION['counter'] ?? 0;
         $data = $_SESSION['insert'] ?? [];
+        $exam = (int)($_SESSION['data_average']['exam']) ?? 1;
         $years = $admin->getYears();
         $studies = $admin->getStudies($year);
         $groupes = $admin->getGroups($year, $study);
         $levels = $admin->getLevels($year, $study, $group);
-        $group_slug = $admin->getGroupSlug($group);
-        $modules = $admin->getModules((string)$level, $group_slug, $study, $year);
+        $modules = $admin->getModules((string)$level, $group, $study, $year);
         $session_nav_left = $_SESSION['nav_left'] ?? '';
-        $count = $admin->getDataCount($year, $study, $group_slug, $level);
+        $count = $admin->getDataCount($year, $study, $group, $level);
         $currentPage = (int)($_SESSION['average_page'] ?? 1);
-        $perPage = 12;
+        $perPage = 10;
         $pages = ceil($count / $perPage);
         $offset = $perPage * ($currentPage - 1);
-        $data_users = $admin->getData($year, $study, $group_slug, $level, $perPage, $offset);
+        $data_users = $admin->getData(1, $current_module, $year, $study, $group, $level, $perPage, $offset);
         switch($session_nav_left) {
             case 'student': 
                 require_once('templates/admin/insert/student.php');
@@ -165,6 +168,49 @@ class Admin extends User
             if ($success) {
                 $_SESSION['err'] = 'insert_success';
                 $_SESSION['insert'][] = $name;
+                header('Location: '. URL_ROOT .'insert');
+            } else {
+                $_SESSION['err'] = 'insert_failed';
+                header('Location: '. URL_ROOT .'insert');
+            }
+        }
+    }
+    public function insertAverages(array $data):void {
+        if (empty($data)) {
+            $_SESSION['err'] = 'emptydata';
+            header('Location: '.URL_ROOT.'insert');
+        } else {
+            $admin = new ModelAdmin;
+            $student = new Student;
+            $module_slug = $_SESSION['current_module'];
+            $module_id = $admin->getIdModule($module_slug);
+            $exam_id = 1;
+            $year = $_SESSION['data_average']['year'];
+            $study = $_SESSION['data_average']['study'];
+            $group = $_SESSION['data_average']['group'];
+            $level = $_SESSION['data_average']['level'];
+            $year_id = $admin->getIdYear($year);
+            $study_id = $admin->getIdStudy($study);
+            $group_id = $admin->getIdGroup($group);
+            $level_id = $admin->getIdLevel((string)$level);
+            $contain_id = $admin->getIdContain($year_id, $study_id, $group_id, $level_id);
+            $counter = 0;
+            foreach($data as $k => $value) {
+                $identifier = str_replace('_', ' ', $k);
+                $user_id = $admin->getIdUser($identifier);
+                $student_id = $student->getIdStudent($user_id);
+                $registration_id = $admin->getIdRegistration($student_id, $contain_id);
+                if ($value) {
+                    $average = new Average;
+                    $success = $average->insertAverage((float)$value, $registration_id, $module_id, $exam_id);
+                    if ($success) {
+                        $counter++;
+                    }
+                }
+            }
+            if ($counter) {
+                $_SESSION['counter'] = $counter;
+                $_SESSION['err'] = 'insert_averages_success';
                 header('Location: '. URL_ROOT .'insert');
             } else {
                 $_SESSION['err'] = 'insert_failed';

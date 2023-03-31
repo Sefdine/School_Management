@@ -129,9 +129,9 @@ if (isset($action)){
     } elseif ($action === 'insert') {
         if (session()) {
             $error = $_SESSION['err'] ?? '';
-            $year = $_SESSION['data_average']['year'] ?? '2022';
-            $study = $_SESSION['data_average']['study'] ?? 'Gestion des entreprises';
-            $group = $_SESSION['data_average']['group'] ?? 'Technicien Sp├®cialis├®';
+            $year = $_SESSION['data_average']['year'] ?? '';
+            $study = $_SESSION['data_average']['study'] ?? '';
+            $group = $_SESSION['data_average']['group'] ?? '';
             $level = (int)$_SESSION['data_average']['level'] ?? 1;
             $admin->displayInsert($error, $year, $study, $group, $level);   
             $_SESSION['err'] = ''; 
@@ -163,6 +163,13 @@ if (isset($action)){
         if (session()) {
             $group = $_POST['name'] ?? '';
             $admin->insertGroup($group);
+        } else {
+            die($user->displayForm());
+        }
+    } elseif($action === 'insertAverages') {
+        if (session()) {
+            $data = $_POST ?? [];
+            $admin->insertAverages($data);
         } else {
             die($user->displayForm());
         }
