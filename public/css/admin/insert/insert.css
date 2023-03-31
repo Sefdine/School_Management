@@ -1,5 +1,5 @@
 
-.admin  > .form-group {
+.admin  .form-group {
     margin-top: 10px;
 }
 
@@ -12,4 +12,13 @@
     margin-top: 5px;
     font-size: 1.7em;
     border-radius: 5px;
+}
+
+.submit_average {
+    background-color: #0fb609;
+    border: none;
+    color: #fff;
+    border-radius: 20px;
+    font-size: larger;
+    margin-left:40%;
 }

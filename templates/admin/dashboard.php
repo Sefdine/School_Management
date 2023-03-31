@@ -7,9 +7,16 @@
         <li><a href="#" class="nav_update">Update</a></li>
         <li><a href="#" class="nav_delete">Delete</a></li>
     </ul>
-    <select name="year" id="year">
-        <option value="2022">2022</option>
-        <option value="2023">2023</option>
+    <select name="study" id="study_header" onchange="select_study(this)">
+        <option value="title" disabled selected class="text-center">Filières</option>
+        <?php foreach($studies as $item): ?>
+            <option value="<?= $item ?>" <?= ($item == $study) ? 'selected' : '' ?> class="text-center"><?= $item ?></option>
+        <?php endforeach ?>
+    </select>
+    <select id="year" onchange="select_year(this)">
+        <?php foreach($years as $item): ?>
+            <option value="<?= $item ?>" <?= ($item == $year) ? 'selected' : '' ?>><?= $item ?></option>
+        <?php endforeach ?>
     </select>
     <a href="disconnect" class="sign_out">Sign out</a>
 </div>
@@ -20,20 +27,17 @@
             <li><button onclick="nav_left_button(this)" data-value="teacher">Enseignants</button></li>
             <li><button onclick="nav_left_button(this)" data-value="study">Filières</button></li>
             <li><button onclick="nav_left_button(this)" data-value="group">Groupes</button></li>
-            <li><button onclick="nav_left_button(this)" data-value="level">Niveau</button></li>
             <li><button onclick="nav_left_button(this)" data-value="average">Notes</button></li>
         </ul>
     </div>
     <div class="contain_admin">
         <div class="container">
-        <div id="contain_admin"></div>
             <?php include_once('templates/errors/errors.php') ?>
             <?= $home ?>
             <span class="admin_student"><?= $insert_student ?></span>
             <span class="admin_teacher"><?= $insert_teacher ?></span>
             <span class="admin_study"><?= $insert_study ?></span>
             <span class="admin_group"><?= $insert_group ?></span>
-            <span class="admin_level"><?= $insert_level ?></span>
             <span class="admin_average"><?= $insert_average ?></span>              
         </div>
     </div>

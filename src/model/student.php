@@ -9,7 +9,7 @@ class Student extends User
 {
     use Registration, Module, Year, Exam;
 
-    public function getData(string $year, int $exam, int $identifier): array
+    public function getDataStudent(string $year, int $exam, int $identifier): array
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(

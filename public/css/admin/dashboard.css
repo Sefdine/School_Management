@@ -66,16 +66,16 @@ a{
     transition: 0.2s;
 }
 
-.header_dashboard #year {
+.header_dashboard select {
     -webkit-appearance: none;
     -moz-appearance: none;
     background-color: unset;
     border: none;
     color: #fff;
-    margin-right: 10px;
+    margin-right: 60px;
 }
 
-.header_dashboard #year option {
+.header_dashboard select option {
     color: #000;
 }
 
@@ -89,7 +89,13 @@ a{
 .section_admin .nav_left{
     width: 230px;
     background-color: rgb(119, 119, 161);
-    height: auto;
+    height: 100%;
+}
+
+.section_admin  .contain_admin {
+    flex: auto;
+    background-color: rgba(192, 199, 223, 0.301);
+    height: 100%;
 }
 
 .section_admin .nav_left ul {
@@ -104,12 +110,6 @@ a{
 .section_admin > .nav_left li {
     list-style: none;
     color: #fff;
-}
-
-.section_admin > .contain_admin {
-    flex: auto;
-    background-color: rgba(192, 199, 223, 0.301);
-    height: auto;
 }
 
 .section_admin .nav_left ul button{

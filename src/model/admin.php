@@ -7,6 +7,9 @@ use Ipem\Src\Lib\Database;
 
 class Admin extends User
 {
+    public $name;
+    public $slug;
+    use Contain, Module, Registration;
     public function insertUserStudent(array $data, string $password, string $token):bool {
         $connection = new Database;
         $firstname = $data['firstname'] ?? '';
@@ -49,7 +52,6 @@ class Admin extends User
             return false;
         }
     }
-
     public function insertUserTeacher(array $data):bool {
         $connection = new Database;
         $firstname = $data['firstname'] ?? '';
@@ -89,5 +91,89 @@ class Admin extends User
             $connection->getConnection()->rollBack();
             return false;
         }
+    }
+    public function insertStudy(string $name): bool {
+        $connection = new Database;
+        $connection->getConnection()->beginTransaction();
+        $statement = $connection->getConnection()->prepare("
+            INSERT INTO studies SET name = ?
+        ");
+        $result = $statement->execute([$name]);
+        if ($result) {
+            $connection->getConnection()->commit();
+            return true;
+        } else {
+            $connection->getConnection()->rollBack();
+            return false;
+        }
+    }
+    public function insertGroup(string $name, string $slug): bool {
+        $connection = new Database;
+        $connection->getConnection()->beginTransaction();
+        $statement = $connection->getConnection()->prepare("
+            INSERT INTO groupes(name, slug) VALUES(?, ?)
+        ");
+        $result = $statement->execute([$name, $slug]);
+        if ($result) {
+            $connection->getConnection()->commit();
+            return true;
+        } else {
+            $connection->getConnection()->rollBack();
+            return false;
+        }
+    }
+    public function getStudies(string $year): array {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare('
+            SELECT DISTINCT s.name AS study FROM studies s
+            JOIN contain c ON s.id = c.study_id
+            JOIN years y ON y.id = c.year_id
+            WHERE y.name = ?
+        ');
+        $statement->execute([$year]);
+        $studies = [];
+        while($row = $statement->fetch()) {
+            $studies[] = $row['study'];
+        }
+        return $studies;
+    }
+    public function getGroups(string $year, string $study) {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare('
+            SELECT DISTINCT g.name as groupe, g.slug FROM groupes g
+            JOIN contain c ON g.id = c.group_id
+            JOIN years y ON y.id = c.year_id
+            JOIN studies s ON s.id = c.study_id
+            WHERE y.name = ?
+            AND s.name = ?
+        ');
+        $groupes = [];
+        $statement->execute([$year, $study]);
+        while ($row = $statement->fetch()) {
+            $group = new self;
+            $group->name = $row['groupe'];
+            $group->slug = $row['slug'];
+            $groupes[] = $group;
+        }
+        return $groupes;
+    }
+    public function getLevels(string $year, string $study, string $group) {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare('
+            SELECT level FROM levels l
+            JOIN contain c ON l.id = c.level_id
+            JOIN years y ON y.id = c.year_id
+            JOIN studies s ON s.id = c.study_id
+            JOIN groupes g ON g.id = c.group_id
+            WHERE y.name = ?
+            AND s.name = ?
+            AND g.slug = ?
+        ');
+        $groupes = [];
+        $statement->execute([$year, $study, $group]);
+        while ($row = $statement->fetch()) {
+            $groupes[] = $row['level'];
+        }
+        return $groupes;
     }
 }
