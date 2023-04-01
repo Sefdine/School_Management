@@ -10,10 +10,10 @@
         <div id="bloc1">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-              <a class="nav-link active" href="<?= URL_ROOT ?>home/<?= $user->id?>" style="color: white"><strong>Home</strong></a>
+              <a class="nav-link active" href="<?= URL_ROOT ?>home" style="color: white"><strong>Home</strong></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="<?= URL_ROOT ?>landing/<?= $user->id ?>" style="color: white"><strong>Note</strong></a>
+              <a class="nav-link active" href="<?= URL_ROOT ?>landing" style="color: white"><strong>Note</strong></a>
             </li>
           </ul>
         </div>
@@ -22,7 +22,7 @@
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><img src="<?= URL_ROOT ?>public/images/logo_login.png" alt="Votre pseudo" title="Votre compte" width=30px height=30px></a>
             <ul class="dropdown-menu text-small shadow">
               <li>
-                <a class="dropdown-item" href="<?= URL_ROOT ?>updatePassword/<?= $user->id ?>">Changer mon mot de passe</a>
+                <a class="dropdown-item" href="<?= URL_ROOT ?>updatePassword">Changer mon mot de passe</a>
               </li>
               <li>
                 <hr class="dropdown-divider">

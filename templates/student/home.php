@@ -7,7 +7,7 @@
     <div id="note">
       <p>Suivez vos évaluations par le moyen le plus simple.</p>
       <p>Pour vous procurer un environnement moderne, IPEM met à votre disposition cette plate-forme vous permettant de consulter vos notes.</p>
-      <a href="<?= URL_ROOT ?>landing/<?= $user->id ?>"><strong>Consulter mes notes</strong></a>
+      <a href="<?= URL_ROOT ?>landing"><strong>Consulter mes notes</strong></a>
     </div>
   </div>
   <div id="part2">

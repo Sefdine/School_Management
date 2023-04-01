@@ -26,7 +26,7 @@ class Database
                         \PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING,
                         \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
                         \PDO::ATTR_EMULATE_PREPARES => false,
-                        // \PDO::ATTR_AUTOCOMMIT => false,
+                        \PDO::ATTR_AUTOCOMMIT => true,
                         \PDO::MYSQL_ATTR_FOUND_ROWS => true
                     ]
                 );

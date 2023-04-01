@@ -4,5 +4,5 @@
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^([a-zA-Z]+)/?([0-9]+)?/?([a-z-]+)?$ index.php?action=$1&id=$2&module_slug=$3
+    RewriteRule ^([a-zA-Z]+)/?([a-z-]+)?$ index.php?action=$1&module_slug=$2
 </IfModule>

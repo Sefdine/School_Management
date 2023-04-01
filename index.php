@@ -25,6 +25,13 @@ if (isset($_GET['action'])){
     $action = null;
 }
 
+$error = $_SESSION['err'] ?? '';
+$year = $_SESSION['data_average']['year'] ?? '';
+$study = $_SESSION['data_average']['study'] ?? '';
+$group = $_SESSION['data_average']['group'] ?? '';
+$level = (int)$_SESSION['data_average']['level'] ?? 1;
+$exam = (int)($_SESSION['data_average']['exam']) ?? 1;
+
 if (isset($action)){
     if ($action === 'connectionTreatment') {
         if (!empty($_POST['identifier']) && !empty($_POST['password'])) {
@@ -39,7 +46,7 @@ if (isset($action)){
     } elseif ($action === 'home') {
         if (session()) {
             $name = $_SESSION['name'] ?? '';
-            $identifier = $_GET['id'] ?? '';             
+            $identifier = (string)$_SESSION['user_id'] ?? '';             
             if ($name === 'student') {
                 $student->displayHome($identifier);
             } elseif ($name === 'admin') {
@@ -53,19 +60,26 @@ if (isset($action)){
         }
     } elseif ($action === 'landing') {
         if (session()) {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $identifier = $_GET['id'];  
-                $error = $_SESSION['err'] ?? '';           
-                $student->displayLanding($identifier, $error);
-                $_SESSION['err'] = '';
+            if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0) {
+                $identifier = (string)$_SESSION['user_id'];  
+                $name = $_SESSION['name'] ?? '';
+                if ($name === 'student') {
+                    $student->displayLanding($identifier, $error);
+                    $_SESSION['err'] = '';
+                } elseif ($name === 'admin') {
+                    $admin->displayLanding($identifier);
+                } else {
+                    $user->displayForm();
+                    die();
+                }         
             }
         } else {
             die($user->displayForm());
         }
     } elseif($action === 'module'){
         session();
-        if (isset($_GET['id']) && $_GET['id'] > 0) {
-            $identifier = $_GET['id'];       
+        if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0) {
+            $identifier = (string)$_SESSION['user_id'];       
             $admin->displayModules($identifier, $_POST);
         } else {
             $user->displayForm();
@@ -74,15 +88,14 @@ if (isset($action)){
     } elseif ($action === 'rate') {
         session();
         $name = $_SESSION['name'] ?? '';
-        if (isset($_GET['id']) && $_GET['id'] > 0) {
-            $identifier = $_GET['id'];
+        if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0) {
+            $identifier = (string)$_SESSION['user_id'];
             if ($name === 'student') {
                 $year = $_POST['year'] ?? '';
                 $control = $_POST['control'] ?? '';
                 $student->displayAverage($identifier, $year, $control);
             } elseif ($name === 'admin') {                
                 $module_slug = $_GET['module_slug'] ?? '';
-                $error = $_SESSION['err'] ?? '';
                 $data = $_SESSION['array'] ?? '';
                 if(isset($_SESSION['sessionData']) && $_SESSION['sessionData'] > 0){
                     $_SESSION['data'] = [];
@@ -95,20 +108,20 @@ if (isset($action)){
         }
     } elseif ($action === 'updatePassword') {
         session();
-        if (isset($_GET['id']) && $_GET['id'] > 0) {
-            $identifier = $_GET['id'];
+        if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0) {
+            $identifier = (string)$_SESSION['user_id'];
             $user->updatePassword($identifier);
         }
     } elseif ($action === 'updatePasswordForm') {
         session();
-        if (isset($_GET['id']) && $_GET['id'] > 0) {
-            $identifier = $_GET['id'];
+        if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0) {
+            $identifier = (string)$_SESSION['user_id'];
             $user->displayFormUpdatePassword($identifier);
         }
     } elseif ($action === 'updatePasswordTreatment') {
         session();
-        if (isset($_GET['id']) && $_GET['id'] > 0) {
-            $identifier = $_GET['id'];
+        if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0) {
+            $identifier = (string)$_SESSION['user_id'];
             $current_passord = $_POST['current_password'];
             $new_password = $_POST['new_password'];
             $new_password_retype = $_POST['new_password_retype'];
@@ -116,24 +129,22 @@ if (isset($action)){
                 $user->updatePasswordTreatment($identifier, $current_passord, $new_password);
             } else {
                 $_SESSION['err'] = 'new_password_retype';
-                header('Location: '. URL_ROOT .'errorPassword/'.$identifier);
+                header('Location: '. URL_ROOT .'errorPassword');
             }
         }
     } elseif ($action === 'rateTreatment') {
-        session();
-        $module_slug = $_GET['module_slug'] ?? '';
-        $id = $_GET['id'] ?? '';
-        if (isset($_POST)) {
-            $rate->update_average($id, $module_slug, $_POST);
-        }     
-    } elseif ($action === 'insert') {
         if (session()) {
-            $error = $_SESSION['err'] ?? '';
-            $year = $_SESSION['data_average']['year'] ?? '';
-            $study = $_SESSION['data_average']['study'] ?? '';
-            $group = $_SESSION['data_average']['group'] ?? '';
-            $level = (int)$_SESSION['data_average']['level'] ?? 1;
-            $admin->displayInsert($error, $year, $study, $group, $level);   
+            $module_slug = $_GET['module_slug'] ?? '';
+            $id = (string)$_SESSION['user_id'] ?? '';
+            if (isset($_POST)) {
+                $rate->update_average($id, $module_slug, $_POST);
+            }   
+        } else {
+            die($user->displayForm());
+        } 
+    } elseif ($action === 'displayDashboard') {
+        if (session()) {
+            $admin->displayDashboard($error, $year, $study, $group, $level, $exam);   
             $_SESSION['err'] = ''; 
         } else {
             die($user->displayForm());
@@ -174,18 +185,14 @@ if (isset($action)){
             die($user->displayForm());
         }
     } elseif ($action === 'errorLogin') {
-        if (session()) {
-            $login_err = $_SESSION['err'];
-            $user->displayForm($login_err);
-            $_SESSION['err'] = ''; 
-        } else {
-            die($user->displayForm());
-        }  
+        $login_err = $_SESSION['err'] ?? '';
+        $user->displayForm($login_err);
+        $_SESSION['err'] = ''; 
     } elseif ($action === 'errorPassword') {
         if (session()) {
-            if (isset($_SESSION['err']) && isset($_GET['id']) && $_GET['id'] > 0) {
+            if (isset($_SESSION['err']) && isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0) {
                 $login_err = $_SESSION['err'];
-                $identifier = $_GET['id'];
+                $identifier = (string)$_SESSION['user_id'];
                 $user->displayFormUpdatePassword($identifier, $login_err);
                 $_SESSION['err'] = '';
             }     

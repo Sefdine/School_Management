@@ -21,23 +21,23 @@ trait Password
         $user = $users->getUser($identifier);
         if ($current_password !== $new_password) {
             if (password_verify($current_password, $user->password)) {
-                $new_password = self::createPassword($current_password);
+                $new_password = self::createPassword($new_password);
                 $success = $users->setPassword($identifier, $new_password);
     
                 if ($success) {
                     $_SESSION['err'] = 'success_password';
-                    header('Location: '. URL_ROOT .'errorPassword/'.$identifier);
+                    header('Location: '. URL_ROOT .'errorPassword');
                 } else {
                     $_SESSION['err'] = 'problem';
-                    header('Location: '. URL_ROOT .'errorPassword/'.$identifier);
+                    header('Location: '. URL_ROOT .'errorPassword');
                 }
             } else {
                 $_SESSION['err'] = 'current_password';
-                header('Location: '. URL_ROOT .'errorPassword/'.$identifier);
+                header('Location: '. URL_ROOT .'errorPassword');
             }
         } else {
             $_SESSION['err'] = 'new_password';
-            header('Location: '. URL_ROOT .'errorPassword/'.$identifier);
+            header('Location: '. URL_ROOT .'errorPassword');
         }
     }
 

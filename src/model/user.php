@@ -62,7 +62,7 @@ class User
             'UPDATE users SET password = ? WHERE id = ?'
         );    
 
-        $affectedLines = $statement->execute([$new_password, $user_id]);
+        $affectedLines = $statement->execute([$new_password, (int)$user_id]);
         return ($affectedLines > 0);
     }
 

@@ -9,7 +9,7 @@
         </div>
         <br>
         <div class="col-md-8 landing_form">
-            <form action="<?= URL_ROOT ?>rate/<?= $user->id ?>" method="post">
+            <form action="<?= URL_ROOT ?>rate" method="post">
                 <label for="year">Année</label>
                 <select name="year" class="form-control" required>
                     <?php foreach($years as $year): ?>

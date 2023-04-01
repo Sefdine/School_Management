@@ -6,12 +6,12 @@
             <h1 class="p-5">M. <?= $user->firstname; ?> !</h1>
             <hr />
             <p>Cliquez sur le boutton ci-dessous pour changer votre mot de passe</p>
-            <button type="button" onclick="window.location.href = '<?= URL_ROOT ?>updatePasswordForm/<?= $user->id ?>';" class="btn btn-info btn-lg" data-toggle="modal" data-target="#change_password">
+            <button type="button" onclick="window.location.href = '<?= URL_ROOT ?>updatePasswordForm';" class="btn btn-info btn-lg" data-toggle="modal" data-target="#change_password">
                 Changer mon mot de passe
             </button>
             <br>
             <br>
-            <a href="<?= URL_ROOT ?>home/<?=  $user->id ?>">Retour à l'accueil</a>
+            <a href="<?= URL_ROOT ?>home" style="color: rgba(42, 156, 31, 0.897);">Retour à l'accueil</a>
         </div>
     </div>
 </div>
