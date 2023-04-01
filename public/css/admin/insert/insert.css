@@ -3,11 +3,6 @@
     margin-top: 10px;
 }
 
-.admin  > .form-group input{
-    margin-top: 2px;
-    border-radius: 5px;
-}
-
 .admin  > .form-group .btn-primary{
     margin-top: 5px;
     font-size: 1.7em;

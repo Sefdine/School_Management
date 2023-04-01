@@ -32,6 +32,9 @@ $(document).ready(() => {
     select_level = (select) => {
         sendValueSession({'level': select.value}, document.location = 'insert');
     }
+    select_exam = (select) => {
+        sendValueSession({'exam': select.value}, document.location = 'insert');
+    }
     next_button_average = (button) => {
         sendValueSession({'current_page': currentPage+1}, document.location = 'insert');
     }

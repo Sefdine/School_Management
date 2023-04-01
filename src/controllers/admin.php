@@ -66,13 +66,14 @@ class Admin extends User
         $groupes = $admin->getGroups($year, $study);
         $levels = $admin->getLevels($year, $study, $group);
         $modules = $admin->getModules((string)$level, $group, $study, $year);
+        $exams = $admin->getExams();
         $session_nav_left = $_SESSION['nav_left'] ?? '';
         $count = $admin->getDataCount($year, $study, $group, $level);
         $currentPage = (int)($_SESSION['average_page'] ?? 1);
         $perPage = 10;
         $pages = ceil($count / $perPage);
         $offset = $perPage * ($currentPage - 1);
-        $data_users = $admin->getData(1, $current_module, $year, $study, $group, $level, $perPage, $offset);
+        $data_users = $admin->getData($exam, $current_module, $year, $study, $group, $level, $perPage, $offset);
         switch($session_nav_left) {
             case 'student': 
                 require_once('templates/admin/insert/student.php');
@@ -97,9 +98,7 @@ class Admin extends User
     public function insertStudent(array $data): void {
         $firstname = $data['firstname'] ?? '';
         $lastname = $data['lastname'] ?? '';
-        $identifier = $data['identifier'] ?? '';
-        $nationality = $data['nationality'] ?? '';
-        if (!($firstname) || !($lastname) || !($identifier) || !($nationality) ) {
+        if (!($firstname) || !($lastname)) {
             $_SESSION['err'] = 'emptydata';
             header('Location: '. URL_ROOT .'insert');
         } else {
@@ -184,7 +183,7 @@ class Admin extends User
             $student = new Student;
             $module_slug = $_SESSION['current_module'];
             $module_id = $admin->getIdModule($module_slug);
-            $exam_id = 1;
+            $exam_id = (int)$_SESSION['data_average']['exam'];
             $year = $_SESSION['data_average']['year'];
             $study = $_SESSION['data_average']['study'];
             $group = $_SESSION['data_average']['group'];
