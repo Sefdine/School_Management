@@ -50,23 +50,23 @@ class Average
                 $success = $averages->insertAverage($value, $registration_id, $module_id, $exam_id);
             } else {
                 $_SESSION['err'] = 'invalid_num_inscription';
-                header('Location: '. URL_ROOT .'rate/'.$id.'/'.$module_slug);
+                header('Location: '. URL_ROOT .'rate/'.$module_slug);
                 die();
             }
         } else {
             $_SESSION['err'] = 'empty_numInscription';
-            header('Location: '. URL_ROOT .'rate/'.$id.'/'.$module_slug);
+            header('Location: '. URL_ROOT .'rate/'.$module_slug);
             die();
         }
 
         if ($success) {
             $_SESSION['data'][] = [$identifier, $full_name, $value];
             $_SESSION['err'] = 'rateSuccess';
-            header('Location: '. URL_ROOT .'rate/'.$id.'/'.$module_slug);
+            header('Location: '. URL_ROOT .'rate/'.$module_slug);
             die();
         } else {
             $_SESSION['err'] = 'rateError';
-            header('Location: '. URL_ROOT .'rate/'.$id.'/'.$module_slug);
+            header('Location: '. URL_ROOT .'rate/'.$module_slug);
             die();
         }
     }

@@ -69,7 +69,7 @@
     </div>
     <br>
     <br>
-    <form action="<?= URL_ROOT ?>rateTreatment/<?= $user->id ?>/<?= $current_slug ?>" method="POST" enctype="multipart/form-data" autocomplete="off">
+    <form action="<?= URL_ROOT ?>rateTreatment/<?= $current_slug ?>" method="POST" enctype="multipart/form-data" autocomplete="off">
         <div class="mb-3">
             <input type="text" class="form-control" name="num_inscription" required="required" placeholder="Numéro d'inscription">
         </div>
@@ -80,7 +80,7 @@
     </form>
     <br />
     <br />
-    <a href="<?= URL_ROOT ?>rate/<?= $user->id ?>/<?= $current_slug ?><?php $_SESSION['sessionData'] = 1 ?>">Reinitialiser le tableau</a>
+    <a href="<?= URL_ROOT ?>rate/<?= $current_slug ?><?php $_SESSION['sessionData'] = 1 ?>">Reinitialiser le tableau</a>
     <div class="table-responsive">
         <table class="table table-striped table-sm table-hover">
             <thead class="thead-light">

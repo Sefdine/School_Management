@@ -39,7 +39,7 @@ class Student extends User
             return $data;
         } else {
             $_SESSION['err'] = 'rate_not_exist';
-            header('Location: '. URL_ROOT .'landing/'.$identifier);
+            header('Location: '. URL_ROOT .'landing');
             die();
         }
     }

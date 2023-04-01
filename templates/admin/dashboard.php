@@ -3,9 +3,9 @@
     <h2 class="logo_admin">Mon logo</h2>
     <ul class="nav_top">
         <li><a href="home">Home</a></li>
-        <li><a href="insert" class="nav_insert">Insert</a></li>
-        <li><a href="#" class="nav_update">Update</a></li>
-        <li><a href="#" class="nav_delete">Delete</a></li>
+        <li><a href="displayDashboard" class="nav_insert" onclick="nav_top_a(this)" data-value="insert">Insert</a></li>
+        <li><a href="displayDashboard" class="nav_update" onclick="nav_top_a(this)" data-value="update">Update</a></li>
+        <li><a href="displayDashboard" class="nav_delete" onclick="nav_top_a(this)" data-value="delete">Delete</a></li>
     </ul>
     <select name="study" id="study_header" onchange="select_study(this)">
         <option value="title" disabled selected class="text-center">Filières</option>
@@ -28,17 +28,19 @@
             <li><button onclick="nav_left_button(this)" data-value="study">Filières</button></li>
             <li><button onclick="nav_left_button(this)" data-value="group">Groupes</button></li>
             <li><button onclick="nav_left_button(this)" data-value="average">Notes</button></li>
+            <br>
+            <a href="<?= URL_ROOT ?>landing">Note Individuelle</a>
         </ul>
     </div>
     <div class="contain_admin">
         <div class="container">
             <?php include_once('templates/errors/errors.php') ?>
-            <?= $home ?>
-            <span class="admin_student"><?= $insert_student ?></span>
-            <span class="admin_teacher"><?= $insert_teacher ?></span>
-            <span class="admin_study"><?= $insert_study ?></span>
-            <span class="admin_group"><?= $insert_group ?></span>
-            <span class="admin_average"><?= $insert_average ?></span>              
+            <?= (isset($home)) ? $home : '' ?>
+            <span class="admin_student"><?= (isset($insert_student)) ? $insert_student : ''?></span>
+            <span class="admin_teacher"><?= (isset($insert_teacher)) ? $insert_teacher : '' ?></span>
+            <span class="admin_study"><?= (isset($insert_study)) ? $insert_study : '' ?></span>
+            <span class="admin_group"><?= (isset($insert_group)) ? $insert_group : '' ?></span>
+            <span class="admin_average"><?= (isset($insert_average)) ? $insert_average : '' ?></span>              
         </div>
     </div>
 </div>

@@ -10,7 +10,7 @@
     <div class="modules">
         <div class="module_teacher">
             <?php foreach($modules as $module): ?>
-                <a href="<?= URL_ROOT ?>rate/<?= $user->id ?>/<?= $module->slug ?><?php $_SESSION['sessionData'] = 1 ?>"><?= $module->name ?></a>
+                <a href="<?= URL_ROOT ?>rate/<?= $module->slug ?><?php $_SESSION['sessionData'] = 1 ?>"><?= $module->name ?></a>
             <?php endforeach; ?>
         </div>
     </div>

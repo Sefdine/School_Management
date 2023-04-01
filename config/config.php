@@ -1,6 +1,9 @@
 <?php
 
 //Base root
+
+use Ipem\Src\Model\User;
+
 define('URL_ROOT', '/ipem/');
 
 define('DB_HOST', 'localhost');
@@ -18,18 +21,17 @@ function session() {
     }
 }
 
-$value = $_POST['value'] ?? false;
 
-if ($value) {
+
+if (isset($_POST['value'])) {
     $_SESSION['insert'] = [];
 }
-
-$nav_left = $_POST['nav_left'] ?? false;
-
-if ($nav_left) {
-    $_SESSION['nav_left'] = $nav_left;
+if (isset($_POST['nav_top'])) {
+    $_SESSION['nav_top'] = $_POST['nav_top'];
 }
-
+if (isset($_POST['nav_left'])) {
+    $_SESSION['nav_left'] = $_POST['nav_left'];
+}
 if (isset($_POST['year'])) {
     $_SESSION['data_average']['year'] = $_POST['year'];
 }
@@ -41,6 +43,9 @@ if (isset($_POST['group'])) {
 }
 if (isset($_POST['level'])) {
     $_SESSION['data_average']['level'] = $_POST['level'];
+}
+if (isset($_POST['exam'])) {
+    $_SESSION['data_average']['exam'] = $_POST['exam'];
 }
 if (isset($_POST['current_page'])) {
     $_SESSION['average_page'] = $_POST['current_page'];

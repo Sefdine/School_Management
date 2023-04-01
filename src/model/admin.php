@@ -9,7 +9,7 @@ class Admin extends User
 {
     public $name;
     public $slug;
-    use Contain, Module, Registration;
+    use Contain, Module, Registration, Exam;
     public function insertUserStudent(array $data, string $password, string $token):bool {
         $connection = new Database;
         $firstname = $data['firstname'] ?? '';
@@ -19,12 +19,25 @@ class Admin extends User
         $birthday = $data['birthday'] ?? '';
         $address = $data['address'] ?? '';
         $cin = $data['cin'] ?? '';
+        $place_birth = $data['place_birth'] ?? '';
+        $registration_date = $data['registration_date'] ?? '';
+        $gender = $data['gender'] ?? '';
+        $level_study = $data['level_study'] ?? '';
+        $entry_date = $data['entry_date'] ?? '';
 
 
         $connection->getConnection()->beginTransaction();
 
         $insertUserStatement = $connection->getConnection()->prepare('
-            INSERT INTO users(firstname, lastname, identifier, password, token, cin, address)
+            INSERT INTO users(
+                firstname, 
+                lastname, 
+                identifier, 
+                password, 
+                token, 
+                cin, 
+                address
+            )
             VALUES (?, ?, ?, ?, ?, ?, ?)
         ');
         
@@ -39,10 +52,28 @@ class Admin extends User
         ]);
         $user_id = $connection->getConnection()->lastInsertId('id');
         $insertStudentStatement = $connection->getConnection()->prepare('
-            INSERT INTO students(nationality, date_of_birth, user_id)
-            VALUES (?, ?, ?)
+            INSERT INTO students(
+                nationality, 
+                date_of_birth, 
+                user_id,
+                place_birth,
+                registration_date,
+                gender,
+                level_study,
+                entry_date
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ');
-        $result = $insertStudentStatement->execute([$nationality, (string)$birthday, $user_id]);     
+        $result = $insertStudentStatement->execute([
+            $nationality, 
+            $birthday, 
+            $user_id,
+            $place_birth,
+            $registration_date,
+            $gender,
+            $level_study,
+            $entry_date
+        ]);     
 
         if($result) {
             $connection->getConnection()->commit();
@@ -56,33 +87,32 @@ class Admin extends User
         $connection = new Database;
         $firstname = $data['firstname'] ?? '';
         $lastname = $data['lastname'] ?? '';
-        $email = $data['email'] ?? '';
+        $email = strtolower($data['email']) ?? '';
         $tel = $data['tel'];
         $cin = $data['cin'];
         $address = $data['address'];
+        $degree = $data['degree'];
+        $experience = $data['experience'];
 
         $connection->getConnection()->beginTransaction();
 
         $insertUserStatement = $connection->getConnection()->prepare('
-            INSERT INTO users(firstname, lastname, identifier, password, token, cin, address)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO users(firstname, lastname, cin, address)
+            VALUES (?, ?, ?, ?)
         ');
         
         $insertUserStatement->execute([
             $firstname,
             $lastname,
-            '',
-            '',
-            '',
             $cin,
             $address
         ]);
         $user_id = $connection->getConnection()->lastInsertId('id');
         $insertStudentStatement = $connection->getConnection()->prepare('
-            INSERT INTO teachers(email, tel, user_id)
-            VALUES (?, ?, ?)
+            INSERT INTO teachers(email, tel, user_id, degree, experience)
+            VALUES (?, ?, ?, ?, ?)
         ');
-        $result = $insertStudentStatement->execute([$email, $tel, $user_id]);     
+        $result = $insertStudentStatement->execute([$email, $tel, $user_id, $degree, $experience]);     
 
         if($result) {
             $connection->getConnection()->commit();

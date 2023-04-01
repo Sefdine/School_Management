@@ -55,51 +55,58 @@ class Admin extends User
         require_once('templates/errors/errors.php');
         require_once('templates/admin/input_rates.php');
     }
-    public function displayInsert(string $error = '', string $year, string $study, string $group, int $level) : void {
+    public function displayDashboard(string $error = '', string $year, string $study, string $group, int $level, int $exam) : void {
         $admin = new ModelAdmin;
         $current_module = $_SESSION['current_module'] ?? '';
         $counter = $_SESSION['counter'] ?? 0;
         $data = $_SESSION['insert'] ?? [];
-        $exam = (int)($_SESSION['data_average']['exam']) ?? 1;
         $years = $admin->getYears();
         $studies = $admin->getStudies($year);
         $groupes = $admin->getGroups($year, $study);
         $levels = $admin->getLevels($year, $study, $group);
         $modules = $admin->getModules((string)$level, $group, $study, $year);
-        $session_nav_left = $_SESSION['nav_left'] ?? '';
+        $exams = $admin->getExams();
         $count = $admin->getDataCount($year, $study, $group, $level);
         $currentPage = (int)($_SESSION['average_page'] ?? 1);
         $perPage = 10;
         $pages = ceil($count / $perPage);
         $offset = $perPage * ($currentPage - 1);
-        $data_users = $admin->getData(1, $current_module, $year, $study, $group, $level, $perPage, $offset);
-        switch($session_nav_left) {
-            case 'student': 
-                require_once('templates/admin/insert/student.php');
-                break;
-            case 'teacher': 
-                require_once('templates/admin/insert/teacher.php');
-                break;
-            case 'study': 
-                require_once('templates/admin/insert/study.php');
-                break;
-            case 'group': 
-                require_once('templates/admin/insert/group.php');
-                break;
-            case 'average': 
-                require_once('templates/admin/insert/average.php');
-                break;
-            default: 
-                require_once('templates/admin/insert/student.php');
-                break;
+        $data_users = $admin->getData($exam, $current_module, $year, $study, $group, $level, $perPage, $offset);
+        $nav_top = $_SESSION['nav_top'] ?? 'insert';
+        $session_nav_left = $_SESSION['nav_left'] ?? '';
+
+        if ($nav_top == 'insert') {
+            switch($session_nav_left) {
+                case 'student': 
+                    require_once('templates/admin/insert/student.php');
+                    break;
+                case 'teacher': 
+                    require_once('templates/admin/insert/teacher.php');
+                    break;
+                case 'study': 
+                    require_once('templates/admin/insert/study.php');
+                    break;
+                case 'group': 
+                    require_once('templates/admin/insert/group.php');
+                    break;
+                case 'average': 
+                    require_once('templates/admin/insert/average.php');
+                    break;
+                default: 
+                    require_once('templates/admin/insert/student.php');
+                    break;
+            }
+        } elseif ($nav_top == 'update') {
+            var_dump('update');
+        } elseif ($nav_top == 'delete') {
+            var_dump('delete');
         }
+        
     }
     public function insertStudent(array $data): void {
         $firstname = $data['firstname'] ?? '';
         $lastname = $data['lastname'] ?? '';
-        $identifier = $data['identifier'] ?? '';
-        $nationality = $data['nationality'] ?? '';
-        if (!($firstname) || !($lastname) || !($identifier) || !($nationality) ) {
+        if (!($firstname) || !($lastname)) {
             $_SESSION['err'] = 'emptydata';
             header('Location: '. URL_ROOT .'insert');
         } else {
@@ -184,7 +191,7 @@ class Admin extends User
             $student = new Student;
             $module_slug = $_SESSION['current_module'];
             $module_id = $admin->getIdModule($module_slug);
-            $exam_id = 1;
+            $exam_id = (int)$_SESSION['data_average']['exam'];
             $year = $_SESSION['data_average']['year'];
             $study = $_SESSION['data_average']['study'];
             $group = $_SESSION['data_average']['group'];
@@ -211,10 +218,10 @@ class Admin extends User
             if ($counter) {
                 $_SESSION['counter'] = $counter;
                 $_SESSION['err'] = 'insert_averages_success';
-                header('Location: '. URL_ROOT .'insert');
+                header('Location: '. URL_ROOT .'displayDashboard');
             } else {
                 $_SESSION['err'] = 'insert_failed';
-                header('Location: '. URL_ROOT .'insert');
+                header('Location: '. URL_ROOT .'displayDashboard');
             }
         }
     }

@@ -8,7 +8,7 @@
             <p>Choisissez attentivement les champs suivantes en tenant compte que l'année correspond à celle dont vous voulez soumettre les notes mais pas celle en cours.</p>
         </div>
         <div class="col-md-6">
-            <form action="<?= URL_ROOT ?>module/<?= $user->id ?>" method="POST" enctype="multipart/form-data">
+            <form action="<?= URL_ROOT ?>module" method="POST" enctype="multipart/form-data">
                 <label for="year" class="form-label">Année</label>
                 <select class="form-select" name="year" required>
                     <?php foreach($years as $year): ?>
@@ -50,7 +50,7 @@
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><img src="<?= URL_ROOT ?>public/images/logo_login.png" alt="Votre pseudo" title="Votre compte" width=30px height=30px></a>
             <ul class="dropdown-menu text-small shadow">
                 <li>
-                    <a class="dropdown-item" href="<?= URL_ROOT ?>updatePassword/<?= $user->id ?>">Changer mon mot de passe</a>
+                    <a class="dropdown-item" href="<?= URL_ROOT ?>updatePassword">Changer mon mot de passe</a>
                 </li>
                 <li>
                     <hr class="dropdown-divider">
