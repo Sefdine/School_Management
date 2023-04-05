@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="public/css/student/display_rate.css">
 
     <!-- site icons -->
-    <link rel="shortcut icon" href="fav.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/gif" /> 
 
     <!-- Javascript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

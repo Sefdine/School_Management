@@ -77,13 +77,17 @@ if (isset($action)){
             die($user->displayForm());
         }
     } elseif($action === 'module'){
-        session();
-        if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0) {
-            $identifier = (string)$_SESSION['user_id'];       
-            $admin->displayModules($identifier, $_POST);
+        if (session()) {
+            if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0) {
+                $identifier = (string)$_SESSION['user_id'];       
+                $admin->displayModules($identifier, $_POST);
+            } else {
+                $user->displayForm();
+                die();              
+            }
         } else {
             $user->displayForm();
-            die();              
+                die();    
         }
     } elseif ($action === 'rate') {
         session();

@@ -19,6 +19,7 @@ $(document).ready(() => {
     let session_study = sessionStorage.getItem('study');
     if (session_study != 1 || session_study == undefined) {
         $('#study_header').hide();
+        $('#individual_insert').hide();
     }
     resetTable = (button) => {
         sendValueSession({'value': true}, document.location = 'displayDashboard');
@@ -27,7 +28,7 @@ $(document).ready(() => {
         sendValueSession({'year': select.value}, document.location = 'displayDashboard');
     }
     select_study = (select) => {
-        sendValueSession({'study': select.value}, document.location = 'displayDashboard');
+        sendValueSession({'study': select.value}, '');
     }
     select_group = (select) => {
         sendValueSession({'group': select.value}, document.location = 'displayDashboard');
@@ -54,7 +55,7 @@ function sendValueSession(data, action) {
         type: 'POST',
         url: 'config/config.php',
         data: data,
-        success: () => {
+        success: success => {
             action;
         },
         error: (error) => {
@@ -62,6 +63,5 @@ function sendValueSession(data, action) {
         }
     })
 }
-
 
 

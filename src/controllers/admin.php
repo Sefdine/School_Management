@@ -24,6 +24,7 @@ class Admin extends User
         $groups = $teacher->getGroups();
         $levels = $teacher->getlevels();
         $controls = $teacher->getExams();
+        require_once('templates/admin/header.php');
         require_once('templates/admin/landing.php'); 
     }
     public function displayModules(string $identifier, array $data): void {

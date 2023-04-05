@@ -46,20 +46,6 @@
     </div> 
 </div>
 
-<div class="nav-item dropdown teacher_nav_item" id="dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><img src="<?= URL_ROOT ?>public/images/logo_login.png" alt="Votre pseudo" title="Votre compte" width=30px height=30px></a>
-            <ul class="dropdown-menu text-small shadow">
-                <li>
-                    <a class="dropdown-item" href="<?= URL_ROOT ?>updatePassword">Changer mon mot de passe</a>
-                </li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li>
-                    <a href="index.php?action=disconnect" class="dropdown-item">Déconnexion</a>
-                </li>
-            </ul>
-          </div>
 <?php $content = ob_get_clean() ?>
 <?php require_once 'templates/layout.php'; ?>
 
