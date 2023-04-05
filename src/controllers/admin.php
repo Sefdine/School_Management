@@ -201,13 +201,12 @@ class Admin extends User
             $study_id = $admin->getIdStudy($study);
             $group_id = $admin->getIdGroup($group);
             $level_id = $admin->getIdLevel((string)$level);
-            $contain_id = $admin->getIdContain($year_id, $study_id, $group_id, $level_id);
             $counter = 0;
             foreach($data as $k => $value) {
                 $identifier = str_replace('_', ' ', $k);
                 $user_id = $admin->getIdUser($identifier);
                 $student_id = $student->getIdStudent($user_id);
-                $registration_id = $admin->getIdRegistration($student_id, $contain_id);
+                $registration_id = $admin->getIdRegistration($student_id, $year, $study, $group, $level);
                 if ($value) {
                     $average = new Average;
                     $success = $average->insertAverage((float)$value, $registration_id, $module_id, $exam_id);
