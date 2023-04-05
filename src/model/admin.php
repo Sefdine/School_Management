@@ -9,7 +9,7 @@ class Admin extends User
 {
     public $name;
     public $slug;
-    use Contain, Module, Registration, Exam;
+    use Module, Registration, Exam;
     public function insertUserStudent(array $data, string $password, string $token):bool {
         $connection = new Database;
         $firstname = $data['firstname'] ?? '';
