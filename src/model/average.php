@@ -17,20 +17,19 @@ class Average
     public function getAverages(int $identifier, int $control, string $year): array
     {
         $connection = new Database;
-        $statement = $connection->getConnection()->prepare(
-            'SELECT m.name, a.value
+        $statement = $connection->getConnection()->prepare('
+            SELECT m.name, a.value
             FROM averages a 
             JOIN registrations r ON r.id = a.registration_id
             JOIN modules m ON m.id = a.module_id
             JOIN exams e ON e.id = a.exam_id
-            JOIN contain c ON c.id = r.contain_id
-            JOIN years y ON y.id = c.year_id
+            JOIN years y ON y.id = r.year_id
             JOIN students s ON s.id = r.student_id
             JOIN users u ON u.id = s.user_id
             AND y.name = ?
             AND e.number = ?
-            AND u.id = ?'
-        );
+            AND u.id = ?
+        ');
         $statement->execute([$year, $control, $identifier]);
         $averages = [];
         while($row = $statement->fetch()) {
