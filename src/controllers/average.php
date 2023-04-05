@@ -38,9 +38,8 @@ class Average
             $level_id = $teacher->getIdLevel($level);
             $module_id = $teacher->getIdModule($module_slug);
             $exam_id = $teacher->getIdExam($exam);
-            $contain_id = $teacher->getIdContain($year_id, $study_id, $group_id, $level_id);
             $registration_id = 0;
-            $registration_id = $students->getIdRegistration($student_id, $contain_id);
+            $registration_id = $students->getIdRegistration($student_id, $year_id, $study_id, $group_id, $level_id);
             
             if ($registration_id) {
                 $averages = new ModelAverage;

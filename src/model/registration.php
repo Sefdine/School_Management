@@ -8,13 +8,23 @@ use Ipem\Src\Lib\Database;
 
 trait Registration
 {
-    public function getIdRegistration(int $student_id, int $contain_id): int 
+    public function getIdRegistration(int $student_id, int $year_id, int $study_id, int $group_id, int $level_id): int 
     {
         $connecton = new Database;
-        $statement = $connecton->getConnection()->prepare(
-            'SELECT id FROM registrations WHERE student_id = ? AND contain_id = ?'
-        );
-        $statement->execute([$student_id, $contain_id]);
+        $statement = $connecton->getConnection()->prepare('
+            SELECT id FROM registrations WHERE student_id = ? 
+            AND year_id = ?
+            AND study_id = ?
+            AND group_id = ?
+            AND level_id = ?
+        ');
+        $statement->execute([
+            $student_id, 
+            $year_id,
+            $study_id,
+            $group_id,
+            $level_id
+        ]);
         
         return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }

@@ -82,11 +82,10 @@ class User
             FROM users u 
             JOIN students s ON u.id = s.user_id
             JOIN registrations r ON s.id = r.student_id
-            JOIN contain c ON c.id = r.contain_id
-            JOIN years y ON y.id = c.year_id
-            JOIN studies st ON st.id = c.study_id
-            JOIN groupes g ON g.id = c.group_id
-            JOIN levels l ON l.id = c.level_id
+            JOIN years y ON y.id = r.year_id
+            JOIN studies st ON st.id = r.study_id
+            JOIN groupes g ON g.id = r.group_id
+            JOIN levels l ON l.id = r.level_id
             JOIN exams e ON e.id = ?
             JOIN modules m ON m.id = (SELECT id FROM modules WHERE slug = ?)
             LEFT JOIN averages a ON r.id = a.registration_id AND a.exam_id = e.id AND a.module_id = m.id
@@ -113,14 +112,11 @@ class User
     public function getDataCount(string $year, string $study, string $group_slug, int $level):int {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
-            SELECT count(u.id) as count FROM users u 
-            JOIN students s ON u.id = s.user_id
-            JOIN registrations r ON s.id = r.student_id
-            JOIN contain c ON c.id = r.contain_id
-            JOIN years y ON y.id = c.year_id
-            JOIN studies st ON st.id = c.study_id
-            JOIN groupes g ON g.id = c.group_id
-            JOIN levels l ON l.id = c.level_id
+            SELECT count(r.id) as count FROM registrations r
+            JOIN years y ON y.id = r.year_id
+            JOIN studies st ON st.id = r.study_id
+            JOIN groupes g ON g.id = r.group_id
+            JOIN levels l ON l.id = r.level_id
             WHERE y.name = ?
             AND st.name = ?
             AND g.slug = ?

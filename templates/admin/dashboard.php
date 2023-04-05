@@ -29,7 +29,7 @@
             <li><button onclick="nav_left_button(this)" data-value="group">Groupes</button></li>
             <li><button onclick="nav_left_button(this)" data-value="average">Notes</button></li>
             <br>
-            <a href="<?= URL_ROOT ?>landing">Note Individuelle</a>
+            <a href="<?= URL_ROOT ?>landing" id="individual_insert">Note Individuelle</a>
         </ul>
     </div>
     <div class="contain_admin">

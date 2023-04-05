@@ -9,7 +9,7 @@ class Admin extends User
 {
     public $name;
     public $slug;
-    use Contain, Module, Registration, Exam;
+    use Module, Registration, Exam, Year, Study, Group, Level;
     public function insertUserStudent(array $data, string $password, string $token):bool {
         $connection = new Database;
         $firstname = $data['firstname'] ?? '';
@@ -156,8 +156,8 @@ class Admin extends User
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
             SELECT DISTINCT s.name AS study FROM studies s
-            JOIN contain c ON s.id = c.study_id
-            JOIN years y ON y.id = c.year_id
+            JOIN years_studies ys ON s.id = ys.study_id
+            JOIN years y ON y.id = ys.year_id
             WHERE y.name = ?
         ');
         $statement->execute([$year]);
@@ -171,9 +171,10 @@ class Admin extends User
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
             SELECT DISTINCT g.name as groupe, g.slug FROM groupes g
-            JOIN contain c ON g.id = c.group_id
-            JOIN years y ON y.id = c.year_id
-            JOIN studies s ON s.id = c.study_id
+            JOIN studies_groupes sg ON g.id = sg.group_id
+            JOIN studies s ON s.id = sg.study_id
+            JOIN years_studies ys ON s.id = ys.study_id
+            JOIN years y ON y.id = ys.year_id
             WHERE y.name = ?
             AND s.name = ?
         ');
@@ -191,10 +192,12 @@ class Admin extends User
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
             SELECT level FROM levels l
-            JOIN contain c ON l.id = c.level_id
-            JOIN years y ON y.id = c.year_id
-            JOIN studies s ON s.id = c.study_id
-            JOIN groupes g ON g.id = c.group_id
+            JOIN groupes_levels gl ON l.id = gl.level_id
+            JOIN groupes g ON g.id = gl.group_id
+            JOIN studies_groupes sg ON g.id = sg.group_id
+            JOIN studies s ON s.id = sg.study_id
+            JOIN years_studies ys ON s.id = ys.study_id
+            JOIN years y ON y.id = ys.year_id
             WHERE y.name = ?
             AND s.name = ?
             AND g.slug = ?
