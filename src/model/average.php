@@ -14,7 +14,7 @@ class Average
     public $value_average;
     public $name_module;
 
-    public function getAverages(int $identifier, int $control, string $year): array
+    public function getAverages(int $identifier, string $exam_name, string $exam_type, string $year): array
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
@@ -27,10 +27,11 @@ class Average
             JOIN students s ON s.id = r.student_id
             JOIN users u ON u.id = s.user_id
             AND y.name = ?
-            AND e.number = ?
+            AND e.exam_name = ?
+            AND e.exam_type_id = (SELECT id FROM exams_types WHERE exam_type = ?)
             AND u.id = ?
         ');
-        $statement->execute([$year, $control, $identifier]);
+        $statement->execute([$year, $exam_name, $exam_type, $identifier]);
         $averages = [];
         while($row = $statement->fetch()) {
             $averages[$row['name']] = $row['value'];
@@ -41,14 +42,14 @@ class Average
     public function insertAverage(float $value, int $registration_id, int $module_id, int $exam_id): bool
     {
         $connection = new Database;
-        $statement = $connection->getConnection()->prepare(
-            'INSERT INTO averages
+        $statement = $connection->getConnection()->prepare('
+            INSERT INTO averages
             SET value = ?,
             registration_id = ?,
             exam_id = ?,
             module_id = ?
-            ON DUPLICATE KEY UPDATE value = ?'
-        );
+            ON DUPLICATE KEY UPDATE value = ?;
+        ');
         $affectedLines = $statement->execute([$value, $registration_id, $exam_id, $module_id, $value]);
         return ($affectedLines > 0);
     }
