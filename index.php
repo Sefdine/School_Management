@@ -7,6 +7,8 @@ use Ipem\Src\Controllers\Admin;
 use Ipem\Src\Controllers\User;
 use Ipem\Src\Controllers\Average;
 
+use Ipem\Src\Model\Admin as ModelAdmin;
+
 require_once('config/config.php');
 
 spl_autoload_register(static function(string $fqcn) {
@@ -21,7 +23,9 @@ $rate = new Average;
 
 if (isset($_GET['action'])){
     $action = $_GET['action'];
-}  else {
+}  elseif(isset($_POST['action'])) {
+    $action = $_POST['action'];
+} else {
     $action = null;
 }
 
@@ -148,6 +152,11 @@ if (isset($action)){
         } 
     } elseif ($action === 'displayDashboard') {
         if (session()) {
+            $year = $_POST['year'] ?? '';
+            $study = $_POST['study'] ?? '';
+            $group = $_POST['group'] ?? '';
+            $level = $_POST['level'] ?? 0;
+            $exam = $_POST['exam'] ?? 0;
             $admin->displayDashboard($error, $year, $study, $group, $level, $exam);   
             $_SESSION['err'] = ''; 
         } else {
@@ -185,6 +194,22 @@ if (isset($action)){
         if (session()) {
             $data = $_POST ?? [];
             $admin->insertAverages($data);
+        } else {
+            die($user->displayForm());
+        }
+    } elseif($action === 'ajax') {
+        if (session()) {
+            if (isset($_POST['value'])) {
+                $value = $_POST['value'];
+                $admin = new ModelAdmin;
+                $select = $_POST['select'] ?? '';
+                if ($select == 'year') {
+                    $response = $admin->getStudies($value);
+                } elseif ($select == 'study') {
+                    // $response = $admin->getGroups($year0)
+                }
+                echo json_encode($response);
+            }
         } else {
             die($user->displayForm());
         }

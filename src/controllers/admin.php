@@ -56,7 +56,7 @@ class Admin extends User
         require_once('templates/errors/errors.php');
         require_once('templates/admin/input_rates.php');
     }
-    public function displayDashboard(string $error = '', string $year, string $study, string $group, int $level, int $exam) : void {
+    public function displayDashboard(string $error = '', string $year='', string $study='', string $group='', int $level=0, int $exam=0) : void {
         $admin = new ModelAdmin;
         $current_module = $_SESSION['current_module'] ?? '';
         $counter = $_SESSION['counter'] ?? 0;
@@ -98,7 +98,26 @@ class Admin extends User
                     break;
             }
         } elseif ($nav_top == 'update') {
-            var_dump('update');
+            switch($session_nav_left) {
+                case 'student': 
+                    require_once('templates/admin/update/student.php');
+                    break;
+                case 'teacher': 
+                    require_once('templates/admin/update/teacher.php');
+                    break;
+                case 'study': 
+                    require_once('templates/admin/update/study.php');
+                    break;
+                case 'group': 
+                    require_once('templates/admin/update/group.php');
+                    break;
+                case 'average': 
+                    require_once('templates/admin/update/average.php');
+                    break;
+                default: 
+                    require_once('templates/admin/update/student.php');
+                    break;
+            }
         } elseif ($nav_top == 'delete') {
             var_dump('delete');
         }
