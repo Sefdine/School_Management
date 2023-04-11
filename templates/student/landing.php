@@ -16,10 +16,16 @@
                         <option value="<?= $year ?>"><?= $year ?></option>
                     <?php endforeach ?>
                 </select>
-                <label for="control">Contrôle</label>
-                <select name="control" class="form-control" required>
-                    <?php foreach($controls as $control): ?>
-                        <option value="<?= $control ?>"><?= $control ?></option>
+                <label for="type_exam">Types d'examens</label>
+                <select name="type_exam" class="form-control" required>
+                    <?php foreach($types_exams as $item): ?>
+                        <option value="<?= $item ?>"><?= $item ?></option>
+                    <?php endforeach ?>
+                </select>
+                <label for="exam">Examens</label>
+                <select name="exam" class="form-control" required>
+                    <?php foreach($exams as $exam): ?>
+                        <option value="<?= $exam ?>"><?= $exam ?></option>
                     <?php endforeach ?>
                 </select>
                 <br>

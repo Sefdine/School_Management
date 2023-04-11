@@ -9,8 +9,8 @@
         Année: <strong><?= $year ?></strong><br>
         Filière: <strong><?= $study ?></strong><br>
         Groupe: <strong><?= $group ?></strong><br>
-        Niveau: <strong><?= ($level === 1) ? '1ère année' : $level.'ème année' ?></strong><br>
-        Contrôle: <strong><?= 'controle n°'.$control ?></strong>
+        Type d'examen: <strong><?= $type_exam ?></strong><br>
+        Examen: <strong><?= $exam ?></strong>
         </label>
 </div>
 <div class="display_average_student">

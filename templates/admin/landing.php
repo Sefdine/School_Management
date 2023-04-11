@@ -24,19 +24,19 @@
                 <label for="group" class="form-label">Groupe</label>
                 <select class="form-select" name="group" required>
                     <?php foreach($groups as $group): ?>
-                        <option value="<?= $group->slug ?>"><?= $group->name ?></option>
+                        <option value="<?= $group ?>"><?= $group ?></option>
                     <?php endforeach ?>
                 </select>
-                <label for="level" class="form-label">Niveau</label>
-                <select class="form-select" name="level" required>
-                    <?php foreach($levels as $level): ?>
-                        <option value="<?= $level ?>"><?= ($level === 1) ? '1ère année' : '2ème année'; ?></option>
+                <label for="control" class="form-label">Types d'examens</label>
+                <select class="form-select" name="type_exam" required>
+                    <?php foreach($types_exams as $item): ?>
+                        <option value="<?= $item ?>"><?= $item ?></option>
                     <?php endforeach ?>
                 </select>
-                <label for="control" class="form-label">Contrôle</label>
-                <select class="form-select" name="control" required>
-                    <?php foreach($controls as $control): ?>
-                        <option value="<?= $control ?>"><?= 'contrôle n°'.$control ?></option>
+                <label for="control" class="form-label">Examens</label>
+                <select class="form-select" name="exam" required>
+                    <?php foreach($exams as $exam): ?>
+                        <option value="<?= $exam ?>"><?= $exam ?></option>
                     <?php endforeach ?>
                 </select>
                 <br>

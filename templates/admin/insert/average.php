@@ -11,20 +11,20 @@
         </select>
     </div>
     <div class="input-group mb-1">
-        <span class="input-group-text">Exams</span>
+        <span class="input-group-text">Type d'exam</span>
         <select name="exam" id="exam" onchange="select_exam(this)" class="form-select">
-            <option value="title" disabled selected>Choisir un exam</option>
-            <?php foreach($exams as $item): ?>
-                <option value="<?= $item ?>" <?= ($item == $exam) ? 'selected' : '' ?>><?= ($item == 1) ? 'Controle n°1' : (($item == 2) ? 'Controle n°2' : 'Exam') ?></option>
+            <option value="title" disabled selected>Choisir un type d'examen</option>
+            <?php foreach($types_exams as $item): ?>
+                <option value="<?= $item ?>" <?= ($item == $type_exam) ? 'selected' : '' ?>><?= $item ?></option>
             <?php endforeach ?>
         </select>
     </div>
     <div class="input-group mb-1">
-        <span class="input-group-text">Type d'exam</span>
+        <span class="input-group-text">Exams</span>
         <select name="exam_type" id="exam_type" onchange="select_type_exam(this)" class="form-select">
-            <option value="title" disabled selected>Choisir un type</option>
-            <?php foreach($levels as $item): ?>
-                <option value="<?= $item ?>" <?= ($item == $level) ? 'selected' : '' ?>><?= ($item == 1) ? '1ère année' : '2ème année' ?></option>
+            <option value="title" disabled selected>Choisir un examen</option>
+            <?php foreach($exams as $item): ?>
+                <option value="<?= $item ?>" <?= ($item == $exam) ? 'selected' : '' ?>><?= $item ?></option>
             <?php endforeach ?>
         </select>
     </div>
