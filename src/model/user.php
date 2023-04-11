@@ -75,7 +75,7 @@ class User
         $statement->execute([$identifier]);
         return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }
-    public function getData(string $exam_name, string $module_slug, string $year, string $study, string $group, int $exam_type, int $limit, int $offset): array {
+    public function getData(string $exam_name, string $module_slug, string $year, string $study, int $group, string $exam_type, int $limit, int $offset): array {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
             SELECT firstname, lastname, identifier
@@ -109,7 +109,7 @@ class User
         }
         return $data;
     }
-    public function getDataCount(string $year, string $study, string $group):int {
+    public function getDataCount(string $year, string $study, int $group):int {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
             SELECT count(r.id) as count FROM registrations r

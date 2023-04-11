@@ -27,19 +27,17 @@ class Average
             $array = $_SESSION['array'];
             $year = $array['year'];
             $study = $array['study'];
-            $group_slug = $array['group'];
-            $level = $array['level'];
+            $group = $array['group'];
             $exam = $array['control'];
 
             $teacher = new ModelTeacher;
             $year_id = $teacher->getIdYear($year);
             $study_id = $teacher->getIdStudy($study);                
-            $group_id = $teacher->getIdGroup($group_slug);
-            $level_id = $teacher->getIdLevel($level);
+            $group_id = $teacher->getIdGroup($group);
             $module_id = $teacher->getIdModule($module_slug);
             $exam_id = $teacher->getIdExam($exam);
             $registration_id = 0;
-            $registration_id = $students->getIdRegistration($student_id, $year_id, $study_id, $group_id, $level_id);
+            $registration_id = $students->getIdRegistration($student_id, $year_id, $study_id, $group_id);
             
             if ($registration_id) {
                 $averages = new ModelAverage;

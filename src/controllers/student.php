@@ -24,26 +24,27 @@ class Student extends User
         $user = $users->getUser($identifier);
         $student = new ModelStudent;
         $years = $student->getYears();
-        $controls = $student->getExams();
+        $exams_types = $student->getExamsTypes();
+
+        $exams = $student->getExams();
         require_once('templates/student/header.php');
         require_once('templates/errors/errors.php');
         require_once('templates/student/landing.php');
     }
 
-    public function displayAverage(string $identifier, string $year, string $control): void
+    public function displayAverage(string $identifier, string $year, string $exam_name, string $exam_type): void
     {
         $users = new ModelUser;
         $title = 'Consultaion des notes';
         $user = $users->getUser($identifier);
         $student = new ModelStudent;
-        $array = $student->getDataStudent($year, (int)$control, (int)$identifier);
+        $array = $student->getDataStudent($year, $exam_name, $exam_type, (int)$identifier);
         $study = $array['study'];
         $group = $array['group'];
-        $level = $array['level'];
         $num_inscription = $array['num_inscription'];
         $modules = $student->getModulesStudent((int)$identifier, $year);
         $rate = new Average;
-        $rates = $rate->getAverages((int)$identifier, (int)$control, $year);
+        $rates = $rate->getAverages((int)$identifier, $exam_name, $exam_type, $year);
         $data = self::getData($modules, $rates);
         $average = self::getAverage($rates);
         require_once('templates/student/header.php');

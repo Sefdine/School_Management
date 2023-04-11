@@ -22,20 +22,19 @@ class Admin extends User
         $years = $teacher->getYears();
         $studies = $teacher->getStudies();
         $groups = $teacher->getGroups();
-        $levels = $teacher->getlevels();
-        $controls = $teacher->getExams();
+        $exams_types = $teacher->getExamsTypes();
+        $exams = $teacher->getExams();
         require_once('templates/admin/header.php');
         require_once('templates/admin/landing.php'); 
     }
     public function displayModules(string $identifier, array $data): void {
         $users = new ModelUser;
         $user = $users->getUser($identifier);
-        $group_slug = $data['group'] ?? '';
-        $level = $data['level'] ?? '';
+        $group = $data['group'] ?? '';
         $study = $data['study'] ?? '';
         $year = $data['year'] ?? '';
         $_SESSION['array'] = $data;
-        $modules = (new Teacher)->getModules($level, $group_slug, $study, $year);
+        $modules = (new Teacher)->getModules($group, $study, $year);
         require_once('templates/admin/header.php');
         require_once('templates/admin/module.php');
     }
@@ -45,18 +44,16 @@ class Admin extends User
         $user = $users->getUser($identifier);
         $year = $data['year'] ?? '';
         $study = $data['study'] ?? '';
-        $group_slug = $data['group'] ?? '';
-        $level = $data['level'] ?? '';
+        $group = (int)$data['group'] ?? 0;
         $control = $data['control'] ?? '';
-        $modules = (new Teacher)->getModules($level, $group_slug, $study, $year);
+        $modules = (new Teacher)->getModules($group, $study, $year);
         $current_module = (new Teacher)->getModule($current_slug);
-        $group_name = (new Teacher)->getGroup($group_slug);
         require_once('templates/admin/header.php');
         echo '<br>';
         require_once('templates/errors/errors.php');
         require_once('templates/admin/input_rates.php');
     }
-    public function displayDashboard(string $error = '', string $year='', string $study='', string $group='', int $level=0, int $exam=0) : void {
+    public function displayDashboard(string $error = '', string $year='', string $study='', int $group=0, string $exam_name='', string $exam_type='') : void {
         $admin = new ModelAdmin;
         $current_module = $_SESSION['current_module'] ?? '';
         $counter = $_SESSION['counter'] ?? 0;
@@ -64,15 +61,14 @@ class Admin extends User
         $years = $admin->getYears();
         $studies = $admin->getStudies($year);
         $groupes = $admin->getGroups($year, $study);
-        $levels = $admin->getLevels($year, $study, $group);
-        $modules = $admin->getModules((string)$level, $group, $study, $year);
+        $modules = $admin->getModules($group, $study, $year);
         $exams = $admin->getExams();
-        $count = $admin->getDataCount($year, $study, $group, $level);
+        $count = $admin->getDataCount($year, $study, $group);
         $currentPage = (int)($_SESSION['average_page'] ?? 1);
         $perPage = 10;
         $pages = ceil($count / $perPage);
         $offset = $perPage * ($currentPage - 1);
-        $data_users = $admin->getData($exam, $current_module, $year, $study, $group, $level, $perPage, $offset);
+        $data_users = $admin->getData($exam_name, $current_module, $year, $study, $group, $exam_type, $perPage, $offset);
         $nav_top = $_SESSION['nav_top'] ?? 'insert';
         $session_nav_left = $_SESSION['nav_left'] ?? '';
 
@@ -183,25 +179,6 @@ class Admin extends User
             }
         }
     }
-    public function insertGroup(string $name):void {
-        if (!$name) {
-            $_SESSION['err'] = 'emptydata';
-            header('Location: '.URL_ROOT.'insert');
-        } else {
-            $slug = str_replace(' ', '-',$name);
-            $admin = new ModelAdmin;
-            $success = $admin->insertGroup($name, $slug);
-            
-            if ($success) {
-                $_SESSION['err'] = 'insert_success';
-                $_SESSION['insert'][] = $name;
-                header('Location: '. URL_ROOT .'insert');
-            } else {
-                $_SESSION['err'] = 'insert_failed';
-                header('Location: '. URL_ROOT .'insert');
-            }
-        }
-    }
     public function insertAverages(array $data):void {
         if (empty($data)) {
             $_SESSION['err'] = 'emptydata';
@@ -215,17 +192,15 @@ class Admin extends User
             $year = $_SESSION['data_average']['year'];
             $study = $_SESSION['data_average']['study'];
             $group = $_SESSION['data_average']['group'];
-            $level = $_SESSION['data_average']['level'];
             $year_id = $admin->getIdYear($year);
             $study_id = $admin->getIdStudy($study);
             $group_id = $admin->getIdGroup($group);
-            $level_id = $admin->getIdLevel((string)$level);
             $counter = 0;
             foreach($data as $k => $value) {
                 $identifier = str_replace('_', ' ', $k);
                 $user_id = $admin->getIdUser($identifier);
                 $student_id = $student->getIdStudent($user_id);
-                $registration_id = $admin->getIdRegistration($student_id, $year, $study, $group, $level);
+                $registration_id = $admin->getIdRegistration($student_id, $year, $study, $group);
                 if ($value) {
                     $average = new Average;
                     $success = $average->insertAverage((float)$value, $registration_id, $module_id, $exam_id);

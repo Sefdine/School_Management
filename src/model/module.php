@@ -11,7 +11,7 @@ trait Module
     public $name;
     public $slug;
 
-    public function getModules(string $group, string $study, string $year): array
+    public function getModules(int $group, string $study, string $year): array
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('

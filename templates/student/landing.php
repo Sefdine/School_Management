@@ -18,7 +18,7 @@
                 </select>
                 <label for="type_exam">Types d'examens</label>
                 <select name="type_exam" class="form-control" required>
-                    <?php foreach($types_exams as $item): ?>
+                    <?php foreach($exams_types as $item): ?>
                         <option value="<?= $item ?>"><?= $item ?></option>
                     <?php endforeach ?>
                 </select>
