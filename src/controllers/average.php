@@ -27,15 +27,16 @@ class Average
             $array = $_SESSION['array'];
             $year = $array['year'];
             $study = $array['study'];
-            $group = $array['group'];
-            $exam = $array['control'];
+            $group = (int)$array['group'];
+            $exam_name = $array['exam_name'];
+            $exam_type = $array['exam_type'];
 
             $teacher = new ModelTeacher;
             $year_id = $teacher->getIdYear($year);
             $study_id = $teacher->getIdStudy($study);                
             $group_id = $teacher->getIdGroup($group);
             $module_id = $teacher->getIdModule($module_slug);
-            $exam_id = $teacher->getIdExam($exam);
+            $exam_id = $teacher->getIdExam($exam_name);
             $registration_id = 0;
             $registration_id = $students->getIdRegistration($student_id, $year_id, $study_id, $group_id);
             

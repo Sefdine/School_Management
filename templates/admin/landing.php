@@ -24,17 +24,17 @@
                 <label for="group" class="form-label">Groupe</label>
                 <select class="form-select" name="group" required>
                     <?php foreach($groups as $group): ?>
-                        <option value="<?= $group ?>"><?= $group ?></option>
+                        <option value="<?= $group ?>"><?= ($group == 1) ? '1ère année' : '2ème année' ?></option>
                     <?php endforeach ?>
                 </select>
-                <label for="control" class="form-label">Types d'examens</label>
-                <select class="form-select" name="type_exam" required>
-                    <?php foreach($types_exams as $item): ?>
+                <label for="exam_type" class="form-label">Types d'examens</label>
+                <select class="form-select" name="exam_type" required>
+                    <?php foreach($exams_types as $item): ?>
                         <option value="<?= $item ?>"><?= $item ?></option>
                     <?php endforeach ?>
                 </select>
-                <label for="control" class="form-label">Examens</label>
-                <select class="form-select" name="exam" required>
+                <label for="exam_name" class="form-label">Examens</label>
+                <select class="form-select" name="exam_name" required>
                     <?php foreach($exams as $exam): ?>
                         <option value="<?= $exam ?>"><?= $exam ?></option>
                     <?php endforeach ?>

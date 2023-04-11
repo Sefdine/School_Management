@@ -21,7 +21,7 @@ trait Group
         return $groups;
     }
 
-    public function getIdGroup(string $group): int
+    public function getIdGroup(int $group): int
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(

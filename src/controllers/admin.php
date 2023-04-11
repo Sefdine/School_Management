@@ -30,7 +30,7 @@ class Admin extends User
     public function displayModules(string $identifier, array $data): void {
         $users = new ModelUser;
         $user = $users->getUser($identifier);
-        $group = $data['group'] ?? '';
+        $group = (int)$data['group'] ?? 0;
         $study = $data['study'] ?? '';
         $year = $data['year'] ?? '';
         $_SESSION['array'] = $data;

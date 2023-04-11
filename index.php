@@ -32,9 +32,8 @@ if (isset($_GET['action'])){
 $error = $_SESSION['err'] ?? '';
 $year = $_SESSION['data_average']['year'] ?? '';
 $study = $_SESSION['data_average']['study'] ?? '';
-$group = $_SESSION['data_average']['group'] ?? '';
-$level = (int)$_SESSION['data_average']['level'] ?? 1;
-$exam = (int)($_SESSION['data_average']['exam']) ?? 1;
+$group = $_SESSION['data_average']['group'] ?? 1;
+$exam_type = $_SESSION['data_average']['exam_type'] ?? 'Contrôle';
 
 if (isset($action)){
     if ($action === 'connectionTreatment') {
@@ -100,8 +99,9 @@ if (isset($action)){
             $identifier = (string)$_SESSION['user_id'];
             if ($name === 'student') {
                 $year = $_POST['year'] ?? '';
-                $control = $_POST['control'] ?? '';
-                $student->displayAverage($identifier, $year, $control);
+                $exam_type = $_POST['exam_type'] ?? '';
+                $exam_name = $_POST['exam_name'] ?? '';
+                $student->displayAverage($identifier, $year, $exam_name, $exam_type);
             } elseif ($name === 'admin') {                
                 $module_slug = $_GET['module_slug'] ?? '';
                 $data = $_SESSION['array'] ?? '';
@@ -154,10 +154,10 @@ if (isset($action)){
         if (session()) {
             $year = $_POST['year'] ?? '';
             $study = $_POST['study'] ?? '';
-            $group = $_POST['group'] ?? '';
-            $level = $_POST['level'] ?? 0;
-            $exam = $_POST['exam'] ?? 0;
-            $admin->displayDashboard($error, $year, $study, $group, $level, $exam);   
+            $group = (int)$_POST['group'] ?? 0;
+            $exam_name = $_POST['exam_name'] ?? '';
+            $exam_type = $_POST['exam_type'] ?? '';
+            $admin->displayDashboard($error, $year, $study, $group, $exam_name, $exam_type);   
             $_SESSION['err'] = ''; 
         } else {
             die($user->displayForm());
@@ -180,13 +180,6 @@ if (isset($action)){
         if (session()) {
             $data = $_POST ?? [];
             $admin->insertTeacher($data);
-        } else {
-            die($user->displayForm());
-        }
-    } elseif($action === 'insertGroup') {
-        if (session()) {
-            $group = $_POST['name'] ?? '';
-            $admin->insertGroup($group);
         } else {
             die($user->displayForm());
         }
