@@ -18,7 +18,7 @@ class Student extends User
         require_once('templates/student/home.php');
     }
 
-    public function displayLanding(string $identifier, string $error = ''): void 
+    public function displayLanding(string $identifier, string $error = '', string $exam_type = ''): void 
     {
         $users = new ModelUser;
         $user = $users->getUser($identifier);
@@ -26,7 +26,7 @@ class Student extends User
         $years = $student->getYears();
         $exams_types = $student->getExamsTypes();
 
-        $exams = $student->getExams();
+        $exams = $student->getExams($exam_type);
         require_once('templates/student/header.php');
         require_once('templates/errors/errors.php');
         require_once('templates/student/landing.php');

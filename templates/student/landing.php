@@ -17,13 +17,13 @@
                     <?php endforeach ?>
                 </select>
                 <label for="exam_type">Types d'examens</label>
-                <select name="exam_type" class="form-control" required>
+                <select name="exam_type" id="exam_type_student" class="form-control" required>
                     <?php foreach($exams_types as $item): ?>
                         <option value="<?= $item ?>"><?= $item ?></option>
                     <?php endforeach ?>
                 </select>
-                <label for="exam_name">Examens</label>
-                <select name="exam_name" class="form-control" required>
+                <label id="exam_label_student" for="exam_name">Examens</label>
+                <select name="exam_name" id="exam_student" class="form-control" required>
                     <?php foreach($exams as $exam): ?>
                         <option value="<?= $exam ?>"><?= $exam ?></option>
                     <?php endforeach ?>
