@@ -1,13 +1,12 @@
 $(document).ready(() => {
-    let nav_left;
-    let year = (document.getElementById('year')).value;
     nav_top_a = (a) => {
         let nav_top = a.getAttribute('data-value');
         sendValueSession({'nav_top': nav_top}, document.location = 'displayDashboard');
         console.log(nav_top)
     }
     nav_left_button = (button) => {
-        nav_left = button.getAttribute('data-value');
+        let year = (document.getElementById('year')).value;
+        let nav_left = button.getAttribute('data-value');
         sendValueSession(
             {'nav_left': nav_left, 'value': true, 'year': year},
             document.location = 'displayDashboard'
@@ -81,8 +80,8 @@ $(document).ready(() => {
                 groupes.appendChild(option);
                 parsed.forEach(element => {
                     let option = document.createElement('option');
-                    option.setAttribute('value', element);
-                    option.textContent = element;
+                    option.value =element;
+                    option.textContent = (element == 1) ? '1ère année' : '2ème année';
                     groupes.appendChild(option);
 
                 });

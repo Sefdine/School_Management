@@ -20,10 +20,7 @@ class Admin extends User
         $user = $users->getUser($identifier);
         $teacher = new Teacher;
         $years = $teacher->getYears();
-        $studies = $teacher->getStudies();
-        $groups = $teacher->getGroups();
         $exams_types = $teacher->getExamsTypes();
-        $exams = $teacher->getExams($exam_type);
         require_once('templates/admin/header.php');
         require_once('templates/admin/landing.php'); 
     }
@@ -45,7 +42,8 @@ class Admin extends User
         $year = $data['year'] ?? '';
         $study = $data['study'] ?? '';
         $group = (int)$data['group'] ?? 0;
-        $control = $data['control'] ?? '';
+        $exam_type = $data['exam_type'] ?? '';
+        $exam = $data['exam_name'] ?? '';
         $modules = (new Teacher)->getModules($group, $study, $year);
         $current_module = (new Teacher)->getModule($current_slug);
         require_once('templates/admin/header.php');
@@ -169,10 +167,10 @@ class Admin extends User
             $student = new Student;
             $module_slug = $_SESSION['current_module'];
             $module_id = $admin->getIdModule($module_slug);
-            $exam_id = (int)$_SESSION['data_average']['exam'];
-            $year = $_SESSION['data_average']['year'];
-            $study = $_SESSION['data_average']['study'];
-            $group = $_SESSION['data_average']['group'];
+            $exam_id = (int)$_SESSION['insert_exam'];
+            $year = $_SESSION['insert_year'];
+            $study = $_SESSION['insert_study'];
+            $group = (int)$_SESSION['insert_group'];
             $year_id = $admin->getIdYear($year);
             $study_id = $admin->getIdStudy($study);
             $group_id = $admin->getIdGroup($group);
@@ -181,7 +179,7 @@ class Admin extends User
                 $identifier = str_replace('_', ' ', $k);
                 $user_id = $admin->getIdUser($identifier);
                 $student_id = $student->getIdStudent($user_id);
-                $registration_id = $admin->getIdRegistration($student_id, $year, $study, $group);
+                $registration_id = $admin->getIdRegistration($student_id, $year_id, $study_id, $group_id);
                 if ($value) {
                     $average = new Average;
                     $success = $average->insertAverage((float)$value, $registration_id, $module_id, $exam_id);
