@@ -8,12 +8,14 @@ use Ipem\Src\Lib\Database;
 
 trait Exam
 {
-    public function getExams(): array
+    public function getExams(string $exam_type): array
     {
         $connection = new Database;
-        $statement = $connection->getConnection()->query(
-            'SELECT exam_name FROM exams ORDER BY id ASC'
-        );
+        $statement = $connection->getConnection()->prepare('
+            SELECT exam_name FROM exams 
+            WHERE exam_type_id = (SELECT id FROM exams_types WHERE exam_type = ?)
+        ');
+        $statement->execute([$exam_type]);
         $controls = [];
         while($row = $statement->fetch()) {
             $controls[] = $row['exam_name'];

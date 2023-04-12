@@ -166,10 +166,7 @@ class Admin extends User
         $groupes = [];
         $statement->execute([$year, $study]);
         while ($row = $statement->fetch()) {
-            $group = new self;
-            $group->name = $row['groupe'];
-            $group->slug = $row['slug'];
-            $groupes[] = $group;
+            $groupes[] = $row['group_number'];
         }
         return $groupes;
     }

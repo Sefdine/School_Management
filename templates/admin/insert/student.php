@@ -56,36 +56,6 @@
     </div>
         <input type="submit" value="Insérer" class="btn btn-primary">
     </form>
-    <br>
-    <hr>
-    <h3>Champs ajoutés</h3>
-    <button onclick="resetTable(this)">Réinitialiser</button>
-    <table class="table table-dark">
-        <thead>
-            <th>#</th>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Numéro d'insription</th>
-            <th>Nationalité</th>
-            <th>Date de naissance</th>
-            <th>CIN</th>
-            <th>Adresse</th>
-        </thead>
-        <tbody class="table-group-divider">
-            <?php foreach($data as $k => $line): ?>
-            <tr class="tr_student">
-                <td><?= $k+1 ?></td>
-                <td><?= $line['lastname'] ?></td>
-                <td><?= $line['firstname'] ?></td>
-                <td><?= $line['identifier'] ?></td>
-                <td><?= $line['nationality'] ?></td>
-                <td><?= $line['birthday'] ?></td>
-                <td><?= $line['cin'] ?></td>
-                <td><?= $line['address'] ?></td>
-            </tr>
-            <?php endforeach ?>
-        </tbody>
-    </table>
 </div>
 <style>
     .input-group-text {

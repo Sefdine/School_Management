@@ -23,10 +23,8 @@
 <div class="section_admin">
     <div class="nav_left">
         <ul>
-            <li><button onclick="nav_left_button(this)" data-value="student" id="btn_student">Etudiants</button></li>
             <li><button onclick="nav_left_button(this)" data-value="teacher">Enseignants</button></li>
-            <li><button onclick="nav_left_button(this)" data-value="study">Filières</button></li>
-            <li><button onclick="nav_left_button(this)" data-value="group">Groupes</button></li>
+            <li><button onclick="nav_left_button(this)" data-value="student" id="btn_student">Etudiants</button></li>
             <li><button onclick="nav_left_button(this)" data-value="average">Notes</button></li>
             <br>
             <a href="<?= URL_ROOT ?>landing" id="individual_insert">Note Individuelle</a>
@@ -38,8 +36,6 @@
             <?= (isset($home)) ? $home : '' ?>
             <span class="admin_student"><?= (isset($insert_student)) ? $insert_student : ''?></span>
             <span class="admin_teacher"><?= (isset($insert_teacher)) ? $insert_teacher : '' ?></span>
-            <span class="admin_study"><?= (isset($insert_study)) ? $insert_study : '' ?></span>
-            <span class="admin_group"><?= (isset($insert_group)) ? $insert_group : '' ?></span>
             <span class="admin_average"><?= (isset($insert_average)) ? $insert_average : '' ?></span>              
         </div>
     </div>

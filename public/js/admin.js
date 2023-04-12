@@ -20,7 +20,6 @@ $(document).ready(() => {
     }
     let session_study = sessionStorage.getItem('study');
     if (session_study != 1 || session_study == undefined) {
-        $('#study_header').hide();
         $('#individual_insert').hide();
     }
     resetTable = (button) => {
@@ -37,10 +36,19 @@ $(document).ready(() => {
             dataType: 'json',
             success: s => {
                 let studies = document.getElementById('study_header');
-                studies.removeChild(document.querySelector('option'));
+                while (studies.firstChild) {
+                    studies.removeChild(studies.firstChild);
+                }
+                let option = document.createElement('option');
+                option.value = 'title';
+                option.setAttribute('disabled', 'disabled');
+                option.setAttribute('selected', 'selected');
+                option.className ='text-center';
+                option.textContent = 'Choisir une filière';
+                studies.appendChild(option);
                 s.forEach(element => {
                     let option = document.createElement('option');
-                    option.setAttribute('value', element);
+                    option.value = element;
                     option.className ='text-center';
                     option.textContent = element;
                     studies.appendChild(option);
@@ -49,7 +57,7 @@ $(document).ready(() => {
             error: (xhr, textStatus, errorThrown) => {
                 console.error(errorThrown);
             }
-        })
+        });
     }
     select_study = (select) => {
         $.ajax({
@@ -57,33 +65,158 @@ $(document).ready(() => {
             url: 'ajax',
             data: {
                 'select': 'study',
-                'study': select.value
+                'value': select.value
             },
             success: s => {
-                console.log(s);
+                let parsed = JSON.parse(s);
+                let groupes = document.getElementById('group');
+                while(groupes.firstChild) {
+                    groupes.removeChild(groupes.firstChild);
+                }
+                let option = document.createElement('option');
+                option.value = 'title';
+                option.setAttribute('disabled', 'disabled');
+                option.setAttribute('selected', 'selected');
+                option.textContent = 'Choisir un groupe';
+                groupes.appendChild(option);
+                parsed.forEach(element => {
+                    let option = document.createElement('option');
+                    option.setAttribute('value', element);
+                    option.textContent = element;
+                    groupes.appendChild(option);
+
+                });
+            }, 
+            error: (xhr, textStatus, errorThrown) => {
+                console.error(errorThrown);
+            }
+        });
+    }
+    select_group = (select) => {
+        $.ajax({
+            type: 'post',
+            url: 'ajax',
+            data: {
+                'select': 'group',
+                'value': select.value
+            },
+            success: s => {
             }, 
             error: (xhr, textStatus, errorThrown) => {
                 console.error(errorThrown);
             }
         })
     }
-    select_group = (select) => {
+    select_type_exam = (select) => {
         $.ajax({
             type: 'post',
-            url: 'displayDashboard',
-            data: {'group': select.value},
+            url: 'ajax',
+            data: {
+                'select': 'exam_type',
+                'value': select.value
+            },
+            dataType: 'json',
             success: s => {
-                console.log(s);
-                document.body.innerHTML = s;
-            }, 
-            error: e => {
-                console.error(e);
+                let exams = document.getElementById('exam');
+                while (exams.firstChild) {
+                    exams.removeChild(exams.firstChild);
+                }
+                let option = document.createElement('option');
+                option.value = 'title';
+                option.setAttribute('selected', 'selected');
+                option.setAttribute('disabled', 'disabled');
+                if (select.value == 'Examen') {
+                    option.textContent = 'Choisir un exam';
+                } else {
+                    option.textContent = 'Choisir un contrôle';
+                }
+                exams.appendChild(option);
+                s.forEach(element => {
+                    let option = document.createElement('option');
+                    option.value = element;
+                    option.textContent = element;
+                    exams.appendChild(option);
+                });
+            },
+            error: (xhr, textStatus, errorThrown) => {
+                console.error(errorThrown);
             }
         })
     }
-    select_level = (select) => {
-    }
     select_exam = (select) => {
+        $.ajax({
+            type: 'post',
+            url: 'ajax',
+            data: {
+                'select': 'exam',
+                'value': select.value
+            },
+            success: s => {
+                let parsed = JSON.parse(s);
+                let modules = document.getElementById('module');
+                while (modules.firstChild) {
+                    modules.removeChild(modules.firstChild);
+                }
+                let option = document.createElement('option');
+                option.value = 'title';
+                option.setAttribute('selected', 'selected');
+                option.setAttribute('disabled', 'disabled');
+                option.textContent = 'Choisir un module';
+                modules.appendChild(option);
+                parsed.forEach(element => {
+                    let option = document.createElement('option');
+                    option.value = element.slug;
+                    option.textContent = element.name;
+                    modules.appendChild(option);
+                })
+            },
+            error: (xhr, textStatus, errorThrown) => {
+                console.log(errorThrown);
+            }
+        });
+    }
+    select_module = (select) => {
+        $.ajax({
+            type: 'post',
+            url: 'ajax',
+            data: {
+                'select': 'module',
+                'value': select.value
+            },
+            success: s => {
+                let parsed = JSON.parse(s);
+                let tbody = document.querySelector('.table-group-divider');
+                while (tbody.firstChild) {
+                    tbody.removeChild(tbody.firstChild);
+                }
+                parsed.forEach(element => {
+                    let tr = document.createElement('tr');
+                    let number = document.createElement('td');
+                    number.textContent = 1;
+                    let name = document.createElement('td');
+                    name.textContent = element.firstname +' '+element.lastname;
+                    let identifier = document.createElement('td');
+                    identifier.textContent = element.identifier;
+                    let average = document.createElement('td');
+                    let input = document.createElement('input');
+                    input.setAttribute('type', 'number');
+                    input.setAttribute('step', '0.1');
+                    input.setAttribute('name', element.identifier);
+                    input.setAttribute('min', '0');
+                    input.setAttribute('max', '20');
+                    average.appendChild(input);
+                    tr.appendChild(number);
+                    tr.appendChild(name);
+                    tr.appendChild(identifier);
+                    tr.appendChild(identifier);
+                    tr.appendChild(average);
+                    tbody.appendChild(tr);
+                })
+            },
+            error: (xhr, textStatus, errorThrown) => {
+                console.error(errorThrown);
+            }
+        })
     }
     next_button_average = (button) => {
         sendValueSession({'current_page': currentPage+1}, document.location = 'displayDashboard');
@@ -91,25 +224,8 @@ $(document).ready(() => {
     previous_button_average = (button) => {
         sendValueSession({'current_page': currentPage-1}, document.location = 'displayDashboard');
     }
-    select_module = (select) => {
-        sendValueSession({'current_module': select.value}, document.location = 'displayDashboard');
-    }
 });
 
-function sendValueSelect(data) {
-    $.ajax({
-        type: 'POST',
-        url: 'displayDashboard',
-        data: data,
-        success: s => {
-            console.log(s);
-            document.body.innerHTML = s;
-        },
-        error: (error) => {
-            console.error(error);
-        }
-    })
-}
 
 function sendValueSession(data, action) {
     $.ajax({

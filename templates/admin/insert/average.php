@@ -12,16 +12,16 @@
     </div>
     <div class="input-group mb-1">
         <span class="input-group-text">Type d'exam</span>
-        <select name="exam" id="exam" onchange="select_exam(this)" class="form-select">
+        <select name="exam_type" id="exam_type" onchange="select_type_exam(this)" class="form-select">
             <option value="title" disabled selected>Choisir un type d'examen</option>
-            <?php foreach($types_exams as $item): ?>
-                <option value="<?= $item ?>" <?= ($item == $type_exam) ? 'selected' : '' ?>><?= $item ?></option>
+            <?php foreach($exams_types as $item): ?>
+                <option value="<?= $item ?>" <?= ($item == $exam_type) ? 'selected' : '' ?>><?= $item ?></option>
             <?php endforeach ?>
         </select>
     </div>
     <div class="input-group mb-1">
         <span class="input-group-text">Exams</span>
-        <select name="exam_type" id="exam_type" onchange="select_type_exam(this)" class="form-select">
+        <select name="exam" id="exam" onchange="select_exam(this)" class="form-select">
             <option value="title" disabled selected>Choisir un examen</option>
             <?php foreach($exams as $item): ?>
                 <option value="<?= $item ?>" <?= ($item == $exam) ? 'selected' : '' ?>><?= $item ?></option>
@@ -30,7 +30,7 @@
     </div>
     <div class="input-group mb-1">
         <span class="input-group-text">Modules</span>
-        <select id="module" onchange="select_module(this)" class="form-select">
+        <select name="module" id="module" onchange="select_module(this)" class="form-select">
             <option value="title" disabled selected>Choisir un module</option>
             <?php foreach($modules as $module): ?>
                 <option value="<?= $module->slug ?>" <?= ($module->slug == $current_module) ? 'selected' : '' ?>><?= $module->name ?></option>

@@ -169,13 +169,6 @@ if (isset($action)){
         } else {
             die($user->displayForm());
         }
-    } elseif($action === 'insertStudy') {
-        if (session()) {
-            $study_name = $_POST['name'] ?? '';
-            $admin->insertStudy($study_name);
-        } else {
-            die($user->displayForm());
-        }
     } elseif($action === 'insertTeacher') {
         if (session()) {
             $data = $_POST ?? [];
@@ -193,13 +186,42 @@ if (isset($action)){
     } elseif($action === 'ajax') {
         if (session()) {
             if (isset($_POST['value'])) {
-                $value = $_POST['value'];
                 $admin = new ModelAdmin;
                 $select = $_POST['select'] ?? '';
                 if ($select == 'year') {
+                    $value = $_POST['value'];
+                    $_SESSION['insert_year'] = $value;
                     $response = $admin->getStudies($value);
                 } elseif ($select == 'study') {
-                    // $response = $admin->getGroups($year0)
+                    $value = $_POST['value'];
+                    $_SESSION['insert_study'] = $value;
+                    $response = $admin->getGroups($_SESSION['insert_year'], $value);
+                } elseif ($select == 'group') {
+                    $value = $_POST['value'];
+                    $_SESSION['insert_group'] = $value;
+                } elseif ($select == 'exam_type') {
+                    $value = $_POST['value'];
+                    $_SESSION['insert_exam_type'] = $value;
+                    $response = $admin->getExams($value);
+                } elseif ($select == 'exam') {
+                    $value = $_POST['value'];
+                    $_SESSION['insert_exam'] = $value;
+                    $group = (int)$_SESSION['insert_group'] ?? 0;
+                    $study = $_SESSION['insert_study'] ?? '';
+                    $year = $_SESSION['insert_year'] ?? '';
+                    $response = $admin->getModules($group, $study, $year);
+                } elseif ($select == 'module') {
+                    $_SESSION['insert_modue'] = $value;
+                    $exam_name = $_SESSION['insert_exam'] ?? '';
+                    $module_slug = $_POST['value'] ?? '';
+                    $year = $_SESSION['insert_year'] ?? '';
+                    $study = $_SESSION['insert_study'] ?? '';
+                    $group = (int)$_SESSION['insert_group'] ?? 0;
+                    $exam_type = $_SESSION['insert_exam_type'] ?? '';
+                    $perPage = 10;
+                    $currentPage = (int)($_SESSION['average_page'] ?? 1);
+                    $offset = $perPage * ($currentPage - 1);
+                    $response = $admin->getData($exam_name, $module_slug, $year, $study, $group, $exam_type, $perPage, $offset);
                 }
                 echo json_encode($response);
             }

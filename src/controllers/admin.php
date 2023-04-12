@@ -15,7 +15,7 @@ class Admin extends User
     public function displayHome():void {
         require_once('templates/admin/home.php');
     }
-    public function displayLanding(string $identifier): void {
+    public function displayLanding(string $identifier, string $exam_type = ''): void {
         $users = new ModelUser;
         $user = $users->getUser($identifier);
         $teacher = new Teacher;
@@ -23,7 +23,7 @@ class Admin extends User
         $studies = $teacher->getStudies();
         $groups = $teacher->getGroups();
         $exams_types = $teacher->getExamsTypes();
-        $exams = $teacher->getExams();
+        $exams = $teacher->getExams($exam_type);
         require_once('templates/admin/header.php');
         require_once('templates/admin/landing.php'); 
     }
@@ -62,7 +62,8 @@ class Admin extends User
         $studies = $admin->getStudies($year);
         $groupes = $admin->getGroups($year, $study);
         $modules = $admin->getModules($group, $study, $year);
-        $exams = $admin->getExams();
+        $exams_types = $admin->getExamsTypes();
+        $exams = $admin->getExams($exam_type);
         $count = $admin->getDataCount($year, $study, $group);
         $currentPage = (int)($_SESSION['average_page'] ?? 1);
         $perPage = 10;
@@ -90,7 +91,7 @@ class Admin extends User
                     require_once('templates/admin/insert/average.php');
                     break;
                 default: 
-                    require_once('templates/admin/insert/student.php');
+                    require_once('templates/admin/insert/teacher.php');
                     break;
             }
         } elseif ($nav_top == 'update') {
@@ -136,7 +137,6 @@ class Admin extends User
                 header('Location: '. URL_ROOT .'insert');
             } else {
                 $_SESSION['err'] = 'insert_success';
-                $_SESSION['insert'][] = $data;
                 header('Location: '. URL_ROOT .'insert');
             }
         }
@@ -157,26 +157,7 @@ class Admin extends User
             header('Location: '. URL_ROOT .'insert');
         } else {
             $_SESSION['err'] = 'insert_success';
-            $_SESSION['insert'][] = $data;
             header('Location: '. URL_ROOT .'insert');
-        }
-    }
-    public function insertStudy(string $name):void {
-        if (!$name) {
-            $_SESSION['err'] = 'emptydata';
-            header('Location: '.URL_ROOT.'insert');
-        } else {
-            $admin = new ModelAdmin;
-            $success = $admin->insertStudy($name);
-
-            if ($success) {
-                $_SESSION['err'] = 'insert_success';
-                $_SESSION['insert'][] = $name;
-                header('Location: '. URL_ROOT .'insert');
-            } else {
-                $_SESSION['err'] = 'insert_failed';
-                header('Location: '. URL_ROOT .'insert');
-            }
         }
     }
     public function insertAverages(array $data):void {
