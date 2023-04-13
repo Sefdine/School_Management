@@ -1,4 +1,5 @@
 $(document).ready(() => {
+    console.log('hello')
     nav_top_a = (a) => {
         let nav_top = a.getAttribute('data-value');
         sendValueSession({'nav_top': nav_top}, document.location = 'displayDashboard');
@@ -183,6 +184,7 @@ $(document).ready(() => {
                 'value': select.value
             },
             success: s => {
+                console.log(s);
                 let parsed = JSON.parse(s);
                 let tbody = document.querySelector('.table-group-divider');
                 while (tbody.firstChild) {

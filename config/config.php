@@ -21,11 +21,6 @@ function session() {
     }
 }
 
-
-
-if (isset($_POST['value'])) {
-    $_SESSION['insert'] = [];
-}
 if (isset($_POST['nav_top'])) {
     $_SESSION['nav_top'] = $_POST['nav_top'];
 }
@@ -35,7 +30,4 @@ if (isset($_POST['nav_left'])) {
 
 if (isset($_POST['current_page'])) {
     $_SESSION['average_page'] = $_POST['current_page'];
-}
-if (isset($_POST['current_module'])) {
-    $_SESSION['current_module'] = $_POST['current_module'];
 }

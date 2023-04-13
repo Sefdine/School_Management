@@ -211,7 +211,7 @@ if (isset($action)){
                     $year = $_SESSION['insert_year'] ?? '';
                     $response = $admin->getModules($group, $study, $year);
                 } elseif ($select == 'module') {
-                    $_SESSION['insert_modue'] = $value;
+                    $_SESSION['insert_module'] = $_POST['value'];
                     $exam_name = $_SESSION['insert_exam'] ?? '';
                     $module_slug = $_POST['value'] ?? '';
                     $year = $_SESSION['insert_year'] ?? '';

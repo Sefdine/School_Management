@@ -165,12 +165,13 @@ class Admin extends User
         } else {
             $admin = new ModelAdmin;
             $student = new Student;
-            $module_slug = $_SESSION['current_module'];
+            $module_slug = $_SESSION['insert_module'] ?? '';
             $module_id = $admin->getIdModule($module_slug);
-            $exam_id = (int)$_SESSION['insert_exam'];
-            $year = $_SESSION['insert_year'];
-            $study = $_SESSION['insert_study'];
-            $group = (int)$_SESSION['insert_group'];
+            $exam = $_SESSION['insert_exam'] ?? 0;
+            $exam_id = $admin->getIdExam($exam);
+            $year = $_SESSION['insert_year'] ?? '';
+            $study = $_SESSION['insert_study'] ?? '';
+            $group = (int)$_SESSION['insert_group'] ?? 0;
             $year_id = $admin->getIdYear($year);
             $study_id = $admin->getIdStudy($study);
             $group_id = $admin->getIdGroup($group);
