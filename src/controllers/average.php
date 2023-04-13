@@ -13,11 +13,12 @@ class Average
 {
     public function update_average(string $id, string $module_slug, array $data): void
     {
-        $identifier = $data['num_inscription'].' ' ?? '';
+        $identifier = $data['num_inscription'] ?? '';
         $value = (float)($data['rate'] ?? 0);
         $users = new ModelUser;
 
         $user_id = $users->getIdUser($identifier);
+
         $_SESSION['sessionData'] = 0;
 
         if ($identifier) {

@@ -18,7 +18,7 @@ class User
     {
         $connection = new Database;
         $statement = $connection->getConnection()->query(
-            'SELECT id, password, token, identifier
+            'SELECT id, password, token, TRIM(identifier) AS identifier
             FROM users 
             ORDER BY id ASC'
         );        
@@ -38,7 +38,7 @@ class User
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id, firstname, lastname, password, identifier 
+            'SELECT id, firstname, lastname, password, TRIM(identifier) AS identifier 
             FROM users
             WHERE id = ?'
         );
@@ -70,7 +70,7 @@ class User
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id FROM users WHERE identifier = ?'
+            'SELECT id FROM users WHERE TRIM(identifier) = ?'
         );
         $statement->execute([$identifier]);
         return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
@@ -78,7 +78,7 @@ class User
     public function getData(string $exam_name, string $module_slug, string $year, string $study, int $group, string $exam_type, int $limit, int $offset): array {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
-            SELECT firstname, lastname, identifier
+            SELECT firstname, lastname, TRIM(identifier) AS identifier
             FROM users u 
             JOIN students s ON u.id = s.user_id
             JOIN registrations r ON s.id = r.student_id
