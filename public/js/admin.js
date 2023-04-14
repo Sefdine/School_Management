@@ -1,31 +1,87 @@
-$(document).ready(() => {
-    console.log('hello')
-    nav_top_a = (a) => {
-        let nav_top = a.getAttribute('data-value');
-        sendValueSession({'nav_top': nav_top}, document.location = 'displayDashboard');
-        console.log(nav_top)
-    }
-    nav_left_button = (button) => {
-        let year = (document.getElementById('year')).value;
-        let nav_left = button.getAttribute('data-value');
-        sendValueSession(
-            {'nav_left': nav_left, 'value': true, 'year': year},
-            document.location = 'displayDashboard'
-        );
-        if (nav_left == 'average') {
-            sessionStorage.setItem('study', 1)
-        } else {
-            sessionStorage.setItem('study', 0)
+if (window.location.pathname == '/ipem/displayDashboard' || window.location.pathname == '/ipem/home') {
+    document.addEventListener('DOMContentLoaded', () => {
+        let year = document.getElementById('year');
+        let studies = document.getElementById('study_header');
+        let groupes = document.getElementById('group');
+        let exam_type = document.getElementById('exam_type');
+        let exam = document.getElementById('exam');
+        let module = document.getElementById('module');
+        let session_average = sessionStorage.getItem('average');
+        if (session_average != 1 || session_average == undefined) {
+            $('#individual_insert').hide();
         }
-    }
-    let session_study = sessionStorage.getItem('study');
-    if (session_study != 1 || session_study == undefined) {
-        $('#individual_insert').hide();
-    }
-    resetTable = (button) => {
-        sendValueSession({'value': true}, document.location = 'displayDashboard');
-    }
-    select_year = (select) => {
+        nav_top_a = (a) => {
+            let nav_top = a.getAttribute('data-value');
+            sendValueSession({'nav_top': nav_top}, document.location = 'displayDashboard');
+            console.log(nav_top)
+        }
+        nav_left_button = (button) => {
+            let nav_left = button.getAttribute('data-value');
+            sendValueSession(
+                {'nav_left': nav_left, 'value': true, 'year': year.value},
+                document.location = 'displayDashboard'
+            );
+            if (nav_left == 'average') {
+                sessionStorage.setItem('average', 1)
+            } else {
+                sessionStorage.setItem('average', 0)
+            }
+        }
+        if (year.value) {
+            sendYear(year);
+        }
+        if (studies.firstChild) {
+            setTimeout(() => {
+                sendStudy(studies);
+            }, 100);
+        }
+        if (groupes.firstChild) {
+            setTimeout(() => {
+                sendGroup(groupes);
+            },400);
+        }
+        if (exam_type.value) {
+            setTimeout(() => {
+                sendTypeExam(exam_type);
+            }, 300);
+        }
+        if (exam.firstChild) {
+            setTimeout(() => {
+                sendExam(exam);
+            }, 300);
+        }
+        if (module.firstChild) {
+            setTimeout(() => {
+                sendModule(module);
+            },100);
+        }
+        select_year = (select) => {
+            sendYear(select);
+        }
+        select_study = (select) => {
+            sendStudy(select);
+        }
+        select_group = (select) => {
+            sendGroup(select);
+        }
+        select_type_exam = (select) => {
+            sendTypeExam(select);
+        }
+        select_exam = (select) => {
+            sendExam(select);
+        }
+        select_module = (select) => {
+            sendModule(select);
+        }
+        next_button_average = (button) => {
+            sendValueSession({'current_page': currentPage+1}, document.location = 'displayDashboard');
+        }
+        previous_button_average = (button) => {
+            sendValueSession({'current_page': currentPage-1}, document.location = 'displayDashboard');
+        }
+    });
+
+    function sendYear(select) {
         $.ajax({
             type: 'post',
             url: 'ajax',
@@ -39,13 +95,6 @@ $(document).ready(() => {
                 while (studies.firstChild) {
                     studies.removeChild(studies.firstChild);
                 }
-                let option = document.createElement('option');
-                option.value = 'title';
-                option.setAttribute('disabled', 'disabled');
-                option.setAttribute('selected', 'selected');
-                option.className ='text-center';
-                option.textContent = 'Choisir une filière';
-                studies.appendChild(option);
                 s.forEach(element => {
                     let option = document.createElement('option');
                     option.value = element;
@@ -59,7 +108,7 @@ $(document).ready(() => {
             }
         });
     }
-    select_study = (select) => {
+    function sendStudy(select) {
         $.ajax({
             type: 'post',
             url: 'ajax',
@@ -73,18 +122,12 @@ $(document).ready(() => {
                 while(groupes.firstChild) {
                     groupes.removeChild(groupes.firstChild);
                 }
-                let option = document.createElement('option');
-                option.value = 'title';
-                option.setAttribute('disabled', 'disabled');
-                option.setAttribute('selected', 'selected');
-                option.textContent = 'Choisir un groupe';
-                groupes.appendChild(option);
                 parsed.forEach(element => {
                     let option = document.createElement('option');
-                    option.value =element;
+                    option.value = element;
                     option.textContent = (element == 1) ? '1ère année' : '2ème année';
                     groupes.appendChild(option);
-
+    
                 });
             }, 
             error: (xhr, textStatus, errorThrown) => {
@@ -92,7 +135,7 @@ $(document).ready(() => {
             }
         });
     }
-    select_group = (select) => {
+    function sendGroup(select) {
         $.ajax({
             type: 'post',
             url: 'ajax',
@@ -107,7 +150,7 @@ $(document).ready(() => {
             }
         })
     }
-    select_type_exam = (select) => {
+    function sendTypeExam(select) {
         $.ajax({
             type: 'post',
             url: 'ajax',
@@ -121,16 +164,6 @@ $(document).ready(() => {
                 while (exams.firstChild) {
                     exams.removeChild(exams.firstChild);
                 }
-                let option = document.createElement('option');
-                option.value = 'title';
-                option.setAttribute('selected', 'selected');
-                option.setAttribute('disabled', 'disabled');
-                if (select.value == 'Examen') {
-                    option.textContent = 'Choisir un exam';
-                } else {
-                    option.textContent = 'Choisir un contrôle';
-                }
-                exams.appendChild(option);
                 s.forEach(element => {
                     let option = document.createElement('option');
                     option.value = element;
@@ -141,9 +174,9 @@ $(document).ready(() => {
             error: (xhr, textStatus, errorThrown) => {
                 console.error(errorThrown);
             }
-        })
+        });
     }
-    select_exam = (select) => {
+    function sendExam(select) {
         $.ajax({
             type: 'post',
             url: 'ajax',
@@ -157,12 +190,6 @@ $(document).ready(() => {
                 while (modules.firstChild) {
                     modules.removeChild(modules.firstChild);
                 }
-                let option = document.createElement('option');
-                option.value = 'title';
-                option.setAttribute('selected', 'selected');
-                option.setAttribute('disabled', 'disabled');
-                option.textContent = 'Choisir un module';
-                modules.appendChild(option);
                 parsed.forEach(element => {
                     let option = document.createElement('option');
                     option.value = element.slug;
@@ -175,7 +202,7 @@ $(document).ready(() => {
             }
         });
     }
-    select_module = (select) => {
+    function sendModule(select) {
         $.ajax({
             type: 'post',
             url: 'ajax',
@@ -184,7 +211,6 @@ $(document).ready(() => {
                 'value': select.value
             },
             success: s => {
-                console.log(s);
                 let parsed = JSON.parse(s);
                 let tbody = document.querySelector('.table-group-divider');
                 while (tbody.firstChild) {
@@ -217,27 +243,19 @@ $(document).ready(() => {
             error: (xhr, textStatus, errorThrown) => {
                 console.error(errorThrown);
             }
+        });
+    }
+    function sendValueSession(data, action) {
+        $.ajax({
+            type: 'POST',
+            url: 'displayDashboard',
+            data: data,
+            success: s => {
+                action;
+            },
+            error: (error) => {
+                console.error(error);
+            }
         })
     }
-    next_button_average = (button) => {
-        sendValueSession({'current_page': currentPage+1}, document.location = 'displayDashboard');
-    }
-    previous_button_average = (button) => {
-        sendValueSession({'current_page': currentPage-1}, document.location = 'displayDashboard');
-    }
-});
-
-
-function sendValueSession(data, action) {
-    $.ajax({
-        type: 'POST',
-        url: 'displayDashboard',
-        data: data,
-        success: s => {
-            action;
-        },
-        error: (error) => {
-            console.error(error);
-        }
-    })
 }
