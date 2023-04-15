@@ -20,7 +20,7 @@
               <ul class="dropdown-menu text-small shadow" id="dropdown-rate">
                 <?php foreach($modules as $module): ?>
                   <li>
-                    <a class="dropdown-item" href="<?= URL_ROOT ?>rate/<?= $module->slug ?><?php $_SESSION['sessionData'] = 1 ?>"><?= $module->name ?></a>
+                    <a class="dropdown-item" href="<?= URL_ROOT ?>rate/<?= $module->slug ?><?php $_SESSION['sessionData'] = 1 ?>" style="color: #000"><?= $module->name ?></a>
                   </li>
                 <?php endforeach ?>
               </ul>

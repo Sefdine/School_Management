@@ -59,6 +59,14 @@
     </div>
         <input type="submit" value="Insérer" class="btn btn-primary" onclick="insert_teacher_btn(this)">
     </div>
+
+    <div class="mt-5 mb-3 mx-auto"  style="width: 60%">
+        <label for="formfile" class="form-label">Entrer un fichier</label>
+        <div class="input-group">
+            <input type="file" name="formFile" id="formFile" class="form-control" accept=".xls, .xlsx" aria-describedby="fromFileAria" aria-label="Upload">
+            <button type="button" class="btn btn-outline-secondary" id="fromFileAria">Confirmer</button>
+        </div>
+    </div>
 </div>
 <style>
     .input-group-text {

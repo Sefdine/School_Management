@@ -2,7 +2,7 @@
 <div class="header_dashboard">
     <h2 class="logo_admin">Mon logo</h2>
     <ul class="nav_top">
-        <li><a href="home">Home</a></li>
+        <li><a href="home">Accueil</a></li>
         <li><a href="displayDashboard" class="nav_insert" onclick="nav_top_a(this)" data-value="insert">Inscription</a></li>
         <li><a href="displayDashboard" class="nav_update" onclick="nav_top_a(this)" data-value="update">Etat</a></li>
         <li><a href="displayDashboard" class="nav_delete" onclick="nav_top_a(this)" data-value="delete">Suppression</a></li>

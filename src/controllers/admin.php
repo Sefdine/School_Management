@@ -79,12 +79,6 @@ class Admin extends User
                 case 'teacher': 
                     require_once('templates/admin/insert/teacher.php');
                     break;
-                case 'study': 
-                    require_once('templates/admin/insert/study.php');
-                    break;
-                case 'group': 
-                    require_once('templates/admin/insert/group.php');
-                    break;
                 case 'average': 
                     require_once('templates/admin/insert/average.php');
                     break;
@@ -95,22 +89,16 @@ class Admin extends User
         } elseif ($nav_top == 'update') {
             switch($session_nav_left) {
                 case 'student': 
-                    require_once('templates/admin/update/student.php');
+                    require_once('templates/admin/view/student.php');
                     break;
                 case 'teacher': 
-                    require_once('templates/admin/update/teacher.php');
-                    break;
-                case 'study': 
-                    require_once('templates/admin/update/study.php');
-                    break;
-                case 'group': 
-                    require_once('templates/admin/update/group.php');
+                    require_once('templates/admin/view/teacher.php');
                     break;
                 case 'average': 
-                    require_once('templates/admin/update/average.php');
+                    require_once('templates/admin/view/average.php');
                     break;
                 default: 
-                    require_once('templates/admin/update/student.php');
+                    require_once('templates/admin/view/teacher.php');
                     break;
             }
         } elseif ($nav_top == 'delete') {
