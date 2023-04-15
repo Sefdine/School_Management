@@ -13,11 +13,12 @@ class Average
 {
     public function update_average(string $id, string $module_slug, array $data): void
     {
-        $identifier = $data['num_inscription'].' ' ?? '';
+        $identifier = $data['num_inscription'] ?? '';
         $value = (float)($data['rate'] ?? 0);
         $users = new ModelUser;
 
         $user_id = $users->getIdUser($identifier);
+
         $_SESSION['sessionData'] = 0;
 
         if ($identifier) {
@@ -27,19 +28,18 @@ class Average
             $array = $_SESSION['array'];
             $year = $array['year'];
             $study = $array['study'];
-            $group_slug = $array['group'];
-            $level = $array['level'];
-            $exam = $array['control'];
+            $group = (int)$array['group'];
+            $exam_name = $array['exam_name'];
+            $exam_type = $array['exam_type'];
 
             $teacher = new ModelTeacher;
             $year_id = $teacher->getIdYear($year);
             $study_id = $teacher->getIdStudy($study);                
-            $group_id = $teacher->getIdGroup($group_slug);
-            $level_id = $teacher->getIdLevel($level);
+            $group_id = $teacher->getIdGroup($group);
             $module_id = $teacher->getIdModule($module_slug);
-            $exam_id = $teacher->getIdExam($exam);
+            $exam_id = $teacher->getIdExam($exam_name);
             $registration_id = 0;
-            $registration_id = $students->getIdRegistration($student_id, $year_id, $study_id, $group_id, $level_id);
+            $registration_id = $students->getIdRegistration($student_id, $year_id, $study_id, $group_id);
             
             if ($registration_id) {
                 $averages = new ModelAverage;

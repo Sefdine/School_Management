@@ -14,7 +14,7 @@
 
 .header_dashboard > .nav_top {
     display: flex;
-    width: 60%;
+    width: 40%;
     align-items: center;
     margin: auto;
 }
@@ -37,6 +37,10 @@
 .header_dashboard .nav_top .nav_delete {
     background-color: rgba(153, 31, 31, 0.973);
     padding: 10px;
+}
+
+.header_dashboard #study_header {
+    width: 361px;
 }
 
 .header_dashboard > a{
@@ -103,13 +107,13 @@ a{
     flex-direction: column;
     height: 300px;
     align-content: center;
-    justify-content: space-around;
     margin-top: 10px;
 }
 
 .section_admin > .nav_left li {
     list-style: none;
     color: #fff;
+    margin-top: 10px;
 }
 
 .section_admin .nav_left ul button{

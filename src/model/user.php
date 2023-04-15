@@ -18,7 +18,7 @@ class User
     {
         $connection = new Database;
         $statement = $connection->getConnection()->query(
-            'SELECT id, password, token, identifier
+            'SELECT id, password, token, TRIM(identifier) AS identifier
             FROM users 
             ORDER BY id ASC'
         );        
@@ -38,7 +38,7 @@ class User
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id, firstname, lastname, password, identifier 
+            'SELECT id, firstname, lastname, password, TRIM(identifier) AS identifier 
             FROM users
             WHERE id = ?'
         );
@@ -70,35 +70,35 @@ class User
     {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
-            'SELECT id FROM users WHERE identifier = ?'
+            'SELECT id FROM users WHERE TRIM(identifier) = ?'
         );
         $statement->execute([$identifier]);
         return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }
-    public function getData(int $exam, string $module_slug, string $year, string $study, string $group_slug, int $level, int $limit, int $offset): array {
+    public function getData(string $exam_name, string $module_slug, string $year, string $study, int $group, string $exam_type, int $limit, int $offset): array {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
-            SELECT firstname, lastname, identifier
+            SELECT firstname, lastname, TRIM(identifier) AS identifier
             FROM users u 
             JOIN students s ON u.id = s.user_id
             JOIN registrations r ON s.id = r.student_id
             JOIN years y ON y.id = r.year_id
             JOIN studies st ON st.id = r.study_id
             JOIN groupes g ON g.id = r.group_id
-            JOIN levels l ON l.id = r.level_id
-            JOIN exams e ON e.id = ?
+            JOIN exams e ON e.exam_name = ?
+            JOIN exams_types et ON et.id = e.exam_type_id
             JOIN modules m ON m.id = (SELECT id FROM modules WHERE slug = ?)
             LEFT JOIN averages a ON r.id = a.registration_id AND a.exam_id = e.id AND a.module_id = m.id
             WHERE y.name = ?
             AND st.name = ?
-            AND g.slug = ?
-            AND l.level = ?
+            AND g.group_number = ?
+            AND et.exam_type = ?
             AND a.registration_id IS NULL
             ORDER BY u.id ASC 
             LIMIT ?
             OFFSET ?
         ');
-        $statement->execute([$exam, $module_slug ,$year, $study, $group_slug, $level, $limit, $offset]);
+        $statement->execute([$exam_name, $module_slug ,$year, $study, $group, $exam_type, $limit, $offset]);
         $data = [];
         while($row = $statement->fetch()) {
             $line = new self;
@@ -109,20 +109,18 @@ class User
         }
         return $data;
     }
-    public function getDataCount(string $year, string $study, string $group_slug, int $level):int {
+    public function getDataCount(string $year, string $study, int $group):int {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
             SELECT count(r.id) as count FROM registrations r
             JOIN years y ON y.id = r.year_id
             JOIN studies st ON st.id = r.study_id
             JOIN groupes g ON g.id = r.group_id
-            JOIN levels l ON l.id = r.level_id
             WHERE y.name = ?
             AND st.name = ?
-            AND g.slug = ?
-            AND l.level = ?
+            AND g.group_number = ?
         ');
-        $statement->execute([$year, $study, $group_slug, $level]);
+        $statement->execute([$year, $study, $group]);
         $row = $statement->fetch(\PDO::FETCH_NUM)[0];
         return $row;
     }

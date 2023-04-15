@@ -4,34 +4,30 @@
     <div class="input-group mb-1">
         <span class="input-group-text">Group</span>
         <select name="group" id="group" onchange="select_group(this)" class="form-select">
-            <option value="title" disabled selected>Choisir un groupe</option>
             <?php foreach($groupes as $item): ?>
                 <option value="<?= $item->slug ?>" <?= ($item->slug == $group) ? 'selected' : '' ?>><?= $item->name ?></option>
             <?php endforeach ?>
         </select>
     </div>
     <div class="input-group mb-1">
-        <span class="input-group-text">Niveaux</span>
-        <select name="level" id="level" onchange="select_level(this)" class="form-select">
-            <option value="title" disabled selected>Choisir un niveau</option>
-            <?php foreach($levels as $item): ?>
-                <option value="<?= $item ?>" <?= ($item == $level) ? 'selected' : '' ?>><?= ($item == 1) ? '1ère année' : '2ème année' ?></option>
+        <span class="input-group-text">Type d'exam</span>
+        <select name="exam_type" id="exam_type" onchange="select_type_exam(this)" class="form-select">
+            <?php foreach($exams_types as $item): ?>
+                <option value="<?= $item ?>" <?= ($item == $exam_type) ? 'selected' : '' ?>><?= $item ?></option>
             <?php endforeach ?>
         </select>
     </div>
     <div class="input-group mb-1">
         <span class="input-group-text">Exams</span>
         <select name="exam" id="exam" onchange="select_exam(this)" class="form-select">
-            <option value="title" disabled selected>Choisir un exam</option>
             <?php foreach($exams as $item): ?>
-                <option value="<?= $item ?>" <?= ($item == $exam) ? 'selected' : '' ?>><?= ($item == 1) ? 'Controle n°1' : (($item == 2) ? 'Controle n°2' : 'Exam') ?></option>
+                <option value="<?= $item ?>" <?= ($item == $exam) ? 'selected' : '' ?>><?= $item ?></option>
             <?php endforeach ?>
         </select>
     </div>
     <div class="input-group mb-1">
         <span class="input-group-text">Modules</span>
-        <select id="module" onchange="select_module(this)" class="form-select">
-            <option value="title" disabled selected>Choisir un module</option>
+        <select name="module" id="module" onchange="select_module(this)" class="form-select">
             <?php foreach($modules as $module): ?>
                 <option value="<?= $module->slug ?>" <?= ($module->slug == $current_module) ? 'selected' : '' ?>><?= $module->name ?></option>
             <?php endforeach ?>

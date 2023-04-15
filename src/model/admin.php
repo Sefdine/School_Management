@@ -4,17 +4,18 @@ declare(strict_types=1);
 namespace Ipem\Src\Model;
 
 use Ipem\Src\Lib\Database;
+use PDOException;
 
 class Admin extends User
 {
     public $name;
     public $slug;
-    use Module, Registration, Exam, Year, Study, Group, Level;
-    public function insertUserStudent(array $data, string $password, string $token):bool {
+    use Module, Registration, Exam, Year, Study, Group;
+    public function insertUserStudent(array $data, string $password, string $token, string $year, string $study, int $group):bool {
         $connection = new Database;
         $firstname = $data['firstname'] ?? '';
         $lastname = $data['lastname'] ?? '';
-        $identifier = $data['identifier'] ?? '';
+        $identifier = $data['identifier'] ?? null;
         $nationality = $data['nationality'] ?? '';
         $birthday = $data['birthday'] ?? '';
         $address = $data['address'] ?? '';
@@ -25,6 +26,9 @@ class Admin extends User
         $level_study = $data['level_study'] ?? '';
         $entry_date = $data['entry_date'] ?? '';
 
+        $year_id = self::getIdYear($year);
+        $study_id = self::getIdStudy($study);
+        $group_id = self::getIdGroup($group);
 
         $connection->getConnection()->beginTransaction();
 
@@ -50,7 +54,8 @@ class Admin extends User
             $cin,
             $address
         ]);
-        $user_id = $connection->getConnection()->lastInsertId('id');
+        $user_id = $connection->getConnection()->lastInsertId();
+
         $insertStudentStatement = $connection->getConnection()->prepare('
             INSERT INTO students(
                 nationality, 
@@ -64,7 +69,7 @@ class Admin extends User
             )
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ');
-        $result = $insertStudentStatement->execute([
+        $insertStudentStatement->execute([
             $nationality, 
             $birthday, 
             $user_id,
@@ -74,7 +79,14 @@ class Admin extends User
             $level_study,
             $entry_date
         ]);     
+        $student_id = $connection->getConnection()->lastInsertId();
+        $insertRegistrationStatement = $connection->getConnection()->prepare('
+            INSERT INTO registrations(student_id, year_id, study_id, group_id)
+            VALUES (?, ?, ?, ?)
+        ');
+        $result = $insertRegistrationStatement->execute([$student_id, $year_id, $study_id, $group_id]);
 
+    
         if($result) {
             $connection->getConnection()->commit();
             return true;
@@ -137,21 +149,6 @@ class Admin extends User
             return false;
         }
     }
-    public function insertGroup(string $name, string $slug): bool {
-        $connection = new Database;
-        $connection->getConnection()->beginTransaction();
-        $statement = $connection->getConnection()->prepare("
-            INSERT INTO groupes(name, slug) VALUES(?, ?)
-        ");
-        $result = $statement->execute([$name, $slug]);
-        if ($result) {
-            $connection->getConnection()->commit();
-            return true;
-        } else {
-            $connection->getConnection()->rollBack();
-            return false;
-        }
-    }
     public function getStudies(string $year): array {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
@@ -170,7 +167,7 @@ class Admin extends User
     public function getGroups(string $year, string $study) {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
-            SELECT DISTINCT g.name as groupe, g.slug FROM groupes g
+            SELECT DISTINCT group_number FROM groupes g
             JOIN studies_groupes sg ON g.id = sg.group_id
             JOIN studies s ON s.id = sg.study_id
             JOIN years_studies ys ON s.id = ys.study_id
@@ -181,32 +178,19 @@ class Admin extends User
         $groupes = [];
         $statement->execute([$year, $study]);
         while ($row = $statement->fetch()) {
-            $group = new self;
-            $group->name = $row['groupe'];
-            $group->slug = $row['slug'];
-            $groupes[] = $group;
+            $groupes[] = $row['group_number'];
         }
         return $groupes;
     }
-    public function getLevels(string $year, string $study, string $group) {
-        $connection = new Database;
-        $statement = $connection->getConnection()->prepare('
-            SELECT level FROM levels l
-            JOIN groupes_levels gl ON l.id = gl.level_id
-            JOIN groupes g ON g.id = gl.group_id
-            JOIN studies_groupes sg ON g.id = sg.group_id
-            JOIN studies s ON s.id = sg.study_id
-            JOIN years_studies ys ON s.id = ys.study_id
-            JOIN years y ON y.id = ys.year_id
-            WHERE y.name = ?
-            AND s.name = ?
-            AND g.slug = ?
-        ');
-        $groupes = [];
-        $statement->execute([$year, $study, $group]);
-        while ($row = $statement->fetch()) {
-            $groupes[] = $row['level'];
-        }
-        return $groupes;
+}
+
+
+$element = new Admin;
+if ($action == 'year') {
+    if (isset($_POST['year'])) {
+        $year = $_POST['year'];
+        $response = $element->getStudies($year);
+        header('Content-Type: application/json');
+        echo json_encode($response);
     }
 }

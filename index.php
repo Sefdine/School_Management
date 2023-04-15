@@ -7,6 +7,8 @@ use Ipem\Src\Controllers\Admin;
 use Ipem\Src\Controllers\User;
 use Ipem\Src\Controllers\Average;
 
+use Ipem\Src\Model\Admin as ModelAdmin;
+
 require_once('config/config.php');
 
 spl_autoload_register(static function(string $fqcn) {
@@ -21,16 +23,17 @@ $rate = new Average;
 
 if (isset($_GET['action'])){
     $action = $_GET['action'];
-}  else {
+}  elseif(isset($_POST['action'])) {
+    $action = $_POST['action'];
+} else {
     $action = null;
 }
 
 $error = $_SESSION['err'] ?? '';
 $year = $_SESSION['data_average']['year'] ?? '';
 $study = $_SESSION['data_average']['study'] ?? '';
-$group = $_SESSION['data_average']['group'] ?? '';
-$level = (int)$_SESSION['data_average']['level'] ?? 1;
-$exam = (int)($_SESSION['data_average']['exam']) ?? 1;
+$group = $_SESSION['data_average']['group'] ?? 1;
+$exam_type = $_SESSION['data_average']['exam_type'] ?? 'Contrôle';
 
 if (isset($action)){
     if ($action === 'connectionTreatment') {
@@ -96,8 +99,9 @@ if (isset($action)){
             $identifier = (string)$_SESSION['user_id'];
             if ($name === 'student') {
                 $year = $_POST['year'] ?? '';
-                $control = $_POST['control'] ?? '';
-                $student->displayAverage($identifier, $year, $control);
+                $exam_type = $_POST['exam_type'] ?? '';
+                $exam_name = $_POST['exam_name'] ?? '';
+                $student->displayAverage($identifier, $year, $exam_name, $exam_type);
             } elseif ($name === 'admin') {                
                 $module_slug = $_GET['module_slug'] ?? '';
                 $data = $_SESSION['array'] ?? '';
@@ -148,7 +152,12 @@ if (isset($action)){
         } 
     } elseif ($action === 'displayDashboard') {
         if (session()) {
-            $admin->displayDashboard($error, $year, $study, $group, $level, $exam);   
+            $year = $_SESSION['insert_year'] ?? '';
+            $study = $_SESSION['insert_study'] ?? '';
+            $group = (int)$_SESSION['insert_group'] ?? 0;
+            $exam_name = $_POST['exam_name'] ?? '';
+            $exam_type = $_POST['exam_type'] ?? '';
+            $admin->displayDashboard($error, $year, $study, $group, $exam_name, $exam_type);   
             $_SESSION['err'] = ''; 
         } else {
             die($user->displayForm());
@@ -160,13 +169,6 @@ if (isset($action)){
         } else {
             die($user->displayForm());
         }
-    } elseif($action === 'insertStudy') {
-        if (session()) {
-            $study_name = $_POST['name'] ?? '';
-            $admin->insertStudy($study_name);
-        } else {
-            die($user->displayForm());
-        }
     } elseif($action === 'insertTeacher') {
         if (session()) {
             $data = $_POST ?? [];
@@ -174,17 +176,58 @@ if (isset($action)){
         } else {
             die($user->displayForm());
         }
-    } elseif($action === 'insertGroup') {
-        if (session()) {
-            $group = $_POST['name'] ?? '';
-            $admin->insertGroup($group);
-        } else {
-            die($user->displayForm());
-        }
     } elseif($action === 'insertAverages') {
         if (session()) {
             $data = $_POST ?? [];
             $admin->insertAverages($data);
+        } else {
+            die($user->displayForm());
+        }
+    } elseif($action === 'ajax') {
+        if (session()) {
+            if (isset($_POST['value'])) {
+                $admin = new ModelAdmin;
+                $select = $_POST['select'] ?? '';
+                if ($select == 'year') {
+                    $value = $_POST['value'];
+                    $_SESSION['insert_year'] = $value;
+                    $response = $admin->getStudies($value);
+                } elseif ($select == 'study') {
+                    $value = $_POST['value'];
+                    $_SESSION['insert_study'] = $value;
+                    $response = $admin->getGroups($_SESSION['insert_year'], $value);
+                } elseif ($select == 'group') {
+                    $value = (int)$_POST['value'];
+                    $_SESSION['insert_group'] = $value;
+                    $study = $_SESSION['insert_study'] ?? '';
+                    $year = $_SESSION['insert_year'] ?? '';
+                    $response = $admin->getModules($value, $study, $year);
+                } elseif ($select == 'exam_type') {
+                    $value = $_POST['value'];
+                    $_SESSION['insert_exam_type'] = $value;
+                    $response = $admin->getExams($value);
+                } elseif ($select == 'exam') {
+                    $value = $_POST['value'];
+                    $_SESSION['insert_exam'] = $value;
+                    $group = (int)$_SESSION['insert_group'] ?? 0;
+                    $study = $_SESSION['insert_study'] ?? '';
+                    $year = $_SESSION['insert_year'] ?? '';
+                    $response = $admin->getModules($group, $study, $year);
+                } elseif ($select == 'module') {
+                    $_SESSION['insert_module'] = $_POST['value'];
+                    $exam_name = $_SESSION['insert_exam'] ?? '';
+                    $module_slug = $_POST['value'] ?? '';
+                    $year = $_SESSION['insert_year'] ?? '';
+                    $study = $_SESSION['insert_study'] ?? '';
+                    $group = (int)$_SESSION['insert_group'] ?? 0;
+                    $exam_type = $_SESSION['insert_exam_type'] ?? '';
+                    $perPage = 10;
+                    $currentPage = (int)($_SESSION['average_page'] ?? 1);
+                    $offset = $perPage * ($currentPage - 1);
+                    $response = $admin->getData($exam_name, $module_slug, $year, $study, $group, $exam_type, $perPage, $offset);
+                }
+                echo json_encode($response);
+            }
         } else {
             die($user->displayForm());
         }

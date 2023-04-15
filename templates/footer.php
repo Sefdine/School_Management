@@ -1,7 +1,7 @@
 <!-- footer.php -->
 
 <footer class="text-center mt-auto p-3">
-  © 2023 by Sefdine Nassuf
+  © 2023 by Sefdine
 </footer>
 
 
