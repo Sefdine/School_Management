@@ -78,7 +78,7 @@ if (isset($error)) {
             echo "<div class='alert alert-danger'>L'insertion a échoué. Veuillez réessayer</div>";
         break;
         case 'insert_success':
-            echo "<div class='alert alert-success'>L'insertion a reussi. Veuillez réessayer</div>";
+            echo "<div class='alert alert-success'>L'insertion a reussi.</div>";
         break;
         case 'insert_averages_success':
             echo "<div class='alert alert-success'>$counter notes ajoutées</div>";

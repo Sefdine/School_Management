@@ -128,14 +128,17 @@ class Admin extends User
             $admin = new ModelAdmin;
             $password = self::createPassword('IPEM2022');
             $token = self::createToken($firstname.$lastname);
-            $success = $admin->insertUserStudent($data, $password, $token);
+            $year = $_SESSION['insert_year'] ?? '';
+            $study = $_SESSION['insert_study'] ?? '';
+            $group = (int)$_SESSION['insert_group'] ?? 0;
+            $success = $admin->insertUserStudent($data, $password, $token, $year, $study, $group);
 
             if (!$success) {
                 $_SESSION['err'] = 'insert_failed';
-                header('Location: '. URL_ROOT .'insert');
+                header('Location: '. URL_ROOT .'displayDashboard');
             } else {
                 $_SESSION['err'] = 'insert_success';
-                header('Location: '. URL_ROOT .'insert');
+                header('Location: '. URL_ROOT .'displayDashboard');
             }
         }
     }

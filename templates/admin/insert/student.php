@@ -1,6 +1,17 @@
 <!-- Student -->
 <?php ob_start() ?>
 <div class="admin">
+    <div id="radioGroupes">
+        <h3>Choisissez un groupe</h3>
+        <div class="form-check">
+            <input type="radio" name="groupRadio" id="firstYear" class="form-check-input" value="1" <?= ($group == 1) ? 'checked' : '' ?>>
+            <label for="firstYear" class="form-check-label">1ère année</label>
+        </div>
+        <div class="form-check">
+            <input type="radio" name="groupRadio" id="secondYear" class="form-check-input" value="2" <?= ($group == 2) ? 'checked' : '' ?>>
+            <label for="secondYear" class="form-check-label">2ème année</label>
+        </div>
+    </div>
     <h1>Insérer un étudiant</h1>
     <form action="<?= URL_ROOT ?>insertStudent" method="post" class="form-group">
     <div class="input-group">
@@ -12,16 +23,16 @@
         <input type="text" name="firstname" id="firstname" class="form-control" required>
     </div>
     <div class="input-group">
+        <span class="input-group-text">Numéro d'inscription *</span>
+        <input type="text" name="identifier" id="identifier" class="form-control" required>
+    </div>
+    <div class="input-group">
         <span class="input-group-text">Lieu de naissance</span>
         <input type="text" name="place_birth" id="place_birth" class="form-control">
     </div>
     <div class="input-group">
         <span class="input-group-text">Date de naissance</span>
         <input type="date" name="birthday" id="birthday" class="form-control">
-    </div>
-    <div class="input-group">
-        <span class="input-group-text">Numéro d'inscription</span>
-        <input type="text" name="identifier" id="identifier" class="form-control">
     </div>
     <div class="input-group">
         <span class="input-group-text">Date d'inscription</span>

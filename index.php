@@ -152,9 +152,9 @@ if (isset($action)){
         } 
     } elseif ($action === 'displayDashboard') {
         if (session()) {
-            $year = $_POST['year'] ?? '';
-            $study = $_POST['study'] ?? '';
-            $group = (int)$_POST['group'] ?? 0;
+            $year = $_SESSION['insert_year'] ?? '';
+            $study = $_SESSION['insert_study'] ?? '';
+            $group = (int)$_SESSION['insert_group'] ?? 0;
             $exam_name = $_POST['exam_name'] ?? '';
             $exam_type = $_POST['exam_type'] ?? '';
             $admin->displayDashboard($error, $year, $study, $group, $exam_name, $exam_type);   
@@ -197,8 +197,11 @@ if (isset($action)){
                     $_SESSION['insert_study'] = $value;
                     $response = $admin->getGroups($_SESSION['insert_year'], $value);
                 } elseif ($select == 'group') {
-                    $value = $_POST['value'];
+                    $value = (int)$_POST['value'];
                     $_SESSION['insert_group'] = $value;
+                    $study = $_SESSION['insert_study'] ?? '';
+                    $year = $_SESSION['insert_year'] ?? '';
+                    $response = $admin->getModules($value, $study, $year);
                 } elseif ($select == 'exam_type') {
                     $value = $_POST['value'];
                     $_SESSION['insert_exam_type'] = $value;

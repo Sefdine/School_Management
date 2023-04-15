@@ -7,9 +7,72 @@ if (window.location.pathname == '/ipem/displayDashboard' || window.location.path
         let exam = document.getElementById('exam');
         let module = document.getElementById('module');
         let session_average = sessionStorage.getItem('average');
+        let radioGroup = document.getElementsByName('groupRadio');
+        let moduleCheckbox = document.getElementsByName('moduleCheckbox');
+        let radio;
+        let moduleChecked = [];
+        for (let i=0; i<radioGroup.length; i++) {
+            radioGroup[i].addEventListener('change', () => {
+                $.ajax({
+                    type: 'post',
+                    url: 'ajax',
+                    data: {
+                        'select': 'group',
+                        'value': radioGroup[i].value
+                    },
+                    success: s => {
+                        let parsed = JSON .parse(s);
+                        let modules = document.getElementById('modulesTeacherCheckbox');
+                        while (modules.firstChild) {
+                            modules.removeChild(modules.firstChild);
+                        }
+                        let h3 = document.createElement('h3');
+                        h3.textContent = 'Choisissez des modules';
+                        modules.appendChild(h3);
+                        parsed.forEach(element => {
+                            let div = document.createElement('div');
+                            div.className = 'form-check';
+                            let input = document.createElement('input');
+                            input.setAttribute('id', element.slug);
+                            input.setAttribute('type', 'checkbox');
+                            input.name = 'moduleCheckbox';
+                            input.value = element.slug;
+                            input.className = 'form-check-input';
+                            let label = document.createElement('label');
+                            label.setAttribute('for', element.slug);
+                            label.className = 'form-check-label';
+                            label.textContent = element.name;
+                            div.appendChild(input);
+                            div.appendChild(label);
+                            modules.appendChild(div);
+                        })
+                    },
+                    error: (xhr, textStatus, errorThrown) => {
+                        console.error(errorThrown);
+                    }
+                });
+                radio = radioGroup[i].value;
+                moduleChecked = [];
+            });
+        }
+
+        for (let i=0; i<moduleCheckbox.length; i++) {
+            moduleCheckbox[i].addEventListener('change', () => {
+                if (moduleCheckbox[i].checked) {
+                    moduleChecked.push(moduleCheckbox[i].value);
+                }
+            })
+        }
+        
         if (session_average != 1 || session_average == undefined) {
             $('#individual_insert').hide();
         }
+
+        insert_teacher_btn = (btn) => {
+            console.log(radio);
+            console.log(moduleChecked);
+        }
+
         nav_top_a = (a) => {
             let nav_top = a.getAttribute('data-value');
             sendValueSession({'nav_top': nav_top}, document.location = 'displayDashboard');

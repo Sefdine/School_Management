@@ -4,17 +4,18 @@ declare(strict_types=1);
 namespace Ipem\Src\Model;
 
 use Ipem\Src\Lib\Database;
+use PDOException;
 
 class Admin extends User
 {
     public $name;
     public $slug;
     use Module, Registration, Exam, Year, Study, Group;
-    public function insertUserStudent(array $data, string $password, string $token):bool {
+    public function insertUserStudent(array $data, string $password, string $token, string $year, string $study, int $group):bool {
         $connection = new Database;
         $firstname = $data['firstname'] ?? '';
         $lastname = $data['lastname'] ?? '';
-        $identifier = $data['identifier'] ?? '';
+        $identifier = $data['identifier'] ?? null;
         $nationality = $data['nationality'] ?? '';
         $birthday = $data['birthday'] ?? '';
         $address = $data['address'] ?? '';
@@ -25,6 +26,9 @@ class Admin extends User
         $level_study = $data['level_study'] ?? '';
         $entry_date = $data['entry_date'] ?? '';
 
+        $year_id = self::getIdYear($year);
+        $study_id = self::getIdStudy($study);
+        $group_id = self::getIdGroup($group);
 
         $connection->getConnection()->beginTransaction();
 
@@ -50,7 +54,8 @@ class Admin extends User
             $cin,
             $address
         ]);
-        $user_id = $connection->getConnection()->lastInsertId('id');
+        $user_id = $connection->getConnection()->lastInsertId();
+
         $insertStudentStatement = $connection->getConnection()->prepare('
             INSERT INTO students(
                 nationality, 
@@ -64,7 +69,7 @@ class Admin extends User
             )
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ');
-        $result = $insertStudentStatement->execute([
+        $insertStudentStatement->execute([
             $nationality, 
             $birthday, 
             $user_id,
@@ -74,7 +79,14 @@ class Admin extends User
             $level_study,
             $entry_date
         ]);     
+        $student_id = $connection->getConnection()->lastInsertId();
+        $insertRegistrationStatement = $connection->getConnection()->prepare('
+            INSERT INTO registrations(student_id, year_id, study_id, group_id)
+            VALUES (?, ?, ?, ?)
+        ');
+        $result = $insertRegistrationStatement->execute([$student_id, $year_id, $study_id, $group_id]);
 
+    
         if($result) {
             $connection->getConnection()->commit();
             return true;

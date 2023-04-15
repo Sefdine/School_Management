@@ -3,9 +3,9 @@
     <h2 class="logo_admin">Mon logo</h2>
     <ul class="nav_top">
         <li><a href="home">Home</a></li>
-        <li><a href="displayDashboard" class="nav_insert" onclick="nav_top_a(this)" data-value="insert">Insert</a></li>
-        <li><a href="displayDashboard" class="nav_update" onclick="nav_top_a(this)" data-value="update">Update</a></li>
-        <li><a href="displayDashboard" class="nav_delete" onclick="nav_top_a(this)" data-value="delete">Delete</a></li>
+        <li><a href="displayDashboard" class="nav_insert" onclick="nav_top_a(this)" data-value="insert">Inscription</a></li>
+        <li><a href="displayDashboard" class="nav_update" onclick="nav_top_a(this)" data-value="update">Etat</a></li>
+        <li><a href="displayDashboard" class="nav_delete" onclick="nav_top_a(this)" data-value="delete">Suppression</a></li>
     </ul>
     <select name="study" id="study_header" onchange="select_study(this)">
         <option value="title" disabled selected class="text-center">Filières</option>
