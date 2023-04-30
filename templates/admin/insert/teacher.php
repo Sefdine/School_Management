@@ -72,11 +72,11 @@
     let radio;
 
     select_study = (select) => {
-        sendStudyTeacher(select);
+        radio = sendStudyTeacher(select);
     }
     if (studies.firstChild) {
         setTimeout(() => {
-            sendStudyTeacher(studies);
+            radio = sendStudyTeacher(studies);
         }, 100);
     }
 
@@ -97,6 +97,7 @@
     })
 
     function sendStudyTeacher(select) {
+        let group = "<?= $group ?>";
         $.ajax({
             type: 'post',
             url: 'ajax',
@@ -107,7 +108,6 @@
             success: s => {
                 let parsed = JSON.parse(s);
                 let groupes = document.getElementById('radioGroupes');
-                let group = "<?= $group ?>";
                 while (groupes.firstChild) {
                     groupes.removeChild(groupes.firstChild);
                 }
@@ -138,7 +138,8 @@
             error: (xhr, textStatus, errorThrown) => {
                 console.error(errorThrown);
             }
-        })
+        });
+        return group;
     }
     function sendGroupTeacher(radioGroup) {
         $.ajax({

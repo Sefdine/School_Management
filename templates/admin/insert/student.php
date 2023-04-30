@@ -3,7 +3,6 @@
 <div class="admin">
     <div id="error"></div>
     <div id="radioGroupes">
-        <h3>Choisissez un groupe</h3>
     </div>
     <h1>Insérer un étudiant</h1>
     <div class="form-group">
@@ -77,17 +76,18 @@
     let studies = document.getElementById('study_header');
     let radioGroup = document.getElementById('radioGroupes');
     let radio;
-    select_study = (select) => {
-        sendStudyStudent(select);
-    }
     if (studies.firstChild) {
         setTimeout(() => {
-            sendStudyStudent(studies);
+            radio = sendStudyStudent(studies);
         }, 100);
+    }
+    select_study = (select) => {
+        radio = sendStudyStudent(select);
     }
     radioGroup.addEventListener('change', (event) => {
         if (event.target.type == 'radio') {
             radio = event.target.value;
+            sendGroupStudent(event.target);
         }
     })
     insertStudentBtn = () => {
@@ -163,6 +163,7 @@
         }
     }
     function sendStudyStudent(select) {
+        let group = "<?= $group ?>";
         $.ajax({
             type: 'post',
             url: 'ajax',
@@ -173,7 +174,6 @@
             success: s => {
                 let parsed = JSON.parse(s);
                 let groupes = document.getElementById('radioGroupes');
-                let group = "<?= $group ?>";
                 while (groupes.firstChild) {
                     groupes.removeChild(groupes.firstChild);
                 }
@@ -191,6 +191,7 @@
                     input.setAttribute('id', 'year'+element);
                     if (group == element) {
                         input.setAttribute('checked', 'checked');
+                        result = element;
                     }
                     let label = document.createElement('label');
                     label.className = 'form-check-label';
@@ -200,6 +201,22 @@
                     div.appendChild(label);
                     groupes.appendChild(div);
                 });
+            },
+            error: (xhr, textStatus, errorThrown) => {
+                console.error(errorThrown);
+            }
+        });
+        return group;
+    }
+    function sendGroupStudent(select) {
+        $.ajax({
+            type: 'post',
+            url: 'ajax',
+            data: {
+                'select': 'group',
+                'value': select.value
+            }, 
+            success: s => {
             },
             error: (xhr, textStatus, errorThrown) => {
                 console.error(errorThrown);
