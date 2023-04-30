@@ -148,6 +148,13 @@
                 },
                 success: s => {
                     console.log(s);
+                    error.style.display = '';
+                    if (s) {
+                        error.className = 'alert alert-success text-center';
+                        error.textContent = 'L\'insertion a reussi';
+                    } else {
+                        error.textContent = 'L\'insertion a echoué';
+                    }
                 },
                 error: (xhr, textStatus, errorThrown) => {
                     console.error(errorThrown);
