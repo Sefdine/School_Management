@@ -1,20 +1,13 @@
 <!-- Teacher -->
 <?php ob_start(); ?>
 <div class="admin">
+    <div id="error"></div>
     <div class="row">
         <div id="radioGroupes" class="col-md-4 ms-4">
             <h3>Choisissez un groupe</h3>
-            <div class="form-check">
-                <input type="radio" name="groupRadio" id="firstYear" class="form-check-input" value="1" <?= ($group == 1) ? 'checked' : '' ?>>
-                <label for="firstYear" class="form-check-label">1ère année</label>
-            </div>
-            <div class="form-check">
-                <input type="radio" name="groupRadio" id="secondYear" class="form-check-input" value="2" <?= ($group == 2) ? 'checked' : '' ?>>
-                <label for="secondYear" class="form-check-label">2ème année</label>
-            </div>
         </div>
         <div class="col-md-6 ms-3" id="modulesTeacherCheckbox">
-            <h3>Choisissez un module</h3>
+            <h3>Choisissez des modules</h3>
             <?php foreach($modules as $module): ?>
                 <div class="form-check">
                     <input type="checkbox" name="moduleCheckbox" id="<?= $module->slug ?>" value="<?= $module->slug ?>" class="form-check-input">
@@ -73,6 +66,182 @@
         width: 20%;
     }
 </style>
+<script>
+    let studies = document.getElementById('study_header');
+    let moduleChecked = [];
+    let radio;
+
+    select_study = (select) => {
+        sendStudyTeacher(select);
+    }
+    if (studies.firstChild) {
+        setTimeout(() => {
+            sendStudyTeacher(studies);
+        }, 100);
+    }
+
+    let radioGroupes = document.getElementById('radioGroupes');
+    radioGroupes.addEventListener('change', (event) => {
+        if (event.target.type == 'radio') {
+            sendGroupTeacher(event.target);
+            radio = event.target.value;
+            moduleChecked = [];
+        }
+    })
+
+    let modulesCheckbox = document.getElementById('modulesTeacherCheckbox');
+    modulesCheckbox.addEventListener('change', (evenet) => {
+        if (evenet.target.type == 'checkbox') {
+            moduleChecked.push(evenet.target.value);
+        }
+    })
+
+    function sendStudyTeacher(select) {
+        $.ajax({
+            type: 'post',
+            url: 'ajax',
+            data: {
+                'select': 'study',
+                'value': select.value
+            },
+            success: s => {
+                let parsed = JSON.parse(s);
+                let groupes = document.getElementById('radioGroupes');
+                let group = "<?= $group ?>";
+                while (groupes.firstChild) {
+                    groupes.removeChild(groupes.firstChild);
+                }
+                let h3 = document.createElement('h3');
+                h3.textContent = 'Choisissez un groupe';
+                groupes.appendChild(h3);
+                parsed.forEach(element => {
+                    let div = document.createElement('div');
+                    div.className = 'form-check';
+                    let input = document.createElement('input');
+                    input.name = 'groupRadio';
+                    input.type = 'radio';
+                    input.value = element;
+                    input.className = 'form-check-input';
+                    input.setAttribute('id', 'year'+element);
+                    if (group == element) {
+                        input.setAttribute('checked', 'checked');
+                    }
+                    let label = document.createElement('label');
+                    label.className = 'form-check-label';
+                    label.setAttribute('for', 'year'+element);
+                    label.textContent = (element == 1) ? '1ère année' : '2ème année';
+                    div.appendChild(input);
+                    div.appendChild(label);
+                    groupes.appendChild(div);
+                });
+            },
+            error: (xhr, textStatus, errorThrown) => {
+                console.error(errorThrown);
+            }
+        })
+    }
+    function sendGroupTeacher(radioGroup) {
+        $.ajax({
+            type: 'post',
+            url: 'ajax',
+            data: {
+                'select': 'group',
+                'value': radioGroup.value
+            },
+            success: s => {
+                let parsed = JSON .parse(s);
+                let modules = document.getElementById('modulesTeacherCheckbox');
+                while (modules.firstChild) {
+                    modules.removeChild(modules.firstChild);
+                }
+                let h3 = document.createElement('h3');
+                h3.textContent = 'Choisissez des modules';
+                modules.appendChild(h3);
+                parsed.forEach(element => {
+                    let div = document.createElement('div');
+                    div.className = 'form-check';
+                    let input = document.createElement('input');
+                    input.setAttribute('id', element.slug);
+                    input.setAttribute('type', 'checkbox');
+                    input.name = 'moduleCheckbox';
+                    input.value = element.slug;
+                    input.className = 'form-check-input';
+                    let label = document.createElement('label');
+                    label.setAttribute('for', element.slug);
+                    label.className = 'form-check-label';
+                    label.textContent = element.name;
+                    div.appendChild(input);
+                    div.appendChild(label);
+                    modules.appendChild(div);
+                })
+            },
+            error: (xhr, textStatus, errorThrown) => {
+                console.error(errorThrown);
+            }
+        });
+    }
+    insert_teacher_btn = (btn) => {
+        let lastname = document.getElementById('lastname');
+        let firstname = document.getElementById('firstname');
+        let email = document.getElementById('email').value;
+        let tel = document.getElementById('tel').value;
+        let cin = document.getElementById('cin').value;
+        let address = document.getElementById('address').value;
+        let degree = document.getElementById('degree').value;
+        let experience = document.getElementById('experience').value;
+        let data = {};
+
+        let error = document.getElementById('error');
+        error.className = 'alert alert-danger text-center';
+            error.style.display = '';
+        if (!radio) {
+            error.textContent = 'Veuillez choisir un groupe';
+        } else if (moduleChecked.length === 0) {
+            error.textContent = 'Veuillez cocher au moin un module';
+        } else if (!lastname.value) {
+            error.textContent = 'Veuillez remplir le champs Nom';
+            lastname.style.backgroundColor = 'red';
+        } else if (!firstname.value) {
+            error.textContent = 'Veuillez remplir le champs Prénom';
+            firstname.style.backgroundColor = 'red';
+            lastname.style.backgroundColor = '#fff';
+        } else {
+            firstname.style.backgroundColor = '#fff';
+            lastname.style.backgroundColor = '#fff';
+            error.style.display = 'none';
+            data['firstname'] = firstname.value;
+            data['lastname'] = lastname.value;
+            data['email'] = email;
+            data['tel'] = tel;
+            data['cin'] = cin;
+            data['address'] = address;
+            data['degree'] = degree;
+            data['experience'] = experience;
+
+            $.ajax({
+                type: 'post',
+                url: 'insertTeacher',
+                data: {
+                    'group': radio,
+                    'modules': moduleChecked,
+                    'data': JSON.stringify(data)
+                },
+                success: s => {
+                    error.style.display = '';
+                    if (s) {
+                        error.className = 'alert alert-success text-center';
+                        error.textContent = 'L\'insertion a reussi';
+                    } else {
+                        error.textContent = 'L\'insertion a echoué';
+                    }
+                },
+                error: (xhr, textStatus, errorThrown) => {
+                    console.error(errorThrown);
+                }
+            });
+        }   
+    }
+</script>
 <?php 
 $insert_teacher = ob_get_clean(); 
 require_once('templates/admin/dashboard.php');

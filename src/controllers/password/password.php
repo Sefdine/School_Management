@@ -49,12 +49,12 @@ trait Password
         require_once('templates/password/update_password.php');
     }
 
-    protected static function createPassword(string $password): string {
+    public static function createPassword(string $password): string {
         $cost = ['cost' => 12];
         return password_hash($password, PASSWORD_BCRYPT, $cost);
     }
 
-    protected static function createToken(string $token_string): string {
+    public static function createToken(string $token_string): string {
         $cost = ['cost' => 12];
         return password_hash($token_string, PASSWORD_BCRYPT, $cost);
     }

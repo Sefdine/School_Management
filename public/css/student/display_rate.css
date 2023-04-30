@@ -31,11 +31,6 @@
     transition: 0.6s;
 }
 
-table:hover{
-    font-size: large;
-    transition: 0.5s;
-}
-
 table,th,td{
     /*border: 1px solid black;*/
     text-align: center;

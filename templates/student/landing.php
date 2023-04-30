@@ -34,5 +34,6 @@
         </div>
     </div>
 </div>
+<script src="public/js/student.js"></script>
 <?php $content = ob_get_clean() ?>
 <?php require_once('templates/layout.php'); ?>

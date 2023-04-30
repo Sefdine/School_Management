@@ -95,7 +95,7 @@ class Admin extends User
             return false;
         }
     }
-    public function insertUserTeacher(array $data):bool {
+    public function insertUserTeacher(array $data, array $modules, string $year, $study, $group):bool {
         $connection = new Database;
         $firstname = $data['firstname'] ?? '';
         $lastname = $data['lastname'] ?? '';
@@ -104,7 +104,12 @@ class Admin extends User
         $cin = $data['cin'];
         $address = $data['address'];
         $degree = $data['degree'];
-        $experience = $data['experience'];
+        $experience = ($data['experience']) ? $data['experience'] : 0;
+        $count = 0;
+
+        $year_id = self::getIdYear($year);
+        $study_id = self::getIdStudy($study);
+        $group_id = self::getIdGroup($group);
 
         $connection->getConnection()->beginTransaction();
 
@@ -119,14 +124,28 @@ class Admin extends User
             $cin,
             $address
         ]);
-        $user_id = $connection->getConnection()->lastInsertId('id');
-        $insertStudentStatement = $connection->getConnection()->prepare('
+        $user_id = $connection->getConnection()->lastInsertId();
+
+        $insertTeacherStatement = $connection->getConnection()->prepare('
             INSERT INTO teachers(email, tel, user_id, degree, experience)
             VALUES (?, ?, ?, ?, ?)
         ');
-        $result = $insertStudentStatement->execute([$email, $tel, $user_id, $degree, $experience]);     
+        $insertTeacherStatement->execute([$email, $tel, $user_id, $degree, $experience]);     
+        $teacher_id = $connection->getConnection()->lastInsertId();
 
-        if($result) {
+        foreach($modules as $module) {
+            $module_id = self::getIdModule($module);
+            $insertTeachStmt = $connection->getConnection()->prepare('
+                INSERT INTO teachs (teacher_id, group_id, study_id, year_id, module_id)
+                VALUES (?, ?, ?, ?, ?)
+            ');
+            $result = $insertTeachStmt->execute([$teacher_id, $group_id, $study_id, $year_id, $module_id]);
+            if ($result) {
+                $count++;
+            }
+        }
+
+        if($count == count($modules)) {
             $connection->getConnection()->commit();
             return true;
         } else {
@@ -181,6 +200,26 @@ class Admin extends User
             $groupes[] = $row['group_number'];
         }
         return $groupes;
+    }
+    public function getFirstnameLastname(string $year, string $study, int $group): array {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->prepare('
+            SELECT firstname, lastname FROM users u 
+            JOIN students s ON u.id = s.user_id
+            join registrations r ON s.id = r.student_id
+            WHERE r.year_id = (SELECT id FROM years WHERE name = ?)
+            AND r.study_id = (SELECT id FROM studies WHERE name = ?)
+            AND r.group_id = (SELECT id FROM groupes WHERE group_number = ?)
+        ');
+        $stmt->execute([$year, $study, $group]);
+        $data = [];
+        while ($row = $stmt->fetch()) {
+            $line = new self;
+            $line->firstname = $row['firstname'];
+            $line->lastname = $row['lastname'];
+            $data[] = $line;
+        }
+        return $data;
     }
 }
 

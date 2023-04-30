@@ -25,9 +25,6 @@
 
     <!-- Javascript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="public/js/admin.js"></script>
-    <script src="public/js/admin_single.js"></script>
-    <script src="public/js/student.js"></script>
     <title><?= $title ?? 'IPEM' ?></title>
   </head>
   <body class="d-flex flex-column min-vh-100">

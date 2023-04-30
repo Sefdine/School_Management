@@ -157,6 +157,16 @@ if (isset($action)){
             $group = (int)$_SESSION['insert_group'] ?? 0;
             $exam_name = $_POST['exam_name'] ?? '';
             $exam_type = $_POST['exam_type'] ?? '';
+            if (isset($_POST['nav_top'])) {
+                $_SESSION['nav_top'] = $_POST['nav_top'];
+            }
+            if (isset($_POST['nav_left'])) {
+                $_SESSION['nav_left'] = $_POST['nav_left'];
+            }           
+            if (isset($_POST['current_page'])) {
+                $_SESSION['average_page'] = $_POST['current_page'];
+            }
+            
             $admin->displayDashboard($error, $year, $study, $group, $exam_name, $exam_type);   
             $_SESSION['err'] = ''; 
         } else {
@@ -164,15 +174,28 @@ if (isset($action)){
         }
     } elseif($action === 'insertStudent') {
         if (session()) {
-            $data = $_POST ?? [];
-            $admin->insertStudent($data);
+            $admin = new ModelAdmin;
+            $year = $_SESSION['insert_year'] ?? '';
+            $study = $_SESSION['insert_study'] ?? '';
+            $group = (int)$_POST['group'] ?? 0;
+            $data = json_decode($_POST['data'], true) ?? [];
+            $password = $user::createPassword('IPEM2022');
+            $token = $user::createToken($firstname.$lastname);
+            $success = $admin->insertUserStudent($data, $password, $token, $year, $study, $group);
+            echo $success;
         } else {
             die($user->displayForm());
         }
     } elseif($action === 'insertTeacher') {
         if (session()) {
-            $data = $_POST ?? [];
-            $admin->insertTeacher($data);
+            $year = $_SESSION['insert_year'] ?? '';
+            $study = $_SESSION['insert_study'] ?? '';
+            $modules = $_POST['modules'] ?? [];
+            $group = (int)$_POST['group'] ?? 0;
+            $data = json_decode($_POST['data'], true) ?? [];
+            $admin = new ModelAdmin;
+            $success = $admin->insertUserTeacher($data, $modules, $year, $study, $group);
+            echo $success;
         } else {
             die($user->displayForm());
         }
@@ -190,6 +213,7 @@ if (isset($action)){
                 $select = $_POST['select'] ?? '';
                 if ($select == 'year') {
                     $value = $_POST['value'];
+                    // die(var_dump($year));
                     $_SESSION['insert_year'] = $value;
                     $response = $admin->getStudies($value);
                 } elseif ($select == 'study') {

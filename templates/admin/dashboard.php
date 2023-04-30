@@ -40,5 +40,79 @@
         </div>
     </div>
 </div>
+<script>
+    let year = document.getElementById('year');
+    let session_average = sessionStorage.getItem('average');
+    if (session_average != 1 || session_average == undefined) {
+        $('#individual_insert').hide();
+    }
+    if (year.value) {
+        sendYear(year);
+    }
+    select_year = (select) => {
+        sendYear(select);
+    }
+    nav_top_a = (a) => {
+        let nav_top = a.getAttribute('data-value');
+        sendValueSession({'nav_top': nav_top}, document.location = 'displayDashboard');
+    }
+    nav_left_button = (button) => {
+        let nav_left = button.getAttribute('data-value');
+        sendValueSession(
+            {'nav_left': nav_left, 'year': year.value},
+            document.location = 'displayDashboard'
+        );
+        if (nav_left == 'average') {
+            sessionStorage.setItem('average', 1);
+        } else {
+            sessionStorage.setItem('average', 0);
+        }
+    }
+
+    function sendYear(select) {
+        $.ajax({
+            type: 'post',
+            url: 'ajax',
+            data: {
+                'select': 'year',
+                'value': select.value
+            },
+            dataType: 'json',
+            success: s => {
+                let studies = document.getElementById('study_header');
+                let study = "<?= $study ?>";
+                while (studies.firstChild) {
+                    studies.removeChild(studies.firstChild);
+                }
+                s.forEach(element => {
+                    let option = document.createElement('option');
+                    option.value = element;
+                    option.className ='text-center';
+                    option.textContent = element;
+                    if (element == study) {
+                        option.setAttribute('selected', 'selected')
+                    }
+                    studies.appendChild(option);
+                });
+            }, 
+            error: (xhr, textStatus, errorThrown) => {
+                console.error(errorThrown);
+            }
+        });
+    }
+    function sendValueSession(data, action) {
+        $.ajax({
+            type: 'POST',
+            url: 'displayDashboard',
+            data: data,
+            success: s => {
+                action;
+            },
+            error: (error) => {
+                console.error(error);
+            }
+        });
+    }
+</script>
 <?php $content = ob_get_clean(); ?>
 <?php require_once('templates/layout.php'); ?>

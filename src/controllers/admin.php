@@ -13,6 +13,8 @@ use Ipem\Src\Model\Student;
 class Admin extends User
 {
     public function displayHome():void {
+        $admin = new ModelAdmin;
+        $years = $admin->getYears();
         require_once('templates/admin/home.php');
     }
     public function displayLanding(string $identifier, string $exam_type = ''): void {
@@ -71,6 +73,8 @@ class Admin extends User
         $nav_top = $_SESSION['nav_top'] ?? 'insert';
         $session_nav_left = $_SESSION['nav_left'] ?? '';
 
+        $firstname_lastname = $admin->getFirstnameLastname($year, $study, $group);
+
         if ($nav_top == 'insert') {
             switch($session_nav_left) {
                 case 'student': 
@@ -105,49 +109,6 @@ class Admin extends User
             var_dump('delete');
         }
         
-    }
-    public function insertStudent(array $data): void {
-        $firstname = $data['firstname'] ?? '';
-        $lastname = $data['lastname'] ?? '';
-        if (!($firstname) || !($lastname)) {
-            $_SESSION['err'] = 'emptydata';
-            header('Location: '. URL_ROOT .'insert');
-        } else {
-            $admin = new ModelAdmin;
-            $password = self::createPassword('IPEM2022');
-            $token = self::createToken($firstname.$lastname);
-            $year = $_SESSION['insert_year'] ?? '';
-            $study = $_SESSION['insert_study'] ?? '';
-            $group = (int)$_SESSION['insert_group'] ?? 0;
-            $success = $admin->insertUserStudent($data, $password, $token, $year, $study, $group);
-
-            if (!$success) {
-                $_SESSION['err'] = 'insert_failed';
-                header('Location: '. URL_ROOT .'displayDashboard');
-            } else {
-                $_SESSION['err'] = 'insert_success';
-                header('Location: '. URL_ROOT .'displayDashboard');
-            }
-        }
-    }
-    public function insertTeacher(array $data): void {
-        $firstname = $data['firstname'] ?? '';
-        $lastname = $data['lastname'] ?? '';
-        if(!$firstname || !$lastname) {
-            $_SESSION['err'] = 'emptydata';
-            header('Location: '. URL_ROOT .'insert');
-        } else {
-            $admin = new ModelAdmin;
-            $success = $admin->insertUserTeacher($data);
-        }
-
-        if (!$success) {
-            $_SESSION['err'] = 'insert_failed';
-            header('Location: '. URL_ROOT .'insert');
-        } else {
-            $_SESSION['err'] = 'insert_success';
-            header('Location: '. URL_ROOT .'insert');
-        }
     }
     public function insertAverages(array $data):void {
         if (empty($data)) {
