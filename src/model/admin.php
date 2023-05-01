@@ -222,14 +222,3 @@ class Admin extends User
         return $data;
     }
 }
-
-
-$element = new Admin;
-if ($action == 'year') {
-    if (isset($_POST['year'])) {
-        $year = $_POST['year'];
-        $response = $element->getStudies($year);
-        header('Content-Type: application/json');
-        echo json_encode($response);
-    }
-}

@@ -36,7 +36,6 @@ trait Module
 
         return $modules;
     }
-
     public function getModulesStudent(int $identifier, string $year): array
     {
         $connection = new Database;
@@ -57,7 +56,6 @@ trait Module
         }
         return $modules;
     }
-
     public function getIdModule(string $modue_slug): int
     {
         $connection = new Database;
@@ -68,7 +66,6 @@ trait Module
         
         return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }
-
     public function getModule(string $slug):string 
     {
         $connection = new Database;

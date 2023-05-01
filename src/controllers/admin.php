@@ -72,8 +72,11 @@ class Admin extends User
         $data_users = $admin->getData($exam_name, $current_module, $year, $study, $group, $exam_type, $perPage, $offset);
         $nav_top = $_SESSION['nav_top'] ?? 'insert';
         $session_nav_left = $_SESSION['nav_left'] ?? '';
-
         $firstname_lastname = $admin->getFirstnameLastname($year, $study, $group);
+        $average = new Average;
+        $identifier = 
+        $averages = $average->getAverages($identifier, $exam_name, $exam_type, $year, $study, $group);
+
 
         if ($nav_top == 'insert') {
             switch($session_nav_left) {
@@ -90,7 +93,7 @@ class Admin extends User
                     require_once('templates/admin/insert/teacher.php');
                     break;
             }
-        } elseif ($nav_top == 'update') {
+        } elseif ($nav_top == 'view') {
             switch($session_nav_left) {
                 case 'student': 
                     require_once('templates/admin/view/student.php');

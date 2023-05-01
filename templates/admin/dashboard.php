@@ -4,7 +4,7 @@
     <ul class="nav_top">
         <li><a href="home">Accueil</a></li>
         <li><a href="displayDashboard" class="nav_insert" onclick="nav_top_a(this)" data-value="insert">Inscription</a></li>
-        <li><a href="displayDashboard" class="nav_update" onclick="nav_top_a(this)" data-value="update">Etat</a></li>
+        <li><a href="displayDashboard" class="nav_update" onclick="nav_top_a(this)" data-value="view">Etat</a></li>
         <li><a href="displayDashboard" class="nav_delete" onclick="nav_top_a(this)" data-value="delete">Suppression</a></li>
     </ul>
     <select name="study" id="study_header" onchange="select_study(this)">
@@ -31,13 +31,11 @@
         </ul>
     </div>
     <div class="contain_admin">
-        <div class="container">
-            <?php include_once('templates/errors/errors.php') ?>
-            <?= (isset($home)) ? $home : '' ?>
-            <span class="admin_student"><?= (isset($insert_student)) ? $insert_student : ''?></span>
-            <span class="admin_teacher"><?= (isset($insert_teacher)) ? $insert_teacher : '' ?></span>
-            <span class="admin_average"><?= (isset($insert_average)) ? $insert_average : '' ?></span>              
-        </div>
+        <?php include_once('templates/errors/errors.php') ?>
+        <?= (isset($home)) ? $home : '' ?>
+        <span class="admin_student"><?= (isset($insert_student)) ? $insert_student : ''?></span>
+        <span class="admin_teacher"><?= (isset($insert_teacher)) ? $insert_teacher : '' ?></span>
+        <span class="admin_average"><?= (isset($insert_average)) ? $insert_average : '' ?></span>              
     </div>
 </div>
 <script>

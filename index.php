@@ -156,7 +156,7 @@ if (isset($action)){
             $study = $_SESSION['insert_study'] ?? '';
             $group = (int)$_SESSION['insert_group'] ?? 0;
             $exam_name = $_POST['exam_name'] ?? '';
-            $exam_type = $_POST['exam_type'] ?? '';
+            $exam_type = $_SESSION['insert_exam_type'] ?? '';
             if (isset($_POST['nav_top'])) {
                 $_SESSION['nav_top'] = $_POST['nav_top'];
             }

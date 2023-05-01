@@ -1,6 +1,6 @@
 <!-- Teacher -->
 <?php ob_start(); ?>
-<div class="admin">
+<div class="admin container">
     <div id="error"></div>
     <div class="row">
         <div id="radioGroupes" class="col-md-4 ms-4">

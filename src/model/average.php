@@ -46,7 +46,6 @@ class Average
         }
         return $averages;
     }
-
     public function insertAverage(float $value, int $registration_id, int $module_id, int $exam_id): bool
     {
         $connection = new Database;
@@ -61,7 +60,6 @@ class Average
         $affectedLines = $statement->execute([$value, $registration_id, $exam_id, $module_id, $value]);
         return ($affectedLines > 0);
     }
-
     public function getTotalFactor(string $year, string $study, int $group): array {
         $conn = new Database;
         $stmt = $conn->getConnection()->prepare('
