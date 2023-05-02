@@ -29,8 +29,15 @@
         </div>
         <br>
         <hr>
-        <h2 class="mt-3 text-center">Notes par étudiant</h2>
-        <div class="card container">
+        <div class="row mt-3">
+            <div class="col-md-4 ms-5">
+                <h2 class="ms-5">Notes par étudiant</h2>
+            </div>
+            <div class="">
+                <button onclick="relevePrint()" class="btn fs-4" style="margin-left: 85%;">Imprimer <i class="fa-solid fa-print"></i></button>
+            </div>
+        </div>
+        <div class="card container" id="releve" style="padding-bottom: 130px;">
             <div class="row">
                 <div class="col-sm ms-5">
                     <img src="public/images/logo_ipem1.JPG" alt="Logo de IPEM" style="width: 10.5em;" class="ms-3">
@@ -77,10 +84,18 @@
                     <?php endforeach ?>
                     <tr class="bg-gray" style="border: none">
                         <td colspan="2" style="border-bottom: 1px solid black"><strong>Moyenne des notes sur 20</strong></td>
-                        <td style="border-bottom: 1px solid black">15</td>
+                        <td style="border-bottom: 1px solid black">$moyenne</td>
                     </tr>
                 </tbody>
            </table>
+           <div class="row ms-5" style="font-size: 1.4em;">
+            <div class="col-md-4 ms-5"> 
+                Fait à Casablanca, <br>Le <?= ' '. date('d/m/Y') ?>
+            </div>
+            <div class="col-md-6 ms-5">
+                Signature du directeur de l'établissement
+            </div>
+           </div>
         </div>
     </div>
     <style>
@@ -105,6 +120,7 @@
             border-left: 2px solid black;
         }
     </style>
+    <script src="public/js/view_average.js"></script>
     <script>
         let studies = document.getElementById('study_header');
         let radioGroup = document.getElementById('radioGroupes');
@@ -131,7 +147,8 @@
             }
         })
         radioExam.addEventListener('change', (event) => {
-            if (event.target.value == 'radio') {
+            if (event.target.type == 'radio') {
+                sendExamAverage(event.target);
                 console.log(event.target.value);
             }
         })
@@ -232,6 +249,22 @@
                         div.appendChild(input);
                         radioExam.appendChild(div);
                     });
+                },
+                error: (xhr, textStatus, errorThrown) => {
+                    console.error(errorThrown);
+                }
+            })
+        }
+        function sendExamAverage(select) {
+            $.ajax({
+                type: 'post',
+                url: 'ajax',
+                data: {
+                    'select': 'exam',
+                    'value': select.value
+                },
+                success: s => {
+                    console.log(s);
                 },
                 error: (xhr, textStatus, errorThrown) => {
                     console.error(errorThrown);

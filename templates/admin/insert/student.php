@@ -1,6 +1,6 @@
 <!-- Student -->
 <?php ob_start() ?>
-<div class="admin">
+<div class="admin container">
     <div id="error"></div>
     <div id="radioGroupes">
     </div>

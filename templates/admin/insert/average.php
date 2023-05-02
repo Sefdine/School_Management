@@ -1,6 +1,6 @@
 <!-- Average -->
 <?php ob_start(); ?>
-<div class="admin">
+<div class="admin container">
     <div class="input-group mb-1">
         <span class="input-group-text">Group</span>
         <select name="group" id="group" onchange="select_group(this)" class="form-select">

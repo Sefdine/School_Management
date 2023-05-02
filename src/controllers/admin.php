@@ -74,9 +74,12 @@ class Admin extends User
         $session_nav_left = $_SESSION['nav_left'] ?? '';
         $firstname_lastname = $admin->getFirstnameLastname($year, $study, $group);
         $average = new Average;
-        $identifier = 
-        $averages = $average->getAverages($identifier, $exam_name, $exam_type, $year, $study, $group);
-
+        $offset_identifier = 6;
+        $identifier = $admin->getIdentifier($offset_identifier, $year, $study, $group);
+        $user_id = $admin->getIdUser($identifier);
+        $user = $admin->getUser((string)$user_id);
+        $full_name = $user->firstname.' '.$user->lastname;
+        $averages = $average->getAverages($user_id, $exam_name, $exam_type, $year, $study, $group);
 
         if ($nav_top == 'insert') {
             switch($session_nav_left) {

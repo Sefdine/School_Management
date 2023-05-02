@@ -25,6 +25,8 @@
 
     <!-- Javascript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://kit.fontawesome.com/a0150d2ccd.js" crossorigin="anonymous"></script>
+    <script src="vendor\twbs\bootstrap\dist\js\bootstrap.bundle.min.js"></script>
     <title><?= $title ?? 'IPEM' ?></title>
   </head>
   <body class="d-flex flex-column min-vh-100">
@@ -32,8 +34,6 @@
     <?= $content; ?>
 
     <?php require_once('templates/footer.php'); ?>
-    <!-- JavaScript Bundle with Popper -->
-    <script src="vendor\twbs\bootstrap\dist\js\bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
   </body>
 </html>
