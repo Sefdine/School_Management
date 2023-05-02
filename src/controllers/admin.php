@@ -114,7 +114,6 @@ class Admin extends User
         } elseif ($nav_top == 'delete') {
             var_dump('delete');
         }
-        
     }
     public function insertAverages(array $data):void {
         if (empty($data)) {

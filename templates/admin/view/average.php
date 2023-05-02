@@ -1,6 +1,6 @@
 <?php ob_start(); ?>
     <div class="admin">
-        <div class="row">
+        <div class="row m-auto">
             <div class="col-md-2 ms-5" id="radioExamType">
                 <h4>Types d'examens</h4>
                 <?php foreach($exams_types as $item): ?>
@@ -29,12 +29,12 @@
         </div>
         <br>
         <hr>
-        <div class="row mt-3">
+        <div class="row mt-3 m-auto">
             <div class="col-md-4 ms-5">
                 <h2 class="ms-5">Notes par étudiant</h2>
             </div>
-            <div class="">
-                <button onclick="relevePrint()" class="btn fs-4" style="margin-left: 85%;">Imprimer <i class="fa-solid fa-print"></i></button>
+            <div class="col-md-2" style="margin-left: 75%;">
+                <button onclick="relevePrint()" class="btn fs-4">Imprimer <i class="fa-solid fa-print"></i></button>
             </div>
         </div>
         <div class="card container" id="releve" style="padding-bottom: 130px;">
@@ -54,7 +54,7 @@
                     <h3 style="font-family: 'Times New Roman', Times, serif;"><strong>Session 1</strong></h3>
                 </div>
             </div>
-            <div class="p-2 ms-5" style="font-size: 1.4em;">
+            <div class="p-2 ms-5" id="student_info" style="font-size: 1.4em;">
                 Matricule: <strong><?= $identifier ?></strong><br>
                 Filière: <strong><?= $study ?></strong><br>
                 Niveau: <strong><?= ($group == 1) ? '1ère année' : '2ème année' ?></strong><br>
@@ -97,6 +97,10 @@
             </div>
            </div>
         </div>
+        <div class="row m-auto my-2">
+            <div class="previous col-md-2 ms-5"><button class="btn btn-primary">Précedant</button></div>
+            <div class="next col-md-1 position-absolute end-0 me-5"><button class="btn btn-primary">Suivant</button></div>
+        </div>
     </div>
     <style>
         .vertical-text {
@@ -120,7 +124,6 @@
             border-left: 2px solid black;
         }
     </style>
-    <script src="public/js/view_average.js"></script>
     <script>
         let studies = document.getElementById('study_header');
         let radioGroup = document.getElementById('radioGroupes');
@@ -141,6 +144,10 @@
                 sendGroupAverage(event.target);
             }
         })
+        if (radioExamType.querySelector('input[type="radio"]:checked')) {
+            let exam_type = radioExamType.querySelector('input[type="radio"]:checked');
+            sendExamTypeAverage(exam_type);
+        }
         radioExamType.addEventListener('change', (event) => {
             if (event.target.type = 'radio') {
                 sendExamTypeAverage(event.target);
@@ -149,7 +156,6 @@
         radioExam.addEventListener('change', (event) => {
             if (event.target.type == 'radio') {
                 sendExamAverage(event.target);
-                console.log(event.target.value);
             }
         })
              
@@ -216,6 +222,7 @@
             })
         }
         function sendExamTypeAverage(select) {
+            let exam = '<?= $exam_name ?>';
             $.ajax({
                 type: 'post',
                 url: 'ajax',
@@ -241,6 +248,9 @@
                         input.type = 'radio';
                         input.id = element;
                         input.value = element;
+                        if (element == exam) {
+                            input.setAttribute('checked', 'checked');
+                        }
                         let label = document.createElement('label');
                         label.setAttribute('for', element);
                         label.className = 'form-check-label';
@@ -264,6 +274,8 @@
                     'value': select.value
                 },
                 success: s => {
+                    let student_info = document.getElementById('student_info');
+                    <?php $identifier = 'GE222' ?>
                     console.log(s);
                 },
                 error: (xhr, textStatus, errorThrown) => {

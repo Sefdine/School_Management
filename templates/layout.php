@@ -30,10 +30,11 @@
     <title><?= $title ?? 'IPEM' ?></title>
   </head>
   <body class="d-flex flex-column min-vh-100">
-  
-    <?= $content; ?>
-
-    <?php require_once('templates/footer.php'); ?>
-
+    <div>
+      <?= $content; ?>
+    </div>
+    <div class="mb-0">
+      <?php require_once('templates/footer.php') ?>
+    </div>
   </body>
 </html>

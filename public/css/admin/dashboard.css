@@ -87,19 +87,18 @@ a{
 /* ---------- Section -----------*/
 .section_admin {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
 }
 
 .section_admin .nav_left{
     width: 230px;
     background-color: rgb(119, 119, 161);
-    height: 100%;
 }
 
 .section_admin  .contain_admin {
     flex: auto;
     background-color: rgba(192, 199, 223, 0.301);
-    height: 100%;
 }
 
 .section_admin .nav_left ul {
