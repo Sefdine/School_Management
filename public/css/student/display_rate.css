@@ -42,7 +42,7 @@ table,th,td{
    background-color: rgba(175, 166, 166, 0.911);
 }
 
-td{
+#myTable td{
     border-top: 1px solid black;
 }
 

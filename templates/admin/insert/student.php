@@ -76,6 +76,7 @@
     let studies = document.getElementById('study_header');
     let radioGroup = document.getElementById('radioGroupes');
     let radio;
+
     if (studies.firstChild) {
         setTimeout(() => {
             radio = sendStudyStudent(studies);
@@ -147,7 +148,6 @@
                     'data': JSON.stringify(data) 
                 },
                 success: s => {
-                    console.log(s);
                     error.style.display = '';
                     if (s) {
                         error.className = 'alert alert-success text-center';

@@ -33,7 +33,6 @@ class User
         }
         return $users;
     }
-
     public function getUser(string $user_id): self
     {
         $connection = new Database;
@@ -136,5 +135,25 @@ class User
         $stmt->execute([$year, $study, $group, $offset]);
         $row = $stmt->fetch();
         return ($row['identifier']) ? $row['identifier'] : '';
+    }
+    public function getIdentifiers(string $year, string $study, int $group): array {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare(
+            'SELECT TRIM(identifier) AS identifier
+            FROM users u 
+            JOIN students s ON u.id = s.user_id
+            JOIN registrations r ON s.id = r.student_id
+            WHERE r.year_id = (SELECT id FROM years WHERE name = ?)
+            AND r.study_id = (SELECT id FROM studies WHERE name = ?)
+            AND r.group_id = (SELECT id FROM groupes WHERE group_number = ?)
+            AND u.identifier IS NOT NULL
+            ORDER BY u.id ASC'
+        );   
+        $statement->execute([$year, $study, $group]);
+        $identifiers = [];
+        while($row = $statement->fetch()) {
+            $identifiers[] = $row['identifier'];
+        }
+        return $identifiers;
     }
 }

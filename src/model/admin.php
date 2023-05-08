@@ -10,6 +10,16 @@ class Admin extends User
 {
     public $name;
     public $slug;
+    public $cin;
+    public $address;
+    public $nationality;
+    public $date_of_birth;
+    public $registration_date;
+    public $entry_date;
+    public $place_birth;
+    public $gender;
+    public $level_study;
+    public $status;
     use Module, Registration, Exam, Year, Study, Group;
     public function insertUserStudent(array $data, string $password, string $token, string $year, string $study, int $group):bool {
         $connection = new Database;
@@ -220,5 +230,86 @@ class Admin extends User
             $data[] = $line;
         }
         return $data;
+    }
+    public function getListStudents(string $year, string $study, int $group, int $offset): array {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->prepare('
+            SELECT firstname, lastname, identifier FROM users u 
+            JOIN students s ON u.id = s.user_id
+            join registrations r ON s.id = r.student_id
+            WHERE r.year_id = (SELECT id FROM years WHERE name = ?)
+            AND r.study_id = (SELECT id FROM studies WHERE name = ?)
+            AND r.group_id = (SELECT id FROM groupes WHERE group_number = ?)
+            AND s.status = 1
+            LIMIT 10
+            OFFSET ?
+        ');
+        $stmt->execute([$year, $study, $group, $offset]);
+        $data = [];
+        while ($row = $stmt->fetch()) {
+            $line = new self;
+            $line->firstname = $row['firstname'];
+            $line->lastname = $row['lastname'];
+            $line->identifier = $row['identifier'];
+            $data[] = $line;
+        }
+        return $data;
+    }
+    public function getInfoStudent(string $identifier): self {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->prepare('
+        SELECT 
+            firstname, 
+            lastname, 
+            identifier, 
+            cin, 
+            address, 
+            nationality, 
+            date_of_birth, 
+            s.registration_date, 
+            entry_date, 
+            place_birth, 
+            gender, 
+            level_study, 
+            status
+        FROM users u 
+        JOIN students s ON u.id = s.user_id
+        WHERE TRIM(u.identifier) = ?
+        ');
+        $stmt->execute([$identifier]);
+        $row = $stmt->fetch();
+        $item = new self;
+        $item->firstname = $row['firstname'];
+        $item->lastname = $row['lastname'];
+        $item->identifier = $row['identifier'];
+        $item->cin = $row['cin'];
+        $item->address = $row['address'];
+        $item->nationality = $row['nationality'];
+        $item->date_of_birth = $row['date_of_birth'];
+        $item->registration_date = $row['registration_date'];
+        $item->entry_date = $row['entry_date'];
+        $item->place_birth = $row['place_birth'];
+        $item->gender = $row['gender'];
+        $item->level_study = $row['level_study'];
+        $item->status = $row['status'];
+        return $item;
+    }
+    public function getTotalInscrit(string $year, string $study, int $group): int {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->prepare('
+            SELECT COUNT(u.id) as total FROM users u 
+            JOIN students s ON u.id = s.user_id     
+            JOIN registrations r ON s.id = r.student_id
+            JOIN years y ON y.id = r.year_id
+            JOIN studies st ON st.id = r.study_id
+            JOIN groupes gp ON gp.id = r.group_id
+            WHERE y.name = ?
+            AND st.name = ?
+            AND gp.group_number = ?
+            AND s.status = 1;
+        ');
+        $stmt->execute([$year, $study, $group]);
+        $row = $stmt->fetch();
+        return $row['total'];
     }
 }

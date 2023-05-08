@@ -1,6 +1,6 @@
 <?php ob_start(); ?>
 <div class="header_dashboard">
-    <h2 class="logo_admin">Mon logo</h2>
+    <h2 class="logo_admin"><strong><span style="color: rgb(167, 73, 10);;">I</span><span style="color: rgb(36, 19, 138);">PEM</span></strong></h2>
     <ul class="nav_top">
         <li><a href="home">Accueil</a></li>
         <li><a href="displayDashboard" class="nav_insert" onclick="nav_top_a(this)" data-value="insert">Inscription</a></li>
@@ -40,6 +40,7 @@
 </div>
 <script>
     let year = document.getElementById('year');
+    let study = document.getElementById('study_header');
     let session_average = sessionStorage.getItem('average');
     if (session_average != 1 || session_average == undefined) {
         $('#individual_insert').hide();
@@ -47,8 +48,18 @@
     if (year.value) {
         sendYear(year);
     }
+    if (study.value) {
+        setTimeout(() => {
+            sendStudyDashboard(study);
+        }, 100);
+    }
     select_year = (select) => {
         sendYear(select);
+        document.location = 'displayDashboard';
+    }
+    select_study = (select) => {
+        sendStudyDashboard(select);
+        document.location = 'displayDashboard';
     }
     nav_top_a = (a) => {
         let nav_top = a.getAttribute('data-value');
@@ -97,6 +108,21 @@
                 console.error(errorThrown);
             }
         });
+    }
+    function sendStudyDashboard(select) {
+        $.ajax({
+            type: 'post',
+            url: 'ajax',
+            data: {
+                'select': 'study',
+                'value': select.value
+            },
+            success: s => {
+            }, 
+            error: (xhr, textStatus, errorThrown) => {
+                console.error(errorThrown);
+            }
+        })
     }
     function sendValueSession(data, action) {
         $.ajax({

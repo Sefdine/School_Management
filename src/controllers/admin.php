@@ -53,7 +53,7 @@ class Admin extends User
         require_once('templates/errors/errors.php');
         require_once('templates/admin/input_rates.php');
     }
-    public function displayDashboard(string $error = '', string $year='', string $study='', int $group=0, string $exam_name='', string $exam_type='') : void {
+    public function displayDashboard(string $error = '', string $year='', string $study='', int $group=1, string $exam_name='', string $exam_type='') : void {
         $admin = new ModelAdmin;
         $current_module = $_SESSION['current_module'] ?? '';
         $counter = $_SESSION['counter'] ?? 0;
@@ -74,12 +74,25 @@ class Admin extends User
         $session_nav_left = $_SESSION['nav_left'] ?? '';
         $firstname_lastname = $admin->getFirstnameLastname($year, $study, $group);
         $average = new Average;
-        $offset_identifier = 6;
+        $offset_identifier = 0;
         $identifier = $admin->getIdentifier($offset_identifier, $year, $study, $group);
         $user_id = $admin->getIdUser($identifier);
         $user = $admin->getUser((string)$user_id);
         $full_name = $user->firstname.' '.$user->lastname;
         $averages = $average->getAverages($user_id, $exam_name, $exam_type, $year, $study, $group);
+        $total_factors_modules = $average->getTotalFactor($year, $study, $group);
+        $total_module = $total_factors_modules[0];
+        $total_factor = $total_factors_modules[1];
+        $total_average = 0;
+        $total_factor_average = 0;
+        foreach($averages as $item) {
+            $total_average += $item->value_average;
+            $total_factor_average += ($item->value_average * $item->factor);
+        }
+        $average = $total_factor_average / $total_factor;
+        $page_view_average = (int)$_SESSION['page_view_average'] ?? 1;
+        $pages_view_averages = $count;
+
 
         if ($nav_top == 'insert') {
             switch($session_nav_left) {
@@ -97,6 +110,12 @@ class Admin extends User
                     break;
             }
         } elseif ($nav_top == 'view') {
+            $page_view_average = 1;
+            $total_students = $admin->getTotalInscrit($year, $study, $group);
+            $pages_view_averages = ceil($total_students / 10);
+            $offset_view_average = 10 * $page_view_average;
+            $list_students = $admin->getListStudents($year, $study, $group, $offset_view_average);
+            $info_student = $admin->getInfoStudent('GE273');
             switch($session_nav_left) {
                 case 'student': 
                     require_once('templates/admin/view/student.php');

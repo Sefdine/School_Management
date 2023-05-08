@@ -8,6 +8,7 @@ use Ipem\Src\Controllers\User;
 use Ipem\Src\Controllers\Average;
 
 use Ipem\Src\Model\Admin as ModelAdmin;
+use Ipem\Src\Model\Average as ModelAverage;
 
 require_once('config/config.php');
 
@@ -154,7 +155,7 @@ if (isset($action)){
         if (session()) {
             $year = $_SESSION['insert_year'] ?? '';
             $study = $_SESSION['insert_study'] ?? '';
-            $group = (int)$_SESSION['insert_group'] ?? 0;
+            $group = (int)($_SESSION['insert_group'] ?? 1);
             $exam_name = $_SESSION['insert_exam'] ?? '';
             $exam_type = $_SESSION['insert_exam_type'] ?? '';
             if (isset($_POST['nav_top'])) {
@@ -213,8 +214,8 @@ if (isset($action)){
                 $select = $_POST['select'] ?? '';
                 if ($select == 'year') {
                     $value = $_POST['value'];
-                    // die(var_dump($year));
                     $_SESSION['insert_year'] = $value;
+                    $_SESSION['insert_offset_identifier'] = 0;
                     $response = $admin->getStudies($value);
                 } elseif ($select == 'study') {
                     $value = $_POST['value'];
@@ -233,7 +234,7 @@ if (isset($action)){
                 } elseif ($select == 'exam') {
                     $value = $_POST['value'];
                     $_SESSION['insert_exam'] = $value;
-                    $group = (int)$_SESSION['insert_group'] ?? 0;
+                    $group = (int)($_SESSION['insert_group'] ?? 1);
                     $study = $_SESSION['insert_study'] ?? '';
                     $year = $_SESSION['insert_year'] ?? '';
                     $response = $admin->getModules($group, $study, $year);
@@ -243,7 +244,7 @@ if (isset($action)){
                     $module_slug = $_POST['value'] ?? '';
                     $year = $_SESSION['insert_year'] ?? '';
                     $study = $_SESSION['insert_study'] ?? '';
-                    $group = (int)$_SESSION['insert_group'] ?? 0;
+                    $group = (int)($_SESSION['insert_group'] ?? 1);
                     $exam_type = $_SESSION['insert_exam_type'] ?? '';
                     $perPage = 10;
                     $currentPage = (int)($_SESSION['average_page'] ?? 1);
@@ -252,6 +253,115 @@ if (isset($action)){
                 }
                 echo json_encode($response);
             }
+        } else {
+            die($user->displayForm());
+        }
+    } elseif ($action === 'releve') {
+        if (session()) {
+            $admin = new ModelAdmin;
+            $identifier = firstOfReleve($admin);
+            $year = $_SESSION['insert_year'];
+            $study = $_SESSION['insert_study'];
+            $group = (int)($_SESSION['insert_group'] ?? 1);
+            $offset_identifier = $_SESSION['insert_offset_identifier'] ?? 0;
+            if (!$identifier) {
+                $identifier = $admin->getIdentifier($offset_identifier, $year, $study, $group);
+            }
+            $data = [];
+            $data['identifier'] = $identifier;
+            $data['year'] = $year;
+            $data['study'] = $study;
+            $data['group'] = $group;
+            
+            $user_id = $admin->getIdUser($identifier);
+            $user = $admin->getUser((string)$user_id);
+            $full_name = $user->firstname.' '.$user->lastname;
+            $data['full_name'] = $full_name;
+            
+            $average = new ModelAverage;
+            $exam_name = $_SESSION['insert_exam'];
+            $exam_type = $_SESSION['insert_exam_type'];
+            $averages = $average->getAverages($user_id, $exam_name, $exam_type, $year, $study, $group);
+            $data['averages'] = $averages;
+            
+            $total_factors_modules = $average->getTotalFactor($year, $study, $group);
+            $total_module = $total_factors_modules[0];
+            $total_factor = $total_factors_modules[1];
+            $total_average = 0;
+            $total_factor_average = 0;
+            foreach($averages as $item) {
+                $total_average += $item->value_average;
+                $total_factor_average += ($item->value_average * $item->factor);
+            }
+            $average = $total_factor_average / $total_factor;
+            $data['total_module'] = $total_module;
+            $data['average'] = round($average, 2);
+            $pages_view_averages = $admin->getDataCount($year, $study, $group);
+            $page_view_average = (int)$_SESSION['insert_offset_identifier'] ?? 1;
+            $data['pages_view_averages'] = $pages_view_averages;
+            $data['page_view_average'] = $page_view_average;
+
+            echo json_encode($data);
+        } else {
+            die($user->displayForm());
+        }
+    } elseif ($action === 'releveExam') {
+        if (session()) {
+            $admin = new ModelAdmin;
+            $identifier = firstOfReleve($admin);
+            $year = $_SESSION['insert_year'];
+            $study = $_SESSION['insert_study'];
+            $group = (int)($_SESSION['insert_group'] ?? 1);
+            $offset_identifier = $_SESSION['insert_offset_identifier'] ?? 0;
+            if (!$identifier) {
+                $identifier = $admin->getIdentifier($offset_identifier, $year, $study, $group);
+            }
+            $data = [];
+            $data['identifier'] = $identifier;
+            $data['year'] = $year;
+            $data['study'] = $study;
+            $data['group'] = $group;
+            
+            $user_id = $admin->getIdUser($identifier);
+            $user = $admin->getUser((string)$user_id);
+            $full_name = $user->firstname.' '.$user->lastname;
+            $data['full_name'] = $full_name;
+            
+            $average = new ModelAverage;
+            $averages = $average->getDataReleveExam($year, $study, $group, $identifier);
+            $total_factor = 0;
+            $total_controls = 0;
+            $total_exam_theorique = 0;
+            $total_exam_pratique = 0;
+            foreach($averages as $item) {
+                $total_factor += $item->factor;
+                $total_controls += $item->controles * $item->factor;
+                $total_exam_theorique += $item->theorical * $item->factor;
+                $total_exam_pratique += $item->pratical * $item->factor;
+            }
+            $pages_view_averages = $admin->getDataCount($year, $study, $group);
+            $page_view_average = (int)$_SESSION['insert_offset_identifier'] ?? 1;
+            $data['pages_view_averages'] = $pages_view_averages;
+            $data['page_view_average'] = $page_view_average;
+            if ($total_factor == 0) {
+                $data['action'] = 'error';
+                echo json_encode($data);
+                die();
+            }
+            $data['averages'] = $averages;
+            $data['total_factor'] = $total_factor;
+            $data['total_controls'] = round($total_controls, 2);
+            $data['total_exam_theorique'] = round($total_exam_theorique, 2);
+            $data['total_exam_pratique'] = round($total_exam_pratique, 2);
+
+            $data['ga_control_value'] = round(($total_controls / $total_factor), 2);
+            $data['ga_exam_theorique_value'] = round(($total_exam_theorique / $total_factor), 2);
+            $data['ga_exam_pratique_value'] = round(($total_exam_pratique / $total_factor), 2);
+            $total = ($data['ga_control_value'] + $data['ga_exam_theorique_value'] + $data['ga_exam_pratique_value']);
+            $data['fa_value'] = round(($total / 3), 2);
+            
+
+            echo json_encode($data);
         } else {
             die($user->displayForm());
         }
@@ -282,3 +392,38 @@ if (isset($action)){
     die($user->displayForm());
 }
 
+
+function firstOfReleve($admin) {
+    $select = $_POST['select'] ?? '';
+    $value = $_POST['value'];
+    if ($select == 'exam') {
+        $_SESSION['insert_exam'] = $value;
+    } elseif ($select == 'group') {
+        $_SESSION['insert_group'] = $value;
+    } elseif ($select == 'previous') {
+        $_SESSION['insert_offset_identifier'] -= 1;
+    } elseif ($select == 'next') {
+        $_SESSION['insert_offset_identifier'] += 1;
+    } elseif ($select == 'identifier') {
+        if (!$value) {
+            die(0);
+        }
+        $year = $_SESSION['insert_year'];
+        $study = $_SESSION['insert_study'];
+        $group = (int)($_SESSION['insert_group'] ?? 1);
+        $identifiers = $admin->getIdentifiers($year, $study, $group);
+        $rep = 0;
+        $identifier = null;
+        foreach($identifiers as $item) {
+            if ((trim($value) == trim($item)) && (!is_null($item))) {
+                $identifier = $item;
+                $rep = 1;
+                break;
+            }
+        }
+        if ($rep == 0) {
+            die(0);
+        }
+    }
+    return $identifier;
+}
