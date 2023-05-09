@@ -20,6 +20,11 @@ class Admin extends User
     public $gender;
     public $level_study;
     public $status;
+    public $email;
+    public $tel;
+    public $degree;
+    public $experience;
+
     use Module, Registration, Exam, Year, Study, Group;
     public function insertUserStudent(array $data, string $password, string $token, string $year, string $study, int $group):bool {
         $connection = new Database;
@@ -234,7 +239,7 @@ class Admin extends User
     public function getListStudents(string $year, string $study, int $group, int $offset): array {
         $conn = new Database;
         $stmt = $conn->getConnection()->prepare('
-            SELECT firstname, lastname, identifier FROM users u 
+            SELECT firstname, lastname, TRIM(identifier) as identifier FROM users u 
             JOIN students s ON u.id = s.user_id
             join registrations r ON s.id = r.student_id
             WHERE r.year_id = (SELECT id FROM years WHERE name = ?)
@@ -261,7 +266,7 @@ class Admin extends User
         SELECT 
             firstname, 
             lastname, 
-            identifier, 
+            TRIM(identifier) as identifier, 
             cin, 
             address, 
             nationality, 
@@ -311,5 +316,60 @@ class Admin extends User
         $stmt->execute([$year, $study, $group]);
         $row = $stmt->fetch();
         return $row['total'];
+    }
+    public function getListTeacher(string $year, string $study, int $group): array {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->prepare('
+            SELECT DISTINCT
+                firstname, 
+                lastname,
+                u.id as identifier
+            FROM users u
+            JOIN teachers t ON u.id = t.user_id
+            JOIN teachs te ON t.id = te.teacher_id
+            WHERE te.year_id = (SELECT id FROM years WHERE name = ?)
+            AND te.study_id = (SELECT id FROM studies WHERE name = ?)
+            AND te.group_id = (SELECT id FROM groupes WHERE group_number = ?)
+        ');
+        $stmt->execute([$year, $study, $group]);
+        $data = [];
+        while($row = $stmt->fetch()) {
+            $item = new self;
+            $item->firstname = $row['firstname'];
+            $item->lastname = $row['lastname'];
+            $item->identifier = $row['identifier'];
+            $data[] = $item;
+        }
+        return $data;
+    }
+    public function getInfoTeacher(int $user_id): self {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->prepare('
+            SELECT DISTINCT
+                firstname, 
+                lastname, 
+                email, 
+                tel, 
+                cin, 
+                address, 
+                degree, 
+                experience
+            FROM users u 
+            JOIN teachers t ON u.id = t.user_id
+            JOIN teachs te ON t.id = te.teacher_id
+            WHERE u.id = ?
+        ');
+        $stmt->execute([$user_id]);
+        $row = $stmt->fetch();
+        $item = new self;
+        $item->firstname = $row['firstname'];
+        $item->lastname = $row['lastname'];
+        $item->email = $row['email'];
+        $item->tel = $row['tel'];
+        $item->cin = $row['cin'];
+        $item->address = $row['address'];
+        $item->degree = $row['degree'];
+        $item->experience = $row['experience'];
+        return $item;
     }
 }

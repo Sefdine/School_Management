@@ -80,7 +80,7 @@ if (isset($action)){
         } else {
             die($user->displayForm());
         }
-    } elseif($action === 'module'){
+    } elseif ($action === 'module'){
         if (session()) {
             if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0) {
                 $identifier = (string)$_SESSION['user_id'];       
@@ -153,7 +153,7 @@ if (isset($action)){
         } 
     } elseif ($action === 'displayDashboard') {
         if (session()) {
-            $year = $_SESSION['insert_year'] ?? '';
+            $year = $_SESSION['insert_year'] ?? date('Y');
             $study = $_SESSION['insert_study'] ?? '';
             $group = (int)($_SESSION['insert_group'] ?? 1);
             $exam_name = $_SESSION['insert_exam'] ?? '';
@@ -173,7 +173,7 @@ if (isset($action)){
         } else {
             die($user->displayForm());
         }
-    } elseif($action === 'insertStudent') {
+    } elseif ($action === 'insertStudent') {
         if (session()) {
             $admin = new ModelAdmin;
             $year = $_SESSION['insert_year'] ?? '';
@@ -187,7 +187,7 @@ if (isset($action)){
         } else {
             die($user->displayForm());
         }
-    } elseif($action === 'insertTeacher') {
+    } elseif ($action === 'insertTeacher') {
         if (session()) {
             $year = $_SESSION['insert_year'] ?? '';
             $study = $_SESSION['insert_study'] ?? '';
@@ -200,14 +200,14 @@ if (isset($action)){
         } else {
             die($user->displayForm());
         }
-    } elseif($action === 'insertAverages') {
+    } elseif ($action === 'insertAverages') {
         if (session()) {
             $data = $_POST ?? [];
             $admin->insertAverages($data);
         } else {
             die($user->displayForm());
         }
-    } elseif($action === 'ajax') {
+    } elseif ($action === 'ajax') {
         if (session()) {
             if (isset($_POST['value'])) {
                 $admin = new ModelAdmin;
@@ -364,6 +364,73 @@ if (isset($action)){
             echo json_encode($data);
         } else {
             die($user->displayForm());
+        }
+    } elseif ($action === 'studentView') {
+        $admin = new ModelAdmin;
+        $select = $_POST['select'] ?? '';
+        $value = $_POST['value'] ?? '';
+        if ($select == 'group') {
+            $_SESSION['insert_group'] = $value;
+            $_SESSION['student_list_button'] = '';
+            $_SESSION['page_view_average'] = 0;
+        } elseif ($select == 'button_ouvrir') {
+            $_SESSION['student_list_button'] = $value;
+        } elseif ($select == 'next') {
+            $_SESSION['page_view_average'] += 1;
+        } elseif ($select == 'previous') {
+            $_SESSION['page_view_average'] -= 1;
+        }
+        $current_identifier_view_student = $_SESSION['student_list_button'];
+        $year = $_SESSION['insert_year'];
+        $study = $_SESSION['insert_study'];
+        $group = (int)$_SESSION['insert_group'];
+        $data = [];
+        $page_view_average = $_SESSION['page_view_average'];
+        $total_students = $admin->getTotalInscrit($year, $study, $group);
+        $pages_view_averages = ceil($total_students / 10);
+        $offset_view_average = 10 * $page_view_average;
+        $list_students = $admin->getListStudents($year, $study, $group, $offset_view_average);
+        if (!$current_identifier_view_student && !empty($list_students)) {
+            $current_identifier_view_student = $list_students[0]->identifier;
+        }
+        $info_student = $admin->getInfoStudent($current_identifier_view_student);
+        $data['page_view_average'] = $page_view_average;
+        $data['pages_view_averages'] = $pages_view_averages;
+        $data['list_students'] = $list_students;
+        $data['info_student'] = $info_student;
+        $data['current_identifier_view_student'] = $current_identifier_view_student;
+
+        echo json_encode($data);
+    } elseif ($action === 'teacherView') {
+        if (session()) {
+            $select = $_POST['select'];
+            $value = $_POST['value'];
+            $admin = new ModelAdmin;
+            if ($select == 'group') {
+                $_SESSION['insert_group'] = $value;
+                $_SESSION['teacher_list_button'] = 0;
+            } elseif ($select == 'button_ouvrir') {
+                $_SESSION['teacher_list_button'] = $value;
+            }
+            $year = $_SESSION['insert_year'];
+            $study = $_SESSION['insert_study'];
+            $group = (int)$_SESSION['insert_group'];
+
+            $data = [];
+            $user_id = (int)$_SESSION['teacher_list_button'] ?? 0;
+            $list_teachers = $admin->getListTeacher($year, $study, $group);
+            if (!$user_id && !empty($list_teachers)) {
+                $user_id = (int)$list_teachers[0]->identifier;
+            }
+
+            $info_teachers = $admin->getInfoTeacher($user_id);
+            $data['info_teachers'] = $info_teachers;
+            $data['user_id'] = $user_id;
+            $data['list_teachers'] = $list_teachers;
+
+            echo json_encode($data);
+        } else {
+            die($admin->displayForm());
         }
     } elseif ($action === 'errorLogin') {
         $login_err = $_SESSION['err'] ?? '';

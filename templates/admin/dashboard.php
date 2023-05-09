@@ -5,7 +5,6 @@
         <li><a href="home">Accueil</a></li>
         <li><a href="displayDashboard" class="nav_insert" onclick="nav_top_a(this)" data-value="insert">Inscription</a></li>
         <li><a href="displayDashboard" class="nav_update" onclick="nav_top_a(this)" data-value="view">Etat</a></li>
-        <li><a href="displayDashboard" class="nav_delete" onclick="nav_top_a(this)" data-value="delete">Suppression</a></li>
     </ul>
     <select name="study" id="study_header" onchange="select_study(this)">
         <option value="title" disabled selected class="text-center">Filières</option>
@@ -15,7 +14,7 @@
     </select>
     <select id="year" onchange="select_year(this)">
         <?php foreach($years as $item): ?>
-            <option value="<?= $item ?>" <?= ($item == $year) ? 'selected' : '' ?>><?= $item ?></option>
+            <option value="<?= $item ?>" <?= (($item == $year) ? 'selected' : '') ?>><?= $item ?></option>
         <?php endforeach ?>
     </select>
     <a href="disconnect" class="sign_out">Sign out</a>

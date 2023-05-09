@@ -24,7 +24,7 @@
         </div>
         <div class="input-group">
             <span class="input-group-text">Date de naissance</span>
-            <input type="date" name="birthday" id="birthday" class="form-control">
+            <input type="date" name="birthday" id="birthday" class="form-control" lang="fr" placeholder="jj/mm/aaaa">
         </div>
         <div class="input-group">
             <span class="input-group-text">Date d'inscription</span>

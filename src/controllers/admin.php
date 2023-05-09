@@ -110,12 +110,20 @@ class Admin extends User
                     break;
             }
         } elseif ($nav_top == 'view') {
-            $page_view_average = 1;
+            $page_view_average = 0;
             $total_students = $admin->getTotalInscrit($year, $study, $group);
             $pages_view_averages = ceil($total_students / 10);
             $offset_view_average = 10 * $page_view_average;
             $list_students = $admin->getListStudents($year, $study, $group, $offset_view_average);
-            $info_student = $admin->getInfoStudent('GE273');
+            $current_identifier_view_student = $_SESSION['student_list_button'];
+
+            $list_teachers = $admin->getListTeacher($year, $study, $group);
+            if (!empty($list_teachers)) {
+                $user_id = (int)$list_teachers[0]->identifier;
+            }
+
+            $user_id = (int)$_SESSION['teacher_list_button'] ?? 0;
+            $info_teachers = $admin->getInfoTeacher($user_id);
             switch($session_nav_left) {
                 case 'student': 
                     require_once('templates/admin/view/student.php');
@@ -130,8 +138,6 @@ class Admin extends User
                     require_once('templates/admin/view/teacher.php');
                     break;
             }
-        } elseif ($nav_top == 'delete') {
-            var_dump('delete');
         }
     }
     public function insertAverages(array $data):void {
