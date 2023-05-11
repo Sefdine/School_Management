@@ -13,8 +13,16 @@ use Ipem\Src\Model\Student;
 class Admin extends User
 {
     public function displayHome():void {
+        $_SESSION['nav_top'] = 'home';
+        $year = $_SESSION["insert_year"] ?? '';
+        $study = $_SESSION["insert_study"] ?? '';
+        $group = (int)$_SESSION["insert_group"] ?? 0;
         $admin = new ModelAdmin;
         $years = $admin->getYears();
+        $registrer_data = $admin->getTotalInscrit($year, $study, $group);
+        $deleted_data = $admin->getTotalDeleted($year, $study, $group);
+        $registrer_all = $admin->getAllInscrit();
+        $deleted_all = $admin->getAllDeleted();
         require_once('templates/admin/home.php');
     }
     public function displayLanding(string $identifier, string $exam_type = ''): void {

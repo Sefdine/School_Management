@@ -1,6 +1,6 @@
 <?php ob_start(); ?>
 <div class="header_dashboard">
-    <h2 class="logo_admin"><strong><span style="color: rgb(167, 73, 10);;">I</span><span style="color: rgb(36, 19, 138);">PEM</span></strong></h2>
+    <a href="home" class="logo_admin"><h2><strong><span style="color: rgb(167, 73, 10);">I</span><span style="color: rgb(36, 19, 138);">PEM</span></strong></h2></a>
     <ul class="nav_top">
         <li><a href="home">Accueil</a></li>
         <li><a href="displayDashboard" class="nav_insert" onclick="nav_top_a(this)" data-value="insert">Inscription</a></li>
@@ -41,6 +41,7 @@
     let year = document.getElementById('year');
     let study = document.getElementById('study_header');
     let session_average = sessionStorage.getItem('average');
+    let session_nav_insert = '<?= $_SESSION['nav_top'] ?>'
     if (session_average != 1 || session_average == undefined) {
         $('#individual_insert').hide();
     }
@@ -54,11 +55,19 @@
     }
     select_year = (select) => {
         sendYear(select);
-        document.location = 'displayDashboard';
+        if (session_nav_insert == 'home') {
+            document.location = 'home';
+        } else {
+            document.location = 'displayDashboard';
+        }
     }
     select_study = (select) => {
         sendStudyDashboard(select);
-        document.location = 'displayDashboard';
+        if (session_nav_insert == 'home') {
+            document.location = 'home';
+        } else {
+            document.location = 'displayDashboard';
+        }
     }
     nav_top_a = (a) => {
         let nav_top = a.getAttribute('data-value');

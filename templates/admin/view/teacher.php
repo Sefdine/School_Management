@@ -5,6 +5,7 @@
         <div class="mt-4">
             <h2 class="view_teacher_title px-4">Listes des enseignants</h2>
         </div>
+
         <div class="card mt-3 view_teacher_list">
             <table class="table table-striped table-hover">
                 <thead>

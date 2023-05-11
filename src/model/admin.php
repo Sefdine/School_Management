@@ -317,6 +317,44 @@ class Admin extends User
         $row = $stmt->fetch();
         return $row['total'];
     }
+    public function getTotalDeleted(string $year, string $study, int $group): int {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->prepare('
+            SELECT COUNT(u.id) as total FROM users u 
+            JOIN students s ON u.id = s.user_id     
+            JOIN registrations r ON s.id = r.student_id
+            JOIN years y ON y.id = r.year_id
+            JOIN studies st ON st.id = r.study_id
+            JOIN groupes gp ON gp.id = r.group_id
+            WHERE y.name = ?
+            AND st.name = ?
+            AND gp.group_number = ?
+            AND s.status = 0;
+        ');
+        $stmt->execute([$year, $study, $group]);
+        $row = $stmt->fetch();
+        return $row['total'];
+    }
+    public function getAllInscrit(): int {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->query('
+            SELECT COUNT(r.id) as total FROM registrations r
+            JOIN students s ON s.id = r.student_id
+            WHERE s.status = 1;
+        ');
+        $row = $stmt->fetch();
+        return $row['total'];
+    }
+    public function getAllDeleted(): int {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->query('
+            SELECT COUNT(r.id) as total FROM registrations r
+            JOIN students s ON s.id = r.student_id
+            WHERE s.status = 0;
+        ');
+        $row = $stmt->fetch();
+        return $row['total'];
+    }
     public function getListTeacher(string $year, string $study, int $group): array {
         $conn = new Database;
         $stmt = $conn->getConnection()->prepare('

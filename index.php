@@ -432,6 +432,27 @@ if (isset($action)){
         } else {
             die($admin->displayForm());
         }
+    } elseif ($action === 'homeAdmin') {
+        if (session()) {
+            $select = $_POST['select'];
+            $value = $_POST['value'];
+            $admin = new ModelAdmin;
+            if ($select == 'group') {
+                $_SESSION['insert_group'] = $value;
+            }
+            $data = [];
+            $year = $_SESSION["insert_year"] ?? '';
+            $study = $_SESSION["insert_study"] ?? '';
+            $group = (int)$_SESSION["insert_group"] ?? 0;
+            $registrer_data = $admin->getTotalInscrit($year, $study, $group);
+            $deleted_data = $admin->getTotalDeleted($year, $study, $group);
+            $data['registrer_data'] = $registrer_data;
+            $data['deleted_data'] = $deleted_data;
+
+            echo json_encode($data);
+        } else {
+            die($admin->displayForm());
+        }
     } elseif ($action === 'errorLogin') {
         $login_err = $_SESSION['err'] ?? '';
         $user->displayForm($login_err);
