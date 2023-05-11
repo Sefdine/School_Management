@@ -2,14 +2,14 @@
 <div class="header_dashboard">
     <a href="home" class="logo_admin"><h2><strong><span style="color: rgb(167, 73, 10);">I</span><span style="color: rgb(36, 19, 138);">PEM</span></strong></h2></a>
     <ul class="nav_top">
-        <li><a href="home">Accueil</a></li>
-        <li><a href="displayDashboard" class="nav_insert" onclick="nav_top_a(this)" data-value="insert">Inscription</a></li>
-        <li><a href="displayDashboard" class="nav_update" onclick="nav_top_a(this)" data-value="view">Etat</a></li>
+        <li><a href="home">Accueil <i class="fa-solid fa-house"></i></a></li>
+        <li><a href="displayDashboard" class="nav_insert" onclick="nav_top_a(this)" data-value="insert">Inscription <i class="fa-solid fa-keyboard"></i></a></li>
+        <li><a href="displayDashboard" class="nav_update" onclick="nav_top_a(this)" data-value="view">Etat <i class="fa-solid fa-display"></i></a></li>
     </ul>
     <select name="study" id="study_header" onchange="select_study(this)">
         <option value="title" disabled selected class="text-center">Filières</option>
         <?php foreach($studies as $item): ?>
-            <option value="<?= $item ?>" <?= ($item == $study) ? 'selected' : '' ?> class="text-center"><?= $item ?></option>
+            <option value="<?= $item ?>" <?= ($item == $_SESSION['insert_study']) ? 'selected' : '' ?> class="text-center"><?= $item ?></option>
         <?php endforeach ?>
     </select>
     <select id="year" onchange="select_year(this)">
@@ -22,9 +22,9 @@
 <div class="section_admin">
     <div class="nav_left">
         <ul>
-            <li><button onclick="nav_left_button(this)" data-value="teacher">Enseignants</button></li>
-            <li><button onclick="nav_left_button(this)" data-value="student" id="btn_student">Etudiants</button></li>
-            <li><button onclick="nav_left_button(this)" data-value="average">Notes</button></li>
+            <li><button onclick="nav_left_button(this)" data-value="teacher">Enseignants <i class="fa-solid fa-user-tie"></i></button></li>
+            <li><button onclick="nav_left_button(this)" data-value="student" id="btn_student">Etudiants <i class="fa-solid fa-user-graduate"></i></button></li>
+            <li><button onclick="nav_left_button(this)" data-value="average">Notes <i class="fa-solid fa-marker"></i></button></li>
             <br>
             <a href="<?= URL_ROOT ?>landing" id="individual_insert">Note Individuelle</a>
         </ul>
@@ -75,9 +75,16 @@
     }
     nav_left_button = (button) => {
         let nav_left = button.getAttribute('data-value');
+        let location;
+
+        if (session_nav_insert == 'home') {
+            location = 'home';
+        } else {
+            location = 'displayDashboard';
+        }
         sendValueSession(
             {'nav_left': nav_left, 'year': year.value},
-            document.location = 'displayDashboard'
+            document.location = location
         );
         if (nav_left == 'average') {
             sessionStorage.setItem('average', 1);

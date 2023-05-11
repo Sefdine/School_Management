@@ -449,6 +449,28 @@ if (isset($action)){
             $data['registrer_data'] = $registrer_data;
             $data['deleted_data'] = $deleted_data;
 
+            $session_nav_left = $_SESSION['nav_left'];
+            switch ($session_nav_left) {
+                case 'student': 
+                    $students = $admin->getStudentsData($year, $study, $group);
+                    $data['students'] = $students;
+                    break;
+                case 'teacher':
+                    $teachers = $admin->getTeacherData($year, $study, $group);
+                    $data['teachers'] = $teachers;
+                    break;
+                case 'average':
+                    $modules = $admin->getModulesData($year, $study, $group);
+                    $students = $admin->getStudentsData($year, $study, $group);
+                    $data['students'] = $students;
+                    $data['modules'] = $modules;
+                    break;
+                default:
+                    $teachers = $admin->getTeacherData($year, $study, $group);
+                    $data['teachers'] = $teachers;
+                    break;
+            }
+            
             echo json_encode($data);
         } else {
             die($admin->displayForm());

@@ -14,8 +14,7 @@ class User
     public $lastname;
     public $token;
 
-    public function getUsers(): array
-    {
+    public function getUsers(): array {
         $connection = new Database;
         $statement = $connection->getConnection()->query(
             'SELECT id, password, token, TRIM(identifier) AS identifier
@@ -33,8 +32,7 @@ class User
         }
         return $users;
     }
-    public function getUser(string $user_id): self
-    {
+    public function getUser(string $user_id): self {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
             'SELECT id, firstname, lastname, password, TRIM(identifier) AS identifier 
@@ -53,8 +51,7 @@ class User
 
         return $user;
     }
-    public function setPassword(string $user_id, string $new_password): bool
-    {
+    public function setPassword(string $user_id, string $new_password): bool {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
             'UPDATE users SET password = ? WHERE id = ?'
@@ -63,8 +60,7 @@ class User
         $affectedLines = $statement->execute([$new_password, (int)$user_id]);
         return ($affectedLines > 0);
     }
-    public function getIdUser(string $identifier):int 
-    {
+    public function getIdUser(string $identifier):int {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
             'SELECT id FROM users WHERE TRIM(identifier) = ?'

@@ -24,6 +24,8 @@ class Admin extends User
     public $tel;
     public $degree;
     public $experience;
+    public $value;
+    public $module;
 
     use Module, Registration, Exam, Year, Study, Group;
     public function insertUserStudent(array $data, string $password, string $token, string $year, string $study, int $group):bool {
@@ -409,5 +411,102 @@ class Admin extends User
         $item->degree = $row['degree'];
         $item->experience = $row['experience'];
         return $item;
+    }
+    public function getStudentsData(string $year, string $study, int $group): array {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->prepare('
+            SELECT identifier, firstname, lastname, nationality, date_of_birth, place_birth, cin, entry_date, level_study
+            FROM users u  
+            JOIN students s ON u.id = s.user_id
+            JOIN registrations r ON s.id = r.student_id
+            WHERE r.year_id = (SELECT id FROM years WHERE name = ?)
+            AND r.study_id = (SELECT id FROM studies WHERE name = ?)
+            AND r.group_id = (SELECT id FROM groupes WHERE group_number = ?)
+            AND s.status = 1;
+        ');
+        $stmt->execute([$year, $study, $group]);
+        $data = [];
+        while ($row = $stmt->fetch()) {
+            $item = new self;
+            $item->identifier = $row['identifier'];
+            $item->name = $row['lastname'].' '.$row['firstname'];
+            $item->nationality = $row['nationality'];
+            $item->date_of_birth = $row['date_of_birth'];
+            $item->place_birth = $row['place_birth'];
+            $item->cin = $row['cin'];
+            $item->entry_date = $row['entry_date'];
+            $item->level_study = $row['level_study'];
+            $data[] = $item;
+        }
+        return $data;
+    }
+    public function getTeacherData(string $year, string $study, int $group): array {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->prepare('
+            SELECT DISTINCT firstname, lastname, tel, cin, email, degree, experience
+            FROM users u 
+            JOIN teachers t ON u.id = t.user_id
+            JOIN teachs te ON t.id = te.teacher_id
+            WHERE te.year_id = (SELECT id FROM years WHERE name = ?)
+            AND te.study_id = (SELECT id FROM studies WHERE name = ?)
+            AND te.group_id = (SELECT id FROM groupes WHERE group_number = ?);
+        ');
+        $stmt->execute([$year, $study, $group]);
+        $data = [];
+        while ($row = $stmt->fetch()) {
+            $item = new self;
+            $item->name = $row['lastname'].' '.$row['firstname'];
+            $item->tel = $row['tel'];
+            $item->email = $row['email'];
+            $item->cin = $row['cin'];
+            $item->degree = $row['degree'];
+            $item->experience = $row['experience'];
+            $data[] = $item;
+        }
+        return $data;
+    }
+    public function getModulesData(string $year, string $study, int $group): array {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->prepare('
+            SELECT m.name FROM modules m 
+            JOIN studies_groupes_modules sgm ON m.id = sgm.module_id
+            JOIN studies s ON s.id = sgm.study_id
+            JOIN years_studies ys ON s.id = ys.study_id
+            WHERE ys.year_id = (SELECT id FROM years WHERE name = ?)
+            AND ys.study_id = (SELECT id FROM studies WHERE name = ?)
+            AND sgm.group_id = (SELECT id FROM groupes WHERE group_number = ?);
+        ');
+        $stmt->execute([$year, $study, $group]);
+        $data = [];
+        while ($row = $stmt->fetch()) {
+            $data[] = $row['name'];
+        }
+        return $data;
+    }
+    public function getAveragesData(string $exam_name, string $year, string $study, int $group, string $identifier): array {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->prepare('
+            SELECT identifier, a.`value`, m.name as module FROM users u 
+            JOIN students s ON u.id = s.user_id
+            JOIN registrations r ON s.id = r.student_id
+            JOIN averages a ON r.id = a.registration_id
+            JOIN modules m ON m.id = a.module_id
+            JOIN exams e ON e.id = a.exam_id
+            WHERE e.exam_name = ?
+            AND r.year_id = (SELECT id FROM years WHERE name = ?)
+            AND r.study_id = (SELECT id FROM studies WHERE name = ?)
+            AND r.group_id = (SELECT id FROM groupes WHERE group_number = ?)
+            AND TRIM(u.identifier) = ?;
+        ');
+        $stmt->execute([$exam_name, $year, $study, $group, $identifier]);
+        $data = [];
+        while ($row = $stmt->fetch()) {
+            $item = new self;
+            $item->identifier = $row['identifier'];
+            $item->value = $row['value'];
+            $item->module = $row['module'];
+            $data[] = $item;
+        }
+        return $data;
     }
 }

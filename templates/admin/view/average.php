@@ -66,27 +66,16 @@
                 <thead id="thead_view_average">
                     <tr class="table-header bg-gray">
                         <th>Unités de Formation</th>
-                        <th class="vertical-text">Coeff.</th>
-                        <th class="vertical-text">Note sur 20<br>Controles continues<br><span id="exam_name_average_view"><?= ($exam_name == 'CC1') ? 'n°1' : 'n°2' ?></span></th>
+                        <th>Coeff.</th>
+                        <th id="exam_name_average_view"><?= $exam_name ?></th>
                         <th>Appréciations</th>
                     </tr>
                     <tr>
-                        <th colspan="4" class="thead_tr_colspan">Domaines de formation principaux</th>
+                        <th colspan="4" class="thead_tr_colspan border_complet">Domaines de formation principaux</th>
                     </tr>
                 </thead>
                 <tbody class="table-body" id="tbody_average_view">
-                        <?php foreach($averages as $item): ?>
-                        <tr>
-                            <td><?= $item->name_module ?></td>
-                            <td><?= $item->factor ?></td>
-                            <td><?= $item->value_average ?></td>
-                            <td class="border_bottom_none"></td>
-                        </tr>
-                        <?php endforeach ?>
-                    <tr class="bg-gray">
-                        <td colspan="2" class="end_border"><strong>Moyenne des notes sur 20</strong></td>
-                        <td class="end_border"><strong><?= (count($averages) == $total_module) ? round($average, 2) : 'NI' ?></strong></td>
-                    </tr>
+                       
                 </tbody>
            </table>
            <div class="d-flex justify-content-between ms-5">
@@ -222,11 +211,22 @@
                 }
             }
         })
-        if (radioExamType.querySelector('input[type="radio"]:checked')) {
-            let exam_type_2 = radioExamType.querySelector('input[type="radio"]:checked');
-            exam_type = exam_type_2.value;
-            sendExamTypeAverage(exam_type_2);
-        }
+        setTimeout(() => {
+            if (radioExamType.querySelector('input[type="radio"]:checked')) {
+                let exam_type_2 = radioExamType.querySelector('input[type="radio"]:checked');
+                exam_type = exam_type_2.value;
+                sendExamTypeAverage(exam_type_2);
+            }
+        }, 100);
+    
+        setTimeout(() => {
+            if (radioExam.querySelector('input[type="radio"]:checked')) {
+                let exam_name = radioExam.querySelector('input[type="radio"]:checked');
+                console.log(exam_name.value)
+                sendExamAverage(exam_name);
+            }
+        }, 200);
+       
         radioExamType.addEventListener('change', (event) => {
             if (event.target.type = 'radio') {
                 exam_type = event.target.value;
@@ -370,7 +370,7 @@
             })
         }
         function sendExamTypeAverage(select) {
-            let exam = '<?= $exam_name ?>';
+            let exam = '<?= $_SESSION['insert_exam'] ?>';
             $.ajax({
                 type: 'post',
                 url: 'ajax',
@@ -434,11 +434,9 @@
                     let th_1 = document.createElement('th');
                     th_1.textContent = 'Unités de Formation';
                     let th_2 = document.createElement('th');
-                    th_2.className = 'vertical-text';
                     th_2.textContent = 'Coeff.';
                     let th_3 = document.createElement('th');
-                    th_3.className = 'vertical-text';
-                    th_3.innerHTML = 'Note sur 20<br>Controles continues<br><span id="exam_name_average_view"><?= ($exam_name == 'CC1') ? 'n°1' : 'n°2' ?></span>';
+                    th_3.textContent = select.value;
                     let th_4 = document.createElement('th');
                     th_4.textContent = 'Appréciations';
                     thead_tr.appendChild(th_1);
@@ -449,14 +447,12 @@
                     let thead_tr_colspan = document.createElement('tr');
                     let th_colspan = document.createElement('th');
                     th_colspan.textContent = 'Domaines de formation principaux';
-                    th_colspan.className = 'thead_tr_colspan';
+                    th_colspan.className = 'border_complet thead_tr_colspan';
                     th_colspan.colSpan = 4;
                     thead_tr_colspan.appendChild(th_colspan);
                     thead_view_average.appendChild(thead_tr);
                     thead_view_average.appendChild(thead_tr_colspan);
 
-                    let exam_name_average_view = document.getElementById('exam_name_average_view');
-                    exam_name_average_view.textContent = (select.value == 'CC1') ? 'n°1' : 'n°2';
                     ChangeReleve(s);
                 },
                 error: (xhr, textStatus, errorThrown) => {
@@ -529,12 +525,15 @@
             while (releve_title.firstChild) {
                 releve_title.removeChild(releve_title.firstChild);
             }
+            //thead
             let h1_releve_title = document.createElement('h1');
             let strong_releve_title = document.createElement('strong');
             strong_releve_title.textContent = 'RELEVE DE NOTES ET RESULTATS';
             h1_releve_title.appendChild(strong_releve_title); 
             releve_title.appendChild(h1_releve_title);
             changeStudentInfo(parsed);
+
+            //tbody
             let tbody_average_view = document.getElementById('tbody_average_view');
             while (tbody_average_view.firstChild) {
                 tbody_average_view.removeChild(tbody_average_view.firstChild);
@@ -543,10 +542,13 @@
             averages.forEach(element => {
                 let tr = document.createElement('tr');
                 let module_td = document.createElement('td');
+                module_td.className = 'border_complet';
                 module_td.textContent = element.name_module;
                 let value_average_td = document.createElement('td');
+                value_average_td.className = 'border_complet';
                 value_average_td.textContent = element.value_average;
                 let factor_td = document.createElement('td');
+                factor_td.className = 'border_complet';
                 factor_td.textContent = element.factor;
                 let td_appreciation = document.createElement('td');
                 td_appreciation.className = 'border_bottom_none';
@@ -556,19 +558,20 @@
                 tr.appendChild(td_appreciation);
                 tbody_average_view.appendChild(tr);
             });
+
+            //tfoot
             let total_module = parsed.total_module;
             let average = parsed.average;
             let tr = document.createElement('tr');
-            tr.className = 'bg-gray';
-            tr.style.borderTop = '2px solid black';
+            tr.className = 'setBorderTop';
             let moyenne = document.createElement('td');
             moyenne.colSpan = '2';
-            moyenne.className = 'end_border';
+            moyenne.className = 'bg-gray border_complet';
             let strong = document.createElement('strong');
             strong.textContent = 'Moyenne des notes sur 20';
             moyenne.appendChild(strong);
             let moyenne_val = document.createElement('td');
-            moyenne_val.className = 'end_border';
+            moyenne_val.className = 'bg-gray border_complet';
             let strong2 = document.createElement('strong');
             strong2.textContent = (averages.length == total_module) ? average : 'NI';
             moyenne_val.appendChild(strong2);
