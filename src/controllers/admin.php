@@ -19,6 +19,7 @@ class Admin extends User
         $group = (int)$_SESSION["insert_group"] ?? 0;
         $admin = new ModelAdmin;
         $years = $admin->getYears();
+        $groupes = $admin->getGroups($year, $study);
         $registrer_data = $admin->getTotalInscrit($year, $study, $group);
         $deleted_data = $admin->getTotalDeleted($year, $study, $group);
         $registrer_all = $admin->getAllInscrit();

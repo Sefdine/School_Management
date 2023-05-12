@@ -92,7 +92,7 @@ a{
 }
 
 .section_admin .nav_left{
-    width: 230px;
+    min-width: 230px;
     background-color: rgb(119, 119, 161);
 }
 
@@ -126,4 +126,8 @@ a{
 
 .section_admin .nav_left ul button:hover{
     background-color: rgb(31, 31, 136);
+}
+
+.nav_left_checked > button{
+    background-color: rgb(31, 31, 136)!important;
 }

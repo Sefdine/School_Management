@@ -150,35 +150,39 @@
                 'value': radioGroup.value
             },
             success: s => {
-                let parsed = JSON .parse(s);
-                let modules = document.getElementById('modulesTeacherCheckbox');
-                while (modules.firstChild) {
-                    modules.removeChild(modules.firstChild);
-                }
-                let h3 = document.createElement('h3');
-                h3.textContent = 'Choisissez des modules';
-                modules.appendChild(h3);
-                parsed.forEach(element => {
-                    let div = document.createElement('div');
-                    div.className = 'form-check';
-                    let input = document.createElement('input');
-                    input.setAttribute('id', element.slug);
-                    input.setAttribute('type', 'checkbox');
-                    input.name = 'moduleCheckbox';
-                    input.value = element.slug;
-                    input.className = 'form-check-input';
-                    let label = document.createElement('label');
-                    label.setAttribute('for', element.slug);
-                    label.className = 'form-check-label';
-                    label.textContent = element.name;
-                    div.appendChild(input);
-                    div.appendChild(label);
-                    modules.appendChild(div);
-                })
+                changeModules(s);
             },
             error: (xhr, textStatus, errorThrown) => {
                 console.error(errorThrown);
             }
+        });
+    }
+    function changeModules(s) {
+        let parsed = JSON .parse(s);
+        console.log(parsed)
+        let modules = document.getElementById('modulesTeacherCheckbox');
+        while (modules.firstChild) {
+            modules.removeChild(modules.firstChild);
+        }
+        let h3 = document.createElement('h3');
+        h3.textContent = 'Choisissez des modules';
+        modules.appendChild(h3);
+        parsed.forEach(element => {
+            let div = document.createElement('div');
+            div.className = 'form-check';
+            let input = document.createElement('input');
+            input.setAttribute('id', element.slug);
+            input.setAttribute('type', 'checkbox');
+            input.name = 'moduleCheckbox';
+            input.value = element.slug;
+            input.className = 'form-check-input';
+            let label = document.createElement('label');
+            label.setAttribute('for', element.slug);
+            label.className = 'form-check-label';
+            label.textContent = element.name;
+            div.appendChild(input);
+            div.appendChild(label);
+            modules.appendChild(div);
         });
     }
     insert_teacher_btn = (btn) => {

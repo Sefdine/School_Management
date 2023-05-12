@@ -8,8 +8,9 @@
     <div class="groupe_select d-flex ml-auto">
         <label for="groupes" class="form-label me-2">Groupes</label>
         <select name="groupes" id="groupes" class="form-select">
-            <option value="1">1ère année</option>
-            <option value="2">2ème année</option>
+            <?php foreach($groupes as $item): ?>
+                <option value="<?= $item ?>"><?= ($item == 1) ? '1ère année' : '2ème année' ?></option>
+            <?php endforeach ?>
         </select>
     </div>
 </div>
@@ -54,13 +55,13 @@
     </div>
 </div>
 <div class="card m-2 home_data">
-    <div class="d-flex home_data_first">
-        <h4 class="mt-2 ms-3 home_data_title">Listes des étudiant</h4>
-        <div class="mt-2 me-5 ml-auto">
-            <button class="btn">
-                <label>Imprimer</label>
-                <i class="fa-solid fa-print"></i>
-            </button>
+    <div class="d-flex home_data_first" id="home_data_first">
+        <h4 class="mt-2 ms-3 home_data_title" id="home_data_title">Listes des étudiant</h4>
+        <div class="exam_name_select d-flex ml-auto" id="exam_name_div">
+            <select name="exam_name" id="exam_name" class="form-select">
+                <option value="1">CC1</option>
+                <option value="2">CC2</option>
+            </select>
         </div>
     </div>
     <table class="table table-hover">
@@ -73,6 +74,13 @@
     </table>
 </div>
 <style>
+    .exam_name_select {
+        background-color:darkgrey;
+        padding: 10px;
+    }
+    .exam_name_select label {
+        color: #fff;
+    }
     #home_thead_tr td {
         font-weight: bold;
     }
@@ -163,13 +171,21 @@
             },
             success: s => {
                 changeValueRegistrerDeleted(s);
+                let home_data_title = document.getElementById('home_data_title');
+                let exam_name = document.getElementById('exam_name');
+                exam_name.style.display = 'none';
                 if (session_nav_left == 'student') {
+                    home_data_title.textContent = 'Liste des étudiants'
                     displayTableStudent(s);
                 } else if (session_nav_left == 'teacher') {
+                    home_data_title.textContent = 'Liste des enseignants'
                     displayTableTeacher(s);
                 } else if(session_nav_left == 'average') {
+                    exam_name.style.display = '';
+                    home_data_title.textContent = 'Liste des Notes'
                     displayTableAverage(s);
                 } else {
+                    home_data_title.textContent = 'Liste des enseignants'
                     displayTableTeacher(s);
                 }
             },
@@ -275,6 +291,7 @@
     }
     function displayTableStudent(s) {
         let parsed = JSON.parse(s);
+
         let home_thead_tr = document.getElementById('home_thead_tr');
         while (home_thead_tr.firstChild) {
             home_thead_tr.removeChild(home_thead_tr.firstChild);

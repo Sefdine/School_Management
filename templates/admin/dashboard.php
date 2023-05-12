@@ -22,9 +22,9 @@
 <div class="section_admin">
     <div class="nav_left">
         <ul>
-            <li><button onclick="nav_left_button(this)" data-value="teacher">Enseignants <i class="fa-solid fa-user-tie"></i></button></li>
-            <li><button onclick="nav_left_button(this)" data-value="student" id="btn_student">Etudiants <i class="fa-solid fa-user-graduate"></i></button></li>
-            <li><button onclick="nav_left_button(this)" data-value="average">Notes <i class="fa-solid fa-marker"></i></button></li>
+            <li class="<?= (($_SESSION['nav_left'] == 'teacher') || !isset($_SESSION['nav_left'])) ? 'nav_left_checked' : '' ?>"><button onclick="nav_left_button(this)" data-value="teacher">Enseignants <i class="fa-solid fa-user-tie"></i></button></li>
+            <li class="<?= ($_SESSION['nav_left'] == 'student') ? 'nav_left_checked' : '' ?>"><button onclick="nav_left_button(this)" data-value="student" id="btn_student">Etudiants <i class="fa-solid fa-user-graduate"></i></button></li>
+            <li class="<?= ($_SESSION['nav_left'] == 'average') ? 'nav_left_checked' : '' ?>"><button onclick="nav_left_button(this)" data-value="average">Notes <i class="fa-solid fa-marker"></i></button></li>
             <br>
             <a href="<?= URL_ROOT ?>landing" id="individual_insert">Note Individuelle</a>
         </ul>
