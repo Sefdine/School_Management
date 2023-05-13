@@ -13,7 +13,7 @@
     </select>
     <select id="year" onchange="select_year(this)">
         <?php foreach($years as $item): ?>
-            <option value="<?= $item ?>" <?= (($item == $year) ? 'selected' : '') ?>><?= $item ?></option>
+            <option value="<?= $item ?>" <?= (($item == $year) ? 'selected' : '') ?>><?= $item-1 .'/'.$item ?></option>
         <?php endforeach ?>
     </select>
     <a href="disconnect" class="sign_out">Sign out</a>

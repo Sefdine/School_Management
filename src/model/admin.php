@@ -388,6 +388,7 @@ class Admin extends User
             SELECT DISTINCT
                 firstname, 
                 lastname, 
+                identifier,
                 email, 
                 tel, 
                 cin, 
@@ -404,6 +405,7 @@ class Admin extends User
         $item = new self;
         $item->firstname = $row['firstname'];
         $item->lastname = $row['lastname'];
+        $item->identifier = $row['identifier'];
         $item->email = $row['email'];
         $item->tel = $row['tel'];
         $item->cin = $row['cin'];

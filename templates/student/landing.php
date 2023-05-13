@@ -13,7 +13,7 @@
                 <label for="year">Année</label>
                 <select name="year" class="form-control" required>
                     <?php foreach($years as $year): ?>
-                        <option value="<?= $year ?>"><?= $year ?></option>
+                        <option value="<?= $year ?>"><?= $year-1 .'/'.$year ?></option>
                     <?php endforeach ?>
                 </select>
                 <label for="exam_type">Types d'examens</label>

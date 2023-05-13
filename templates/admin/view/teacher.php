@@ -32,6 +32,7 @@
                 <div class="ms-5 mt-3 part2-info" id="teacher_info">
                     <span class="name">Nom <span class="two_point">: </span><?= $info_teachers->lastname.' '.$info_teachers->firstname ?></span><br>
                     <span class="email">Email <span class="two_point">: </span><?= $info_teachers->email ?></span><br>
+                    <span class="identifier">Identifiant <span class="two_point">: </span><?= $info_teachers->identifier ?></span><br>
                     <span class="tel">GSM <span class="two_point">: </span><?= $info_teachers->tel ?></span><br>
                     <span class="cin">CIN <span class="two_point">: </span><?= $info_teachers->cin ?></span><br>
                     <span class="address">Adresse <span class="two_point">: </span><?= $info_teachers->address ?></span><br>
@@ -213,6 +214,9 @@
             let email_span = document.createElement('span');
             email_span.className = 'email';
             email_span.innerHTML = 'Email <span class="two_point">:</span> '+info_teachers.email+'<br>';
+            let identifier_span = document.createElement('span');
+            identifier_span.className = 'identifier';
+            identifier_span.innerHTML = 'Identifiant <span class="two_point">:</span> '+info_teachers.identifier+'<br>';
             let tel_span = document.createElement('span');
             tel_span.className = 'tel';
             tel_span.innerHTML = 'GSM <span class="two_point">:</span> '+info_teachers.tel+'<br>';
@@ -230,6 +234,7 @@
             experience_span.innerHTML = 'Expérience <span class="two_point">:</span> '+((info_teachers.experience > 1) ? info_teachers.experience+' ans' : info_teachers.experience+' an')+'<br>';
             teacher_info.appendChild(span_name); 
             teacher_info.appendChild(email_span); 
+            teacher_info.appendChild(identifier_span); 
             teacher_info.appendChild(tel_span); 
             teacher_info.appendChild(email_span); 
             teacher_info.appendChild(cin_span); 

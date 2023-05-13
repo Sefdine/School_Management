@@ -27,6 +27,10 @@
         <input type="text" name="firstname" id="firstname" class="form-control" required>
     </div>
     <div class="input-group">
+        <span class="input-group-text">Identifiant *</span>
+        <input type="text" name="identifier" id="identifier" class="form-control" required>
+    </div>
+    <div class="input-group">
         <span class="input-group-text">Email</span>
         <input type="email" name="email" id="email" class="form-control">
     </div>
@@ -188,6 +192,7 @@
     insert_teacher_btn = (btn) => {
         let lastname = document.getElementById('lastname');
         let firstname = document.getElementById('firstname');
+        let identifier = document.getElementById('identifier');
         let email = document.getElementById('email').value;
         let tel = document.getElementById('tel').value;
         let cin = document.getElementById('cin').value;
@@ -210,9 +215,15 @@
             error.textContent = 'Veuillez remplir le champs Prénom';
             firstname.style.backgroundColor = 'red';
             lastname.style.backgroundColor = '#fff';
+        } else if (!identifier.value) {
+            error.textContent = 'Veuillez remplir le champs Identifiant';
+            identifier.style.backgroundColor = 'red';
+            lastname.style.backgroundColor = '#fff';
+            firstname.style.backgroundColor = '#fff';
         } else {
             firstname.style.backgroundColor = '#fff';
             lastname.style.backgroundColor = '#fff';
+            identifier.style.backgroundColor = '#fff';
             error.style.display = 'none';
             data['firstname'] = firstname.value;
             data['lastname'] = lastname.value;
