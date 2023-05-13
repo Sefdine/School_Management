@@ -152,14 +152,49 @@
 </style>
 <script>
     let groupes = document.getElementById('groupes');
+    let studies = document.getElementById('study_header');
     let session_nav_left = '<?= $_SESSION['nav_left'] ?>';
+
+    setTimeout(() => {
+        if (studies.firstChild) {
+            sendStudyHome(studies);
+        }
+    }, 200);
+
+    setTimeout(() => {
+        if (groupes.firstChild) {
+            sendGroupHome(groupes);
+        }
+    }, 300);
+
     groupes.addEventListener('change', (event) => {
         sendGroupHome(event.target);
     });
-    if (groupes.firstChild) {
-        setTimeout(() => {
-            sendGroupHome(groupes);
-        }, 100);
+
+    function sendStudyHome(select) {
+        $.ajax({
+            type: 'post',
+            url: 'ajax',
+            data: {
+                'select': 'study',
+                'value': select.value
+            },
+            success: s => {
+                let parsed = JSON.parse(s);
+                while (groupes.firstChild) {
+                    groupes.removeChild(groupes.firstChild);
+                }
+                parsed.forEach(element => {
+                    let option = document.createElement('option');
+                    option.value = element;
+                    option.textContent = (element == 1) ? '1ère année' : '2ème année';
+                    groupes.appendChild(option);
+                })
+            }, 
+            error: (xhr, textStatus, errorThrown) => {
+                console.error(errorThrown);
+            }
+        })
     }
     function sendGroupHome(select) {
         $.ajax({
@@ -227,13 +262,13 @@
         while (home_tbody.firstChild) {
             home_tbody.removeChild(home_tbody.firstChild);
         }
-        students.forEach(element => {
-            let tr = document.createElement('tr');
-            let name_td = document.createElement('td');
-            name_td.textContent = element.name;
-            tr.appendChild(name_td);
-            home_tbody.appendChild(tr);
-        })
+        // students.forEach(element => {
+        //     let tr = document.createElement('tr');
+        //     let name_td = document.createElement('td');
+        //     name_td.textContent = element.name;
+        //     tr.appendChild(name_td);
+        //     home_tbody.appendChild(tr);
+        // })
     }
     function displayTableTeacher(s) {
         let parsed = JSON.parse(s);

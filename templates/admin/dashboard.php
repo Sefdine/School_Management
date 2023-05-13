@@ -7,7 +7,6 @@
         <li><a href="displayDashboard" class="nav_update" onclick="nav_top_a(this)" data-value="view">Etat <i class="fa-solid fa-display"></i></a></li>
     </ul>
     <select name="study" id="study_header" onchange="select_study(this)">
-        <option value="title" disabled selected class="text-center">Filières</option>
         <?php foreach($studies as $item): ?>
             <option value="<?= $item ?>" <?= ($item == $_SESSION['insert_study']) ? 'selected' : '' ?> class="text-center"><?= $item ?></option>
         <?php endforeach ?>
@@ -45,14 +44,12 @@
     if (session_average != 1 || session_average == undefined) {
         $('#individual_insert').hide();
     }
-    if (year.value) {
-        sendYear(year);
-    }
-    if (study.value) {
-        setTimeout(() => {
-            sendStudyDashboard(study);
-        }, 100);
-    }
+    setTimeout(() => {
+        if (year.value) {
+            sendYear(year);
+        }
+    }, 100);
+
     select_year = (select) => {
         sendYear(select);
         if (session_nav_insert == 'home') {
@@ -133,6 +130,7 @@
                 'value': select.value
             },
             success: s => {
+                console.log(s)
             }, 
             error: (xhr, textStatus, errorThrown) => {
                 console.error(errorThrown);

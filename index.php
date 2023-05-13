@@ -94,14 +94,14 @@ if (isset($action)){
                 die();    
         }
     } elseif ($action === 'rate') {
-        session();
-        $name = $_SESSION['name'] ?? '';
-        if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0) {
+        if (session()) {
             $identifier = (string)$_SESSION['user_id'];
+            $name = $_SESSION['name'] ?? '';
             if ($name === 'student') {
                 $year = $_POST['year'] ?? '';
                 $exam_type = $_POST['exam_type'] ?? '';
                 $exam_name = $_POST['exam_name'] ?? '';
+
                 $student->displayAverage($identifier, $year, $exam_name, $exam_type);
             } elseif ($name === 'admin') {                
                 $module_slug = $_GET['module_slug'] ?? '';
@@ -114,6 +114,8 @@ if (isset($action)){
                 $_SESSION['err'] = '';
                 die();
             }
+        } else {
+            $user->displayForm();
         }
     } elseif ($action === 'updatePassword') {
         session();
@@ -357,8 +359,8 @@ if (isset($action)){
             $data['ga_control_value'] = round(($total_controls / $total_factor), 2);
             $data['ga_exam_theorique_value'] = round(($total_exam_theorique / $total_factor), 2);
             $data['ga_exam_pratique_value'] = round(($total_exam_pratique / $total_factor), 2);
-            $total = ($data['ga_control_value'] + $data['ga_exam_theorique_value'] + $data['ga_exam_pratique_value']);
-            $data['fa_value'] = round(($total / 3), 2);
+            $total = ($data['ga_control_value']*3 + $data['ga_exam_theorique_value']*2 + $data['ga_exam_pratique_value']*3);
+            $data['fa_value'] = round(($total / 8), 2);
             
 
             echo json_encode($data);
@@ -417,16 +419,18 @@ if (isset($action)){
             $group = (int)$_SESSION['insert_group'];
 
             $data = [];
-            $user_id = (int)$_SESSION['teacher_list_button'] ?? 0;
+            $teacher_id = (int)$_SESSION['teacher_list_button'] ?? 0;
             $list_teachers = $admin->getListTeacher($year, $study, $group);
-            if (!$user_id && !empty($list_teachers)) {
-                $user_id = (int)$list_teachers[0]->identifier;
+            if (!$teacher_id && !empty($list_teachers)) {
+                $teacher_id = (int)$list_teachers[0]->identifier;
             }
 
-            $info_teachers = $admin->getInfoTeacher($user_id);
+            $info_teachers = $admin->getInfoTeacher($teacher_id);
+            $modules_teachers = $admin->getModulesTeachers($teacher_id);
             $data['info_teachers'] = $info_teachers;
-            $data['user_id'] = $user_id;
+            $data['teacher_id'] = $teacher_id;
             $data['list_teachers'] = $list_teachers;
+            $data['modules_teachers'] = $modules_teachers;
 
             echo json_encode($data);
         } else {

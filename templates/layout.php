@@ -30,7 +30,7 @@
     <title><?= $title ?? 'IPEM' ?></title>
   </head>
   <body class="d-flex flex-column min-vh-100">
-    <div class="min-vh-100">
+    <div style="min-height: 90vh">
       <?= $content; ?>
     </div>
     <div class="mb-0">

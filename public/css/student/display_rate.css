@@ -70,4 +70,10 @@ table{
         grid-template-columns: 1fr;
         padding-top: 10px;
     }
+    .releveExamStudent th {
+        font-size: small;
+    }
+    .releveExamStudent td {
+        font-size: smaller;
+    }
 }

@@ -54,6 +54,24 @@ class Student extends User
             $total_factor_average += ($item->value_average * $item->factor);
         }
         $average = $total_factor_average / $total_factor;
+
+        if ($exam_type == 'Examen') {
+            $identifier = $student->getIdentifierStudent((int)$identifier);
+            $averages = $rate->getDataReleveExam($year, $study, $group, $identifier);
+            $total_controls = 0;
+            $total_exam_theorical = 0;
+            $total_exam_pratical = 0;
+            foreach($averages as $item) {
+                $total_controls += $item->controles * $item->factor;
+                $total_exam_theorical += $item->theorical * $item->factor;
+                $total_exam_pratical += $item->pratical * $item->factor;
+            }
+            $ga_controls = round($total_controls / $total_factor, 2);
+            $ga_exam_theorical = round($total_exam_theorical / $total_factor, 2);
+            $ga_exam_pratical = round($total_exam_pratical / $total_factor, 2);
+
+            $final_average = ($ga_controls*3 + $ga_exam_theorical*2 + $ga_exam_pratical*3) / 8;
+        }
         require_once('templates/student/header.php');
         require_once('templates/student/display_rate.php');
     }

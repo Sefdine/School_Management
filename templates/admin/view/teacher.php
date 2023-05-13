@@ -38,24 +38,61 @@
                     <span class="degree">Diplome <span class="two_point">: </span><?= $info_teachers->degree ?></span><br>
                     <span class="experience">Expérience <span class="two_point">: </span><?= ($info_teachers->experience > 1) ? $info_teachers->experience.' ans' : $info_teachers->experience.' an' ?></span><br>
                 </div>
-                <div class="ms-5 mt-5">
-                    <i class="fa-sharp fa-solid fa-person-chalkboard fa-fade"></i>
+                <div class="hr-vertical"></div>
+                <div class="modules_teacher_view">
+                    <h3 class="set_underline">Modules</h3>
+                    <ul class="ul_teacher_view_modules" id="ul_teacher_view_modules">
+                        <li>French</li>
+                        <li>English</li>
+                    </ul>
                 </div>
+            </div>
+            <div class="ms-5 mt-5 big_icon">
+                <i class="fa-sharp fa-solid fa-person-chalkboard fa-fade"></i>
             </div>
         </div>
     </div>
 </div>
 <style>
+    .ul_teacher_view_modules li {
+        list-style:circle;
+    }
+    .set_underline {
+        text-decoration: underline;
+    }
+    .hr-vertical {
+        border-left: 2px solid green;
+        height: 260px;
+        margin: 0 20px;
+    }
+    .degree .two_point {
+        margin-left: 26px;
+    }
+    .address .two_point {
+        margin-left: 30px;
+    }
+    .cin .two_point {
+        margin-left: 75px;
+    }
+    .email .two_point {
+        margin-left: 56px;
+    }
+    .tel .two_point {
+        margin-left: 66px;
+    }
+    .name .two_point {
+        margin-left: 65px;
+    }
     .identifier_selected {
         background-color:rgba(42, 156, 31, 0.897);;
     }
-    .part2-right i {
+    .big_icon i {
         font-size: 3.6em;
         margin-top: 50px;
         margin-left: 30px;
     }
     .part2-right {
-        font-size: 1.9em;
+        font-size: 1.4em;
     }
     .view_teacher_info {
         background-color: darkgray;
@@ -140,11 +177,11 @@
             view_teacher_tbody.removeChild(view_teacher_tbody.firstChild);
         }
         let list_teachers = parsed.list_teachers;
-        let user_id = parsed.user_id;
+        let teacher_id = parsed.teacher_id;
         list_teachers.forEach(element => {
             let tr = document.createElement('tr');
             tr.className = 'view_teacher_tbody_tr';
-            if (user_id == element.identifier) {
+            if (teacher_id == element.identifier) {
                 tr.className = 'view_teacher_tbody_tr identifier_selected';
             }
             let name_td = document.createElement('td');
@@ -199,6 +236,17 @@
             teacher_info.appendChild(address_span); 
             teacher_info.appendChild(degree_span); 
             teacher_info.appendChild(experience_span); 
+
+            let modules_teachers = parsed.modules_teachers;
+            let ul_teacher_view_modules = document.getElementById('ul_teacher_view_modules');
+            while (ul_teacher_view_modules.firstChild) {
+                ul_teacher_view_modules.removeChild(ul_teacher_view_modules.firstChild);
+            }
+            modules_teachers.forEach(element => {
+                let li = document.createElement('li');
+                li.textContent = element.name;
+                ul_teacher_view_modules.appendChild(li);
+            })
         }
     }
     function sendStudyStudent(select) {

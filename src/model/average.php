@@ -18,8 +18,7 @@ class Average
     public $pratical;
     public $theorical;
 
-    public function getAverages(int $identifier, string $exam_name, string $exam_type, string $year, string $study, int $group, ): array
-    {
+    public function getAverages(int $identifier, string $exam_name, string $exam_type, string $year, string $study, int $group, ): array {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
             SELECT m.name, a.value, sgm.factor
@@ -49,8 +48,7 @@ class Average
         }
         return $averages;
     }
-    public function insertAverage(float $value, int $registration_id, int $module_id, int $exam_id): bool
-    {
+    public function insertAverage(float $value, int $registration_id, int $module_id, int $exam_id): bool {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare('
             INSERT INTO averages

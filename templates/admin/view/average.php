@@ -645,11 +645,11 @@
             let th_2 = document.createElement('th');
             th_2.textContent = 'Coeff.';
             let th_3 = document.createElement('th');
-            th_3.innerHTML = 'CCs';
+            th_3.innerHTML = 'MCC';
             let th_4 = document.createElement('th');
-            th_4.innerHTML = 'ET';
+            th_4.innerHTML = 'MEFCFT';
             let th_5 = document.createElement('th');
-            th_5.innerHTML = 'EP';
+            th_5.innerHTML = 'MEFCFP';
             let th_6 = document.createElement('th');
             th_6.textContent = 'Appréciations';
             thead_tr.appendChild(th_1);

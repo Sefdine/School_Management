@@ -43,6 +43,10 @@
     margin-left: 120px; 
 }
 
+.user_login {
+    color: #fff;
+    font-size: 2.2em;
+}
 
 /* ---------------- MEDIA SCREEN -----------------*/
 @media screen and (max-width: 991px) {

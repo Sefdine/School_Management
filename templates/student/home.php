@@ -2,7 +2,7 @@
 <?php ob_start(); ?>
 
 <h2 class="hello">Bonjour <?= $user->firstname; ?> !</h2>               
-<div class="row">
+<div class="d-flex flex-column container home_student">
   <div id="part1">
     <div id="note">
       <p>Suivez vos évaluations par le moyen le plus simple.</p>

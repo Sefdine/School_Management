@@ -363,7 +363,7 @@ class Admin extends User
             SELECT DISTINCT
                 firstname, 
                 lastname,
-                u.id as identifier
+                t.id as identifier
             FROM users u
             JOIN teachers t ON u.id = t.user_id
             JOIN teachs te ON t.id = te.teacher_id
@@ -382,7 +382,7 @@ class Admin extends User
         }
         return $data;
     }
-    public function getInfoTeacher(int $user_id): self {
+    public function getInfoTeacher(int $teacher_id): self {
         $conn = new Database;
         $stmt = $conn->getConnection()->prepare('
             SELECT DISTINCT
@@ -397,9 +397,9 @@ class Admin extends User
             FROM users u 
             JOIN teachers t ON u.id = t.user_id
             JOIN teachs te ON t.id = te.teacher_id
-            WHERE u.id = ?
+            WHERE t.id = ?
         ');
-        $stmt->execute([$user_id]);
+        $stmt->execute([$teacher_id]);
         $row = $stmt->fetch();
         $item = new self;
         $item->firstname = $row['firstname'];
@@ -505,6 +505,23 @@ class Admin extends User
             $item->identifier = $row['identifier'];
             $item->value = $row['value'];
             $item->module = $row['module'];
+            $data[] = $item;
+        }
+        return $data;
+    }
+    public function getModulesTeachers(int $teacher_id): array {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->prepare('
+            SELECT m.name, m.slug FROM modules m 
+            JOIN teachs te ON m.id = te.module_id
+            WHERE te.teacher_id = ?;
+        ');
+        $stmt->execute([$teacher_id]);
+        $data = [];
+        while ($row = $stmt->fetch()) {
+            $item = new self;
+            $item->name = $row['name'];
+            $item->slug = $row['slug'];
             $data[] = $item;
         }
         return $data;
