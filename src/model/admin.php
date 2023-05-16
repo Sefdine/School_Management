@@ -112,7 +112,7 @@ class Admin extends User
             return false;
         }
     }
-    public function insertUserTeacher(array $data, array $modules, string $year, $study, $group):bool {
+    public function insertUserTeacher(array $data, array $modulesFirstYear, array $modulesSecondYear, string $year, string $study):bool {
         $connection = new Database;
         $firstname = $data['firstname'] ?? '';
         $lastname = $data['lastname'] ?? '';
@@ -122,11 +122,11 @@ class Admin extends User
         $address = $data['address'];
         $degree = $data['degree'];
         $experience = ($data['experience']) ? $data['experience'] : 0;
-        $count = 0;
+        $count_first = 0;
+        $count_second = 0;
 
         $year_id = self::getIdYear($year);
         $study_id = self::getIdStudy($study);
-        $group_id = self::getIdGroup($group);
 
         $connection->getConnection()->beginTransaction();
 
@@ -150,19 +150,35 @@ class Admin extends User
         $insertTeacherStatement->execute([$email, $tel, $user_id, $degree, $experience]);     
         $teacher_id = $connection->getConnection()->lastInsertId();
 
-        foreach($modules as $module) {
+        //inserting teachs for first year
+        foreach($modulesFirstYear as $module) {
             $module_id = self::getIdModule($module);
             $insertTeachStmt = $connection->getConnection()->prepare('
                 INSERT INTO teachs (teacher_id, group_id, study_id, year_id, module_id)
-                VALUES (?, ?, ?, ?, ?)
+                VALUES (?, 1, ?, ?, ?)
             ');
-            $result = $insertTeachStmt->execute([$teacher_id, $group_id, $study_id, $year_id, $module_id]);
+            $result = $insertTeachStmt->execute([$teacher_id, $study_id, $year_id, $module_id]);
             if ($result) {
-                $count++;
+                $count_first++;
             }
         }
 
-        if($count == count($modules)) {
+        //inserting teachs for second year
+        if ($count_first == count($modulesFirstYear)) {
+            foreach($modulesSecondYear as $module) {
+                $module_id = self::getIdModule($module);
+                $insertTeachStmt = $connection->getConnection()->prepare('
+                    INSERT INTO teachs (teacher_id, group_id, study_id, year_id, module_id)
+                    VALUES (?, 2, ?, ?, ?)
+                ');
+                $result = $insertTeachStmt->execute([$teacher_id, $study_id, $year_id, $module_id]);
+                if ($result) {
+                    $count_second++;
+                }
+            }
+        } 
+
+        if($count_second == count($modulesSecondYear)) {
             $connection->getConnection()->commit();
             return true;
         } else {

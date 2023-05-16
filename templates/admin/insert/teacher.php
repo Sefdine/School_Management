@@ -2,20 +2,31 @@
 <?php ob_start(); ?>
 <div class="admin container">
     <div id="error"></div>
-    <div class="row">
-        <div id="radioGroupes" class="col-md-4 ms-4">
-            <h3>Choisissez un groupe</h3>
+    <div class="d-flex mt-2 m-auto" style="width:fit-content;">
+        <div class="ms-4" id="modulesFirstYearCheckbox">
+            <h3 class="text-center mt-2">Modules de 1ère année</h3>
+            <div class="mt-2 card first_year_modules p-3">
+                <?php foreach($modules_first_year as $module): ?>
+                    <div class="form-check">
+                        <input type="checkbox" name="moduleCheckbox" id="<?= $module->slug ?>" value="<?= $module->slug ?>" class="form-check-input">
+                        <label for="<?= $module->slug ?>" class="form-check-label"><?= $module->name ?></label>
+                    </div>
+                <?php endforeach ?>
+            </div>
         </div>
-        <div class="col-md-6 ms-3" id="modulesTeacherCheckbox">
-            <h3>Choisissez des modules</h3>
-            <?php foreach($modules as $module): ?>
-                <div class="form-check">
-                    <input type="checkbox" name="moduleCheckbox" id="<?= $module->slug ?>" value="<?= $module->slug ?>" class="form-check-input">
-                    <label for="<?= $module->slug ?>" class="form-check-label"><?= $module->name ?></label>
-                </div>
-            <?php endforeach ?>
+        <div class="ms-4" id="modulesSecondYearCheckbox">
+            <h3 class="text-center mt-2">Modules de 2ème année</h3>
+            <div class="mt-2 card first_year_modules p-3">
+                <?php foreach($modules_second_year as $module): ?>
+                    <div class="form-check">
+                        <input type="checkbox" name="moduleCheckbox" id="<?= $module->slug ?>" value="<?= $module->slug ?>" class="form-check-input">
+                        <label for="<?= $module->slug ?>" class="form-check-label"><?= $module->name ?></label>
+                    </div>
+                <?php endforeach ?>
+            </div>
         </div>
     </div>
+
     <h1>Insérer un enseignant</h1>
     <div class="form-group">
     <div class="input-group">
@@ -66,85 +77,17 @@
     </div>
 </div>
 <style>
+    .first_year_modules {
+        background-color: darkgrey;
+        color: #fff;
+    }
     .input-group-text {
         width: 20%;
     }
 </style>
 <script>
     let studies = document.getElementById('study_header');
-    let moduleChecked = [];
-    let radio;
 
-    select_study = (select) => {
-        radio = sendStudyTeacher(select);
-    }
-    if (studies.firstChild) {
-        setTimeout(() => {
-            radio = sendStudyTeacher(studies);
-        }, 100);
-    }
-
-    let radioGroupes = document.getElementById('radioGroupes');
-    radioGroupes.addEventListener('change', (event) => {
-        if (event.target.type == 'radio') {
-            sendGroupTeacher(event.target);
-            radio = event.target.value;
-            moduleChecked = [];
-        }
-    })
-
-    let modulesCheckbox = document.getElementById('modulesTeacherCheckbox');
-    modulesCheckbox.addEventListener('change', (evenet) => {
-        if (evenet.target.type == 'checkbox') {
-            moduleChecked.push(evenet.target.value);
-        }
-    })
-
-    function sendStudyTeacher(select) {
-        let group = "<?= $group ?>";
-        $.ajax({
-            type: 'post',
-            url: 'ajax',
-            data: {
-                'select': 'study',
-                'value': select.value
-            },
-            success: s => {
-                let parsed = JSON.parse(s);
-                let groupes = document.getElementById('radioGroupes');
-                while (groupes.firstChild) {
-                    groupes.removeChild(groupes.firstChild);
-                }
-                let h3 = document.createElement('h3');
-                h3.textContent = 'Choisissez un groupe';
-                groupes.appendChild(h3);
-                parsed.forEach(element => {
-                    let div = document.createElement('div');
-                    div.className = 'form-check';
-                    let input = document.createElement('input');
-                    input.name = 'groupRadio';
-                    input.type = 'radio';
-                    input.value = element;
-                    input.className = 'form-check-input';
-                    input.setAttribute('id', 'year'+element);
-                    if (group == element) {
-                        input.setAttribute('checked', 'checked');
-                    }
-                    let label = document.createElement('label');
-                    label.className = 'form-check-label';
-                    label.setAttribute('for', 'year'+element);
-                    label.textContent = (element == 1) ? '1ère année' : '2ème année';
-                    div.appendChild(input);
-                    div.appendChild(label);
-                    groupes.appendChild(div);
-                });
-            },
-            error: (xhr, textStatus, errorThrown) => {
-                console.error(errorThrown);
-            }
-        });
-        return group;
-    }
     function sendGroupTeacher(radioGroup) {
         $.ajax({
             type: 'post',
@@ -190,6 +133,14 @@
         });
     }
     insert_teacher_btn = (btn) => {
+        let moduleFirstYearChecked = [];
+        let moduleSecondYearChecked = [];
+        modulesFirstYearCheckbox.querySelectorAll('input[type="checkbox"]:checked').forEach(element => {
+            moduleFirstYearChecked.push(element.value);
+        })
+        modulesSecondYearCheckbox.querySelectorAll('input[type="checkbox"]:checked').forEach(element => {
+            moduleSecondYearChecked.push(element.value);
+        })
         let lastname = document.getElementById('lastname');
         let firstname = document.getElementById('firstname');
         let identifier = document.getElementById('identifier');
@@ -204,9 +155,7 @@
         let error = document.getElementById('error');
         error.className = 'alert alert-danger text-center';
             error.style.display = '';
-        if (!radio) {
-            error.textContent = 'Veuillez choisir un groupe';
-        } else if (moduleChecked.length === 0) {
+        if (moduleFirstYearChecked.length === 0 && moduleSecondYearChecked.length === 0) {
             error.textContent = 'Veuillez cocher au moin un module';
         } else if (!lastname.value) {
             error.textContent = 'Veuillez remplir le champs Nom';
@@ -227,6 +176,7 @@
             error.style.display = 'none';
             data['firstname'] = firstname.value;
             data['lastname'] = lastname.value;
+            data['identifier'] = identifier.value;
             data['email'] = email;
             data['tel'] = tel;
             data['cin'] = cin;
@@ -238,8 +188,8 @@
                 type: 'post',
                 url: 'insertTeacher',
                 data: {
-                    'group': radio,
-                    'modules': moduleChecked,
+                    'modulesFirstYear': moduleFirstYearChecked,
+                    'modulesSecondYear': moduleSecondYearChecked,
                     'data': JSON.stringify(data)
                 },
                 success: s => {

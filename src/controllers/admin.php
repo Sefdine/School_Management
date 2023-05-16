@@ -104,6 +104,8 @@ class Admin extends User
 
 
         if ($nav_top == 'insert') {
+            $modules_first_year = $admin->getModules(1, $study, $year);
+            $modules_second_year = $admin->getModules(2, $study, $year);
             switch($session_nav_left) {
                 case 'student': 
                     require_once('templates/admin/insert/student.php');

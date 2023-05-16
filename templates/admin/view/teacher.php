@@ -43,8 +43,6 @@
                 <div class="modules_teacher_view">
                     <h3 class="set_underline">Modules</h3>
                     <ul class="ul_teacher_view_modules" id="ul_teacher_view_modules">
-                        <li>French</li>
-                        <li>English</li>
                     </ul>
                 </div>
             </div>
@@ -65,6 +63,9 @@
         border-left: 2px solid green;
         height: 260px;
         margin: 0 20px;
+    }
+    .identifier .two_point {
+        margin-left: 5px;
     }
     .degree .two_point {
         margin-left: 26px;
@@ -236,7 +237,6 @@
             teacher_info.appendChild(email_span); 
             teacher_info.appendChild(identifier_span); 
             teacher_info.appendChild(tel_span); 
-            teacher_info.appendChild(email_span); 
             teacher_info.appendChild(cin_span); 
             teacher_info.appendChild(address_span); 
             teacher_info.appendChild(degree_span); 

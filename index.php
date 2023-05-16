@@ -193,11 +193,11 @@ if (isset($action)){
         if (session()) {
             $year = $_SESSION['insert_year'] ?? '';
             $study = $_SESSION['insert_study'] ?? '';
-            $modules = $_POST['modules'] ?? [];
-            $group = (int)$_POST['group'] ?? 0;
+            $modulesFirstYear = $_POST['modulesFirstYear'] ?? [];
+            $modulesSecondYear = $_POST['modulesSecondYear'] ?? [];
             $data = json_decode($_POST['data'], true) ?? [];
             $admin = new ModelAdmin;
-            $success = $admin->insertUserTeacher($data, $modules, $year, $study, $group);
+            $success = $admin->insertUserTeacher($data, $modulesFirstYear, $modulesSecondYear, $year, $study);
             echo $success;
         } else {
             die($user->displayForm());
