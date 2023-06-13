@@ -527,14 +527,15 @@ class Admin extends User
         }
         return $data;
     }
-    public function getModulesTeachers(int $teacher_id): array {
+    public function getModulesTeachers(int $teacher_id, int $group): array {
         $conn = new Database;
         $stmt = $conn->getConnection()->prepare('
             SELECT m.name, m.slug FROM modules m 
             JOIN teachs te ON m.id = te.module_id
-            WHERE te.teacher_id = ?;
+            WHERE te.teacher_id = ?
+            AND te.group_id = (SELECT id FROM groupes WHERE group_number = ?);        
         ');
-        $stmt->execute([$teacher_id]);
+        $stmt->execute([$teacher_id, $group]);
         $data = [];
         while ($row = $stmt->fetch()) {
             $item = new self;

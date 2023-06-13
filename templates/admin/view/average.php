@@ -201,31 +201,20 @@
             radio = sendStudyAverage(select);
             document.location = 'displayDashboard';
         }
-        radioGroup.addEventListener('change', (event) => {
-            if (event.target.type == 'radio') {
-                radio = event.target.value;
-                if (exam_type == 'Examen') {
-                    sendGroupAverage(event.target, 'releveExam', ChangeReleveExam);
-                } else {
-                    sendGroupAverage(event.target, 'releve', ChangeReleve);
-                }
-            }
-        })
         setTimeout(() => {
             if (radioExamType.querySelector('input[type="radio"]:checked')) {
                 let exam_type_2 = radioExamType.querySelector('input[type="radio"]:checked');
                 exam_type = exam_type_2.value;
                 sendExamTypeAverage(exam_type_2);
             }
-        }, 100);
+        }, 200);
     
         setTimeout(() => {
             if (radioExam.querySelector('input[type="radio"]:checked')) {
                 let exam_name = radioExam.querySelector('input[type="radio"]:checked');
-                console.log(exam_name.value)
                 sendExamAverage(exam_name);
             }
-        }, 200);
+        }, 300);
        
         radioExamType.addEventListener('change', (event) => {
             if (event.target.type = 'radio') {
@@ -253,6 +242,16 @@
                 sendExamAverage(event.target);
             }
         })
+        radioGroup.addEventListener('change', (event) => {
+            if (event.target.type == 'radio') {
+                radio = event.target.value;
+                if (exam_type == 'Examen') {
+                    sendGroupAverage(event.target, 'releveExam', ChangeReleveExam);
+                } else {
+                    sendGroupAverage(event.target, 'releve', ChangeReleve);
+                }
+            }
+        })
         previous_btn_view_average = () => {
             if (exam_type == 'Examen') {
                 sendNextPrevious('previous', exam_type, 'releveExam', ChangeReleveExam);
@@ -267,7 +266,16 @@
                 sendNextPrevious('next', exam_type, 'releve', ChangeReleve);
             }
         }
+        let indentifier_view_average = document.getElementById('indentifier_view_average');
+        indentifier_view_average.addEventListener('keydown', event => {
+            if (event.key == 'Enter') {
+                sendIdentifierSingle();
+            }
+        })
         SearchIdentifierViewAverage = () => {
+            sendIdentifierSingle();
+        }
+        function sendIdentifierSingle() {
             let indentifier_view_average = document.getElementById('indentifier_view_average');
             if (!indentifier_view_average.value) {
                 indentifier_view_average.style.backgroundColor = 'red';
@@ -370,7 +378,7 @@
             })
         }
         function sendExamTypeAverage(select) {
-            let exam = '<?= $_SESSION['insert_exam'] ?>';
+            let exam = '<?= $exam_name ?>';
             $.ajax({
                 type: 'post',
                 url: 'ajax',

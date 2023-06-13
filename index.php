@@ -158,8 +158,8 @@ if (isset($action)){
             $year = $_SESSION['insert_year'] ?? date('Y');
             $study = $_SESSION['insert_study'] ?? '';
             $group = (int)($_SESSION['insert_group'] ?? 1);
-            $exam_name = $_SESSION['insert_exam'] ?? '';
-            $exam_type = $_SESSION['insert_exam_type'] ?? '';
+            $exam_name = $_SESSION['insert_exam'] ?? 'CC1';
+            $exam_type = $_SESSION['insert_exam_type'] ?? 'Contrôle';
             if (isset($_POST['nav_top'])) {
                 $_SESSION['nav_top'] = $_POST['nav_top'];
             }
@@ -426,7 +426,7 @@ if (isset($action)){
             }
 
             $info_teachers = $admin->getInfoTeacher($teacher_id);
-            $modules_teachers = $admin->getModulesTeachers($teacher_id);
+            $modules_teachers = $admin->getModulesTeachers($teacher_id, $group);
             $data['info_teachers'] = $info_teachers;
             $data['teacher_id'] = $teacher_id;
             $data['list_teachers'] = $list_teachers;
