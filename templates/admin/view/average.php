@@ -282,6 +282,7 @@
             } else {
                 indentifier_view_average.style.backgroundColor = '#fff';
             }
+            
 
             if (exam_type == 'Examen') {
                 url_send = 'releveExam';
