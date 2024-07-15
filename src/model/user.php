@@ -14,8 +14,7 @@ class User
     public $lastname;
     public $token;
 
-    public function getUsers(): array
-    {
+    public function getUsers(): array {
         $connection = new Database;
         $statement = $connection->getConnection()->query(
             'SELECT id, password, token, TRIM(identifier) AS identifier
@@ -33,9 +32,7 @@ class User
         }
         return $users;
     }
-
-    public function getUser(string $user_id): self
-    {
+    public function getUser(string $user_id): self {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
             'SELECT id, firstname, lastname, password, TRIM(identifier) AS identifier 
@@ -54,9 +51,7 @@ class User
 
         return $user;
     }
-
-    public function setPassword(string $user_id, string $new_password): bool
-    {
+    public function setPassword(string $user_id, string $new_password): bool {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
             'UPDATE users SET password = ? WHERE id = ?'
@@ -65,14 +60,12 @@ class User
         $affectedLines = $statement->execute([$new_password, (int)$user_id]);
         return ($affectedLines > 0);
     }
-
-    public function getIdUser(string $identifier):int 
-    {
+    public function getIdUser(string $identifier):int {
         $connection = new Database;
         $statement = $connection->getConnection()->prepare(
             'SELECT id FROM users WHERE TRIM(identifier) = ?'
         );
-        $statement->execute([$identifier]);
+        $statement->execute([trim($identifier)]);
         return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }
     public function getData(string $exam_name, string $module_slug, string $year, string $study, int $group, string $exam_type, int $limit, int $offset): array {
@@ -123,5 +116,40 @@ class User
         $statement->execute([$year, $study, $group]);
         $row = $statement->fetch(\PDO::FETCH_NUM)[0];
         return $row;
+    }
+    public function getIdentifier(int $offset, string $year, string $study, int $group):string {
+        $conn = new Database;
+        $stmt = $conn->getConnection()->prepare('
+            SELECT u.identifier FROM users u
+            JOIN students s ON u.id = s.user_id
+            JOIN registrations r ON s.id = r.student_id
+            WHERE r.year_id = (SELECT id FROM years WHERE name = ?)
+            AND r.study_id = (SELECT id FROM studies WHERE name = ?)
+            AND r.group_id = (SELECT id FROM groupes WHERE group_number = ?)
+            LIMIT 1 OFFSET ?;
+        ');
+        $stmt->execute([$year, $study, $group, $offset]);
+        $row = $stmt->fetch();
+        return ($row['identifier']) ? $row['identifier'] : '';
+    }
+    public function getIdentifiers(string $year, string $study, int $group): array {
+        $connection = new Database;
+        $statement = $connection->getConnection()->prepare(
+            'SELECT TRIM(identifier) AS identifier
+            FROM users u 
+            JOIN students s ON u.id = s.user_id
+            JOIN registrations r ON s.id = r.student_id
+            WHERE r.year_id = (SELECT id FROM years WHERE name = ?)
+            AND r.study_id = (SELECT id FROM studies WHERE name = ?)
+            AND r.group_id = (SELECT id FROM groupes WHERE group_number = ?)
+            AND u.identifier IS NOT NULL
+            ORDER BY u.id ASC'
+        );   
+        $statement->execute([$year, $study, $group]);
+        $identifiers = [];
+        while($row = $statement->fetch()) {
+            $identifiers[] = $row['identifier'];
+        }
+        return $identifiers;
     }
 }

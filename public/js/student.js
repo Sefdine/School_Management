@@ -10,9 +10,11 @@ if (window.location.pathname == '/ipem/landing') {
                 $('#exam_student').hide();
                 $('#exam_label_student').hide();
             } else {
+                $('#exam_student').show();
+                $('#exam_label_student').show();
                 sendExam(exam_type);
             }
-        })
+        });
     })
     
     function sendExam(exam_type) {
@@ -34,8 +36,7 @@ if (window.location.pathname == '/ipem/landing') {
                     option.value = element;
                     option.textContent = element;
                     exams.appendChild(option);
-                })
-                
+                });
             }, 
             error: (xhr, textStatus, errorThrown) => {
                 console.error(errorThrown);

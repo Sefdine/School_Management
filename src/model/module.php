@@ -21,6 +21,8 @@ trait Module
             JOIN studies s ON s.id = sgm.study_id
             JOIN years_studies ys ON s.id = ys.study_id
             JOIN years y ON y.id = ys.year_id
+            LEFT JOIN teachs t ON m.id = t.module_id
+            WHERE t.module_id IS NULL
             AND g.group_number = ?
             AND s.name = ?
             AND y.name = ?
@@ -36,7 +38,6 @@ trait Module
 
         return $modules;
     }
-
     public function getModulesStudent(int $identifier, string $year): array
     {
         $connection = new Database;
@@ -57,7 +58,6 @@ trait Module
         }
         return $modules;
     }
-
     public function getIdModule(string $modue_slug): int
     {
         $connection = new Database;
@@ -68,7 +68,6 @@ trait Module
         
         return ($row = $statement->fetch()) ? (int)$row['id'] : 0;
     }
-
     public function getModule(string $slug):string 
     {
         $connection = new Database;

@@ -13,6 +13,17 @@ use Ipem\Src\Model\Student;
 class Admin extends User
 {
     public function displayHome():void {
+        $_SESSION['nav_top'] = 'home';
+        $year = $_SESSION["insert_year"] ?? '';
+        $study = $_SESSION["insert_study"] ?? '';
+        $group = (int)$_SESSION["insert_group"] ?? 0;
+        $admin = new ModelAdmin;
+        $years = $admin->getYears();
+        $groupes = $admin->getGroups($year, $study);
+        $registrer_data = $admin->getTotalInscrit($year, $study, $group);
+        $deleted_data = $admin->getTotalDeleted($year, $study, $group);
+        $registrer_all = $admin->getAllInscrit();
+        $deleted_all = $admin->getAllDeleted();
         require_once('templates/admin/home.php');
     }
     public function displayLanding(string $identifier, string $exam_type = ''): void {
@@ -51,7 +62,7 @@ class Admin extends User
         require_once('templates/errors/errors.php');
         require_once('templates/admin/input_rates.php');
     }
-    public function displayDashboard(string $error = '', string $year='', string $study='', int $group=0, string $exam_name='', string $exam_type='') : void {
+    public function displayDashboard(string $error = '', string $year='', string $study='', int $group=1, string $exam_name='', string $exam_type='') : void {
         $admin = new ModelAdmin;
         $current_module = $_SESSION['current_module'] ?? '';
         $counter = $_SESSION['counter'] ?? 0;
@@ -70,20 +81,37 @@ class Admin extends User
         $data_users = $admin->getData($exam_name, $current_module, $year, $study, $group, $exam_type, $perPage, $offset);
         $nav_top = $_SESSION['nav_top'] ?? 'insert';
         $session_nav_left = $_SESSION['nav_left'] ?? '';
+        $firstname_lastname = $admin->getFirstnameLastname($year, $study, $group);
+        $average = new Average;
+        $offset_identifier = 0;
+        $identifier = $admin->getIdentifier($offset_identifier, $year, $study, $group);
+        $user_id = $admin->getIdUser($identifier);
+        $user = $admin->getUser((string)$user_id);
+        $full_name = $user->firstname.' '.$user->lastname;
+        $averages = $average->getAverages($user_id, $exam_name, $exam_type, $year, $study, $group);
+        $total_factors_modules = $average->getTotalFactor($year, $study, $group);
+        $total_module = $total_factors_modules[0];
+        $total_factor = $total_factors_modules[1];
+        $total_average = 0;
+        $total_factor_average = 0;
+        foreach($averages as $item) {
+            $total_average += $item->value_average;
+            $total_factor_average += ($item->value_average * $item->factor);
+        }
+        $average = $total_factor_average / $total_factor;
+        $page_view_average = (int)$_SESSION['page_view_average'] ?? 1;
+        $pages_view_averages = $count;
+
 
         if ($nav_top == 'insert') {
+            $modules_first_year = $admin->getModules(1, $study, $year);
+            $modules_second_year = $admin->getModules(2, $study, $year);
             switch($session_nav_left) {
                 case 'student': 
                     require_once('templates/admin/insert/student.php');
                     break;
                 case 'teacher': 
                     require_once('templates/admin/insert/teacher.php');
-                    break;
-                case 'study': 
-                    require_once('templates/admin/insert/study.php');
-                    break;
-                case 'group': 
-                    require_once('templates/admin/insert/group.php');
                     break;
                 case 'average': 
                     require_once('templates/admin/insert/average.php');
@@ -92,73 +120,35 @@ class Admin extends User
                     require_once('templates/admin/insert/teacher.php');
                     break;
             }
-        } elseif ($nav_top == 'update') {
+        } elseif ($nav_top == 'view') {
+            $page_view_average = 0;
+            $total_students = $admin->getTotalInscrit($year, $study, $group);
+            $pages_view_averages = ceil($total_students / 10);
+            $offset_view_average = 10 * $page_view_average;
+            $list_students = $admin->getListStudents($year, $study, $group, $offset_view_average);
+            $current_identifier_view_student = $_SESSION['student_list_button'];
+
+            $list_teachers = $admin->getListTeacher($year, $study, $group);
+            if (!empty($list_teachers)) {
+                $user_id = (int)$list_teachers[0]->identifier;
+            }
+
+            $user_id = (int)$_SESSION['teacher_list_button'] ?? 0;
+            $info_teachers = $admin->getInfoTeacher($user_id);
             switch($session_nav_left) {
                 case 'student': 
-                    require_once('templates/admin/update/student.php');
+                    require_once('templates/admin/view/student.php');
                     break;
                 case 'teacher': 
-                    require_once('templates/admin/update/teacher.php');
-                    break;
-                case 'study': 
-                    require_once('templates/admin/update/study.php');
-                    break;
-                case 'group': 
-                    require_once('templates/admin/update/group.php');
+                    require_once('templates/admin/view/teacher.php');
                     break;
                 case 'average': 
-                    require_once('templates/admin/update/average.php');
+                    require_once('templates/admin/view/average.php');
                     break;
                 default: 
-                    require_once('templates/admin/update/student.php');
+                    require_once('templates/admin/view/teacher.php');
                     break;
             }
-        } elseif ($nav_top == 'delete') {
-            var_dump('delete');
-        }
-        
-    }
-    public function insertStudent(array $data): void {
-        $firstname = $data['firstname'] ?? '';
-        $lastname = $data['lastname'] ?? '';
-        if (!($firstname) || !($lastname)) {
-            $_SESSION['err'] = 'emptydata';
-            header('Location: '. URL_ROOT .'insert');
-        } else {
-            $admin = new ModelAdmin;
-            $password = self::createPassword('IPEM2022');
-            $token = self::createToken($firstname.$lastname);
-            $year = $_SESSION['insert_year'] ?? '';
-            $study = $_SESSION['insert_study'] ?? '';
-            $group = (int)$_SESSION['insert_group'] ?? 0;
-            $success = $admin->insertUserStudent($data, $password, $token, $year, $study, $group);
-
-            if (!$success) {
-                $_SESSION['err'] = 'insert_failed';
-                header('Location: '. URL_ROOT .'displayDashboard');
-            } else {
-                $_SESSION['err'] = 'insert_success';
-                header('Location: '. URL_ROOT .'displayDashboard');
-            }
-        }
-    }
-    public function insertTeacher(array $data): void {
-        $firstname = $data['firstname'] ?? '';
-        $lastname = $data['lastname'] ?? '';
-        if(!$firstname || !$lastname) {
-            $_SESSION['err'] = 'emptydata';
-            header('Location: '. URL_ROOT .'insert');
-        } else {
-            $admin = new ModelAdmin;
-            $success = $admin->insertUserTeacher($data);
-        }
-
-        if (!$success) {
-            $_SESSION['err'] = 'insert_failed';
-            header('Location: '. URL_ROOT .'insert');
-        } else {
-            $_SESSION['err'] = 'insert_success';
-            header('Location: '. URL_ROOT .'insert');
         }
     }
     public function insertAverages(array $data):void {

@@ -2,8 +2,6 @@
 
 //Base root
 
-use Ipem\Src\Model\User;
-
 define('URL_ROOT', '/ipem/');
 
 define('DB_HOST', 'localhost');
@@ -21,13 +19,3 @@ function session() {
     }
 }
 
-if (isset($_POST['nav_top'])) {
-    $_SESSION['nav_top'] = $_POST['nav_top'];
-}
-if (isset($_POST['nav_left'])) {
-    $_SESSION['nav_left'] = $_POST['nav_left'];
-}
-
-if (isset($_POST['current_page'])) {
-    $_SESSION['average_page'] = $_POST['current_page'];
-}
